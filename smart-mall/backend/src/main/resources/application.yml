@@ -1,0 +1,27 @@
+server:
+  port: 8080
+
+spring:
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:mysql://localhost:3306/smart_mall?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true&useSSL=false}
+    username: ${SPRING_DATASOURCE_USERNAME:root}
+    password: ${SPRING_DATASOURCE_PASSWORD:smartmall_root}
+  jpa:
+    hibernate:
+      ddl-auto: none
+    open-in-view: false
+    properties:
+      hibernate:
+        format_sql: true
+  jackson:
+    property-naming-strategy: LOWER_CAMEL_CASE
+
+app:
+  jwt-secret: ${JWT_SECRET:replace-with-at-least-32-characters-secret}
+  internal-service-secret: ${INTERNAL_SERVICE_SECRET:agent-internal-secret}
+
+logging:
+  file:
+    path: logs
+  level:
+    com.example.smartmall: INFO
