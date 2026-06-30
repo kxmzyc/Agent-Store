@@ -51,7 +51,11 @@ public class OrderController {
     CartItem item = carts.findByUserIdAndProductId(user.id(), product.id).orElseGet(CartItem::new);
     item.userId = user.id();
     item.productId = product.id;
-    item.quantity = item.id == null ? request.quantity() : item.quantity + request.quantity();
+    int targetQty = item.id == null ? request.quantity() : item.quantity + request.quantity();
+    if (targetQty > product.stock) {
+      throw BizException.badRequest("超出库存数量");
+    }
+    item.quantity = targetQty;
     item.createdAt = item.createdAt == null ? LocalDateTime.now() : item.createdAt;
     CartItem saved = carts.save(item);
     saved.product = product;
@@ -62,9 +66,13 @@ public class OrderController {
   CartResponse updateCart(@AuthenticationPrincipal CurrentUser user, @PathVariable Long id,
                           @Valid @RequestBody CartUpdateRequest request) {
     CartItem item = carts.findByIdAndUserId(id, user.id()).orElseThrow(() -> BizException.notFound("购物车商品不存在"));
+    Product product = products.findById(item.productId).orElseThrow(() -> BizException.notFound("商品不存在"));
+    if (request.quantity() > product.stock) {
+      throw BizException.badRequest("超出库存数量");
+    }
     item.quantity = request.quantity();
     CartItem saved = carts.save(item);
-    saved.product = products.findById(saved.productId).orElseThrow();
+    saved.product = product;
     return CartResponse.from(saved);
   }
 

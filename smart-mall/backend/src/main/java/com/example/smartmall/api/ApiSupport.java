@@ -94,3 +94,11 @@ class GlobalExceptionHandler {
     return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ApiSupport.ErrorResponse("系统繁忙，请稍后再试"));
   }
 }
+
+@RestController
+class HealthController {
+  @GetMapping("/health")
+  java.util.Map<String, Object> health() {
+    return java.util.Map.of("status", "ok");
+  }
+}

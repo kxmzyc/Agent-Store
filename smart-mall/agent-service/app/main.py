@@ -3,12 +3,14 @@ import logging
 import os
 import re
 from collections import defaultdict, deque
+from contextlib import asynccontextmanager
 from decimal import Decimal
 from typing import Any
 
 import httpx
 from fastapi import FastAPI, Query
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
 from langchain.agents import AgentExecutor, create_tool_calling_agent
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain_core.tools import tool
@@ -30,12 +32,33 @@ INTERNAL_SERVICE_SECRET = os.getenv("INTERNAL_SERVICE_SECRET", "agent-internal-s
 LLM_API_KEY = os.getenv("LLM_API_KEY", "")
 LLM_BASE_URL = os.getenv("LLM_BASE_URL") or None
 LLM_MODEL = os.getenv("LLM_MODEL", "gpt-4o-mini")
+LLM_PLACEHOLDER = "__PLACEHOLDER_WILL_BE_PROVIDED_BY_USER__"
 
 engine = create_engine(DATABASE_URL, pool_pre_ping=True)
 SessionLocal = sessionmaker(bind=engine)
 memory: dict[str, deque[dict[str, str]]] = defaultdict(lambda: deque(maxlen=12))
 
-app = FastAPI(title="Smart Mall Agent Service")
+
+class Utf8JSONResponse(JSONResponse):
+    media_type = "application/json; charset=utf-8"
+
+
+def is_configured(value: str | None) -> bool:
+    return bool(value and value.strip() and value != LLM_PLACEHOLDER)
+
+
+def llm_enabled() -> bool:
+    return bool(is_configured(LLM_API_KEY) and ChatOpenAI)
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    ensure_tables()
+    logger.info("agent service started, backend=%s, llm_enabled=%s", BACKEND_BASE, llm_enabled())
+    yield
+
+
+app = FastAPI(title="Smart Mall Agent Service", lifespan=lifespan, default_response_class=Utf8JSONResponse)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -61,6 +84,10 @@ def _internal_headers() -> dict[str, str]:
         "X-Internal-Service": "agent",
         "X-Internal-Secret": INTERNAL_SERVICE_SECRET,
     }
+
+
+def memory_key(user_id: int, session_id: str) -> str:
+    return f"{user_id}:{session_id}"
 
 
 def _json_default(value: Any) -> str:
@@ -112,7 +139,6 @@ def query_order_status(user_id: int, order_id: int | None = None) -> str:
 
 TOOLS = [search_products, query_order_status]
 
-
 def ensure_tables() -> None:
     with engine.begin() as conn:
         conn.execute(text("""
@@ -138,31 +164,36 @@ def ensure_tables() -> None:
         """))
 
 
-@app.on_event("startup")
-def startup() -> None:
-    ensure_tables()
-    logger.info("agent service started, backend=%s, llm_enabled=%s", BACKEND_BASE, bool(LLM_API_KEY and ChatOpenAI))
-
-
-def load_history(session_id: str) -> list[dict[str, str]]:
-    if memory[session_id]:
-        return list(memory[session_id])
+def load_history(session_id: str, user_id: int | None = None) -> list[dict[str, str]]:
+    key = memory_key(user_id, session_id) if user_id is not None else session_id
+    if memory[key]:
+        return list(memory[key])
     with SessionLocal() as db:
-        rows = db.execute(
-            text("""
-                SELECT role, content FROM agent_conversation
-                WHERE session_id = :session_id
-                ORDER BY id DESC LIMIT 12
-            """),
-            {"session_id": session_id},
-        ).mappings().all()
+        if user_id is None:
+            rows = db.execute(
+                text("""
+                    SELECT role, content FROM agent_conversation
+                    WHERE session_id = :session_id
+                    ORDER BY id DESC LIMIT 12
+                """),
+                {"session_id": session_id},
+            ).mappings().all()
+        else:
+            rows = db.execute(
+                text("""
+                    SELECT role, content FROM agent_conversation
+                    WHERE session_id = :session_id AND user_id = :user_id
+                    ORDER BY id DESC LIMIT 12
+                """),
+                {"session_id": session_id, "user_id": user_id},
+            ).mappings().all()
     restored = [{"role": row["role"], "content": row["content"]} for row in reversed(rows)]
-    memory[session_id].extend(restored)
+    memory[key].extend(restored)
     return restored
 
 
 def save_message(session_id: str, user_id: int, role: str, content: str) -> None:
-    memory[session_id].append({"role": role, "content": content})
+    memory[memory_key(user_id, session_id)].append({"role": role, "content": content})
     with engine.begin() as conn:
         conn.execute(
             text("""
@@ -205,8 +236,17 @@ def upsert_preferences(user_id: int, tags: list[str]) -> None:
 
 
 def extract_budget(message: str) -> float | None:
-    match = re.search(r"(\d+(?:\.\d+)?)\s*(?:元|块|预算|以内)?", message)
-    return float(match.group(1)) if match else None
+    """只在出现预算语境时识别金额，避免把普通数字（如"推荐3款键盘"）误判为预算。"""
+    patterns = [
+        r"(?:预算|不超过|不高于|低于|最多|控制在)\s*[¥￥]?\s*(\d+(?:\.\d+)?)",
+        r"[¥￥]\s*(\d+(?:\.\d+)?)",
+        r"(\d+(?:\.\d+)?)\s*(?:元|块钱|块|rmb|预算以内|以内|以下|左右)",
+    ]
+    for pattern in patterns:
+        match = re.search(pattern, message, re.IGNORECASE)
+        if match:
+            return float(match.group(1))
+    return None
 
 
 def extract_preferences_rule(message: str) -> list[str]:
@@ -239,9 +279,10 @@ def product_keyword(message: str, tags: list[str]) -> str:
 
 
 def llm() -> Any | None:
-    if not LLM_API_KEY or ChatOpenAI is None:
+    if not llm_enabled():
         return None
-    return ChatOpenAI(api_key=LLM_API_KEY, base_url=LLM_BASE_URL, model=LLM_MODEL, temperature=0.3)
+    base_url = LLM_BASE_URL if is_configured(LLM_BASE_URL) else None
+    return ChatOpenAI(api_key=LLM_API_KEY, base_url=base_url, model=LLM_MODEL, temperature=0.3)
 
 
 def extract_preferences(user_id: int, history: list[dict[str, str]], message: str, reply: str) -> list[str]:
@@ -272,6 +313,7 @@ def system_prompt(tags: list[str]) -> str:
         f"该用户的历史偏好标签：{', '.join(tags) or '暂无'}。"
         "你只能回答购物、商品推荐和订单相关问题。"
         "推荐商品时必须基于工具返回的真实商品数据，不要编造不存在的商品。"
+        "回复使用简洁中文，不要使用 emoji。"
         "用户问订单时必须调用订单工具。用户问商品或推荐时必须调用商品搜索工具。"
         "用户问天气、新闻、股票等非购物问题时，礼貌说明自己只能处理商城购物相关问题。"
     )
@@ -325,15 +367,15 @@ def offline_agent(user_id: int, tags: list[str], message: str) -> tuple[str, lis
 
 @app.post("/agent/chat", response_model=ChatResponse)
 def chat(request: ChatRequest) -> ChatResponse:
-    history = load_history(request.sessionId)
+    history = load_history(request.sessionId, request.userId)
     tags = preference_tags(request.userId)
     message = request.message.strip()
     save_message(request.sessionId, request.userId, "user", message)
 
     try:
         reply, tools_used = run_langchain_agent(request.userId, tags, history, message)
-        if not tools_used and not any(word in message for word in ["天气", "新闻", "股票", "世界杯"]):
-            logger.info("agent returned without tool use, falling back to deterministic tools")
+        if not reply.strip():
+            logger.info("agent reply empty, falling back to deterministic tools")
             reply, tools_used = offline_agent(request.userId, tags, message)
     except Exception as exc:
         logger.info("langchain agent unavailable, using offline fallback, error=%s", exc)
@@ -351,8 +393,9 @@ def chat(request: ChatRequest) -> ChatResponse:
 
 
 @app.get("/agent/history")
-def history(sessionId: str = Query(...)) -> list[dict[str, str]]:
-    return load_history(sessionId)
+def history(sessionId: str = Query(...), userId: int | None = Query(default=None)) -> list[dict[str, str]]:
+    # 传入 userId 时使用与 chat 一致的内存键（userId:sessionId），避免命名空间割裂
+    return load_history(sessionId, userId)
 
 
 @app.get("/health")
@@ -360,5 +403,8 @@ def health() -> dict[str, Any]:
     return {
         "status": "ok",
         "backend": BACKEND_BASE,
-        "llmEnabled": bool(LLM_API_KEY and ChatOpenAI),
+        "llmEnabled": llm_enabled(),
+        "tools": [tool.name for tool in TOOLS],
+        "shortTermMemory": "in-memory window plus agent_conversation fallback",
+        "longTermMemory": "user_preference",
     }

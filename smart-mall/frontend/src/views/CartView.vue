@@ -68,8 +68,14 @@ async function load() {
 }
 
 async function update(item, quantity) {
-  await api.put(`/cart/${item.id}`, { quantity })
-  await load()
+  if (quantity < 1) return
+  try {
+    await api.put(`/cart/${item.id}`, { quantity })
+    await load()
+  } catch (e) {
+    toast.show(errorMessage(e))
+    await load()
+  }
 }
 
 async function remove(item) {

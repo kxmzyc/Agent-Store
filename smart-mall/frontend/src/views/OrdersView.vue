@@ -30,11 +30,17 @@
           </tr>
         </tbody>
       </table>
+      <div v-if="expanded.includes(order.id)" class="order-detail muted">
+        <p>收货地址：{{ order.shippingAddress }}</p>
+        <p v-if="order.paidAt">支付时间：{{ order.paidAt }}</p>
+      </div>
       <div class="toolbar order-toolbar">
         <button v-if="order.status === 'PENDING_PAYMENT'" class="primary" @click="pay(order)">模拟支付</button>
-        <div v-if="order.status === 'PENDING_PAYMENT'" class="order-action-swap">
-          <button class="order-view-action" type="button">查看详情</button>
-          <button class="order-danger-action" type="button" @click="cancel(order)">取消订单</button>
+        <div class="order-action-swap">
+          <button class="order-view-action" type="button" @click="toggle(order)">
+            {{ expanded.includes(order.id) ? '收起详情' : '查看详情' }}
+          </button>
+          <button v-if="order.status === 'PENDING_PAYMENT'" class="order-danger-action" type="button" @click="cancel(order)">取消订单</button>
         </div>
         <button v-if="order.status === 'SHIPPED'" class="primary" @click="confirm(order)">确认收货</button>
       </div>
@@ -57,7 +63,14 @@ const tabs = [
 ]
 const status = ref('all')
 const orders = ref([])
+const expanded = ref([])
 const toast = useToast()
+
+function toggle(order) {
+  const i = expanded.value.indexOf(order.id)
+  if (i >= 0) expanded.value.splice(i, 1)
+  else expanded.value.push(order.id)
+}
 
 onMounted(load)
 

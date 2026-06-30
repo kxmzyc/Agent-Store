@@ -146,13 +146,7 @@ public class OrderService {
     requireStatus(order, "PENDING_PAYMENT");
     order.status = "CANCELLED";
     for (OrderItem item : orderItems.findByOrderId(order.id)) {
-      Product product = products.findById(item.productId).orElse(null);
-      if (product != null) {
-        product.stock += item.quantity;
-        product.version += 1;
-        product.salesCount = Math.max(0, product.salesCount - item.quantity);
-        products.save(product);
-      }
+      products.restoreStock(item.productId, item.quantity);
     }
     log.info("order cancelled and stock restored, userId={}, orderId={}", userId, orderId);
     return toResponse(orders.save(order));

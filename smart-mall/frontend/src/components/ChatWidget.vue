@@ -43,11 +43,15 @@ async function send() {
   if (!draft.value.trim()) return
   const content = draft.value.trim()
   draft.value = ''
+  if (!store.user?.id) {
+    messages.value.push({ role: 'assistant', content: '请先登录后再使用 AI 导购助手，这样我才能读取你的偏好和订单。' })
+    return
+  }
   messages.value.push({ role: 'user', content })
   loading.value = true
   try {
     const { data } = await agentApi.post('/chat', {
-      userId: store.user?.id || 2,
+      userId: store.user.id,
       sessionId,
       message: content
     })

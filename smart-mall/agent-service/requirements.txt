@@ -6,3 +6,8 @@ pymysql==1.1.1
 pydantic==2.10.3
 langchain==0.3.12
 langchain-openai==0.2.12
+langchain-core==0.3.63
+langchain-text-splitters==0.3.8
+langsmith==0.2.11
+openai==1.109.1
+tiktoken==0.12.0

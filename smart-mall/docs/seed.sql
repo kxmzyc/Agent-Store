@@ -154,3 +154,28 @@ ON DUPLICATE KEY UPDATE
 INSERT INTO cart (user_id, product_id, quantity)
 VALUES (2, 1, 1), (2, 8, 2)
 ON DUPLICATE KEY UPDATE quantity = VALUES(quantity);
+
+INSERT INTO `order` (id, order_no, user_id, total_amount, status, shipping_address, created_at, paid_at)
+VALUES
+  (1, 'SM202606300001', 2, 399.00, 'PAID', '上海市浦东新区软件园 1 号楼', NOW(), NOW())
+ON DUPLICATE KEY UPDATE
+  user_id = VALUES(user_id),
+  total_amount = VALUES(total_amount),
+  status = VALUES(status),
+  shipping_address = VALUES(shipping_address),
+  paid_at = VALUES(paid_at);
+
+INSERT INTO order_item (id, order_id, product_id, product_name_snapshot, price_snapshot, quantity)
+VALUES
+  (1, 1, 1, '极客机械键盘 K87', 399.00, 1)
+ON DUPLICATE KEY UPDATE
+  product_id = VALUES(product_id),
+  product_name_snapshot = VALUES(product_name_snapshot),
+  price_snapshot = VALUES(price_snapshot),
+  quantity = VALUES(quantity);
+
+INSERT INTO user_preference (user_id, preference_tag, weight)
+VALUES (2, '机械键盘', 1.2)
+ON DUPLICATE KEY UPDATE
+  weight = GREATEST(weight, VALUES(weight)),
+  updated_at = CURRENT_TIMESTAMP;

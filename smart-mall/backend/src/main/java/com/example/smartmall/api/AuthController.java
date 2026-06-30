@@ -77,11 +77,15 @@ public class AuthController {
   @PutMapping("/user/profile")
   UserResponse updateProfile(@AuthenticationPrincipal CurrentUser currentUser, @RequestBody ProfileUpdateRequest request) {
     User user = users.findById(currentUser.id()).orElseThrow(() -> BizException.notFound("用户不存在"));
-    if (request.phone() != null && !request.phone().equals(user.phone) && users.existsByPhone(request.phone())) {
-      throw BizException.conflict("手机号已存在");
+    if (request.phone() != null) {
+      if (!request.phone().equals(user.phone) && users.existsByPhone(request.phone())) {
+        throw BizException.conflict("手机号已存在");
+      }
+      user.phone = request.phone();
     }
-    user.phone = request.phone();
-    user.avatarUrl = request.avatarUrl();
+    if (request.avatarUrl() != null) {
+      user.avatarUrl = request.avatarUrl();
+    }
     user.updatedAt = LocalDateTime.now();
     return UserResponse.from(users.save(user));
   }

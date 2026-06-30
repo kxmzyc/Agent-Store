@@ -10,6 +10,7 @@ import org.springframework.data.repository.query.Param;
 public interface ProductRepository extends JpaRepository<Product, Long> {
   Page<Product> findByStatus(Integer status, Pageable pageable);
   Page<Product> findByStatusAndCategoryId(Integer status, Long categoryId, Pageable pageable);
+  Page<Product> findByCategoryId(Long categoryId, Pageable pageable);
 
   @Query("""
       select p from Product p
@@ -26,4 +27,13 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
       where p.id = :id and p.stock >= :quantity and p.version = :version
       """)
   int deductStock(@Param("id") Long id, @Param("quantity") int quantity, @Param("version") int version);
+
+  @Modifying(flushAutomatically = true, clearAutomatically = true)
+  @Query("""
+      update Product p set p.stock = p.stock + :quantity,
+        p.version = p.version + 1,
+        p.salesCount = case when p.salesCount >= :quantity then p.salesCount - :quantity else 0 end
+      where p.id = :id
+      """)
+  int restoreStock(@Param("id") Long id, @Param("quantity") int quantity);
 }

@@ -40,6 +40,15 @@
 基础地址：`http://localhost:8000`
 
 - `POST /agent/chat` `{ "userId": 2, "sessionId": "uuid", "message": "有没有适合敲代码的键盘，预算500" }`
+  - 响应：`{ "reply": "...", "toolsUsed": ["search_products"], "sessionId": "uuid" }`
 - `GET /agent/history?sessionId=uuid`
+- `GET /health`
+  - 响应包含 `tools`、`shortTermMemory`、`longTermMemory`、`llmEnabled`
 
 Agent 调主后端订单接口使用 `X-Internal-Service: agent` 与 `X-Internal-Secret`，主系统只开放受限内部订单查询。
+
+可用以下命令做 Agent 验收烟测：
+
+```bash
+python scripts/agent_smoke.py --base-url http://127.0.0.1:8000 --user-id 2
+```

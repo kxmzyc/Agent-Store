@@ -35,6 +35,7 @@ public class SecurityConfig {
               response.getWriter().write("{\"msg\":\"无权限访问\"}");
             }))
         .authorizeHttpRequests(auth -> auth
+            .requestMatchers("/health").permitAll()
             .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
             .requestMatchers("/api/auth/**").permitAll()
             .requestMatchers(HttpMethod.GET, "/api/categories", "/api/products/**").permitAll()

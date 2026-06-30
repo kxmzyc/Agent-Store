@@ -48,6 +48,19 @@ public class ProductController {
     return new PageResponse<>(result.getTotalElements(), result.getContent().stream().map(ProductResponse::from).toList());
   }
 
+  @GetMapping("/products/admin")
+  @PreAuthorize("hasRole('ADMIN')")
+  PageResponse<ProductResponse> adminList(@RequestParam(required = false) Long categoryId,
+                                          @RequestParam(defaultValue = "1") int page,
+                                          @RequestParam(defaultValue = "20") int size) {
+    Pageable pageable = PageRequest.of(Math.max(page, 1) - 1, Math.min(Math.max(size, 1), 100),
+        Sort.by(Sort.Direction.DESC, "id"));
+    Page<Product> result = categoryId == null
+        ? products.findAll(pageable)
+        : products.findByCategoryId(categoryId, pageable);
+    return new PageResponse<>(result.getTotalElements(), result.getContent().stream().map(ProductResponse::from).toList());
+  }
+
   @GetMapping("/products/search")
   PageResponse<ProductResponse> search(@RequestParam(defaultValue = "") String keyword,
                                        @RequestParam(defaultValue = "1") int page,

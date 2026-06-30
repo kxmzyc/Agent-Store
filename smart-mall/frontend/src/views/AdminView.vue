@@ -27,18 +27,20 @@
     </div>
     <table class="table table-spaced">
       <thead>
-        <tr><th>ID</th><th>商品</th><th>价格</th><th>库存</th><th>销量</th><th>操作</th></tr>
+        <tr><th>ID</th><th>商品</th><th>价格</th><th>库存</th><th>销量</th><th>状态</th><th>操作</th></tr>
       </thead>
       <tbody>
-        <tr v-for="p in products" :key="p.id">
+        <tr v-for="p in products" :key="p.id" :class="{ 'row-inactive': p.status !== 1 }">
           <td>{{ p.id }}</td>
           <td>{{ p.name }}</td>
           <td>¥{{ p.price }}</td>
           <td>{{ p.stock }}</td>
           <td>{{ p.salesCount }}</td>
+          <td>{{ p.status === 1 ? '在售' : '已下架' }}</td>
           <td>
             <button @click="edit(p)">编辑</button>
-            <button @click="remove(p)">下架</button>
+            <button v-if="p.status === 1" @click="remove(p)">下架</button>
+            <button v-else @click="activate(p)">上架</button>
           </td>
         </tr>
       </tbody>
@@ -70,7 +72,7 @@ function blank() {
 }
 
 async function load() {
-  const { data } = await api.get('/products', { params: { page: 1, size: 100 } })
+  const { data } = await api.get('/products/admin', { params: { page: 1, size: 100 } })
   products.value = data.list
 }
 
@@ -98,8 +100,30 @@ async function save() {
 
 async function remove(product) {
   if (!confirm(`确认下架 ${product.name}？`)) return
-  await api.delete(`/products/${product.id}`)
-  toast.show('商品已下架')
-  await load()
+  try {
+    await api.delete(`/products/${product.id}`)
+    toast.show('商品已下架')
+    await load()
+  } catch (e) {
+    toast.show(errorMessage(e))
+  }
+}
+
+async function activate(product) {
+  try {
+    await api.put(`/products/${product.id}`, {
+      categoryId: product.categoryId,
+      name: product.name,
+      description: product.description,
+      price: product.price,
+      stock: product.stock,
+      imageUrl: product.imageUrl,
+      status: 1
+    })
+    toast.show('商品已上架')
+    await load()
+  } catch (e) {
+    toast.show(errorMessage(e))
+  }
 }
 </script>

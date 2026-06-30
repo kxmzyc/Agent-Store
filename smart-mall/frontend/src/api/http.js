@@ -9,7 +9,7 @@ export const api = axios.create({
 
 export const agentApi = axios.create({
   baseURL: '/agent',
-  timeout: 20000
+  timeout: 120000
 })
 
 api.interceptors.request.use((config) => {
@@ -17,21 +17,34 @@ api.interceptors.request.use((config) => {
   return config
 })
 
+// 单飞锁：并发 401 只触发一次刷新，其余请求复用同一个刷新 Promise
+let refreshing = null
+
 api.interceptors.response.use(
   (response) => response,
   async (error) => {
     const status = error.response?.status
-    if (status === 401 && localStorage.getItem('refreshToken')) {
+    const original = error.config
+    if (status === 401 && localStorage.getItem('refreshToken') && original && !original._retry) {
+      original._retry = true
       try {
-        const refresh = await axios.post('/api/auth/refresh', {
-          refreshToken: localStorage.getItem('refreshToken')
-        })
-        store.token = refresh.data.accessToken
-        localStorage.setItem('accessToken', refresh.data.accessToken)
-        error.config.headers.Authorization = `Bearer ${refresh.data.accessToken}`
-        return api.request(error.config)
+        if (!refreshing) {
+          refreshing = axios
+            .post('/api/auth/refresh', { refreshToken: localStorage.getItem('refreshToken') })
+            .then((res) => {
+              store.token = res.data.accessToken
+              localStorage.setItem('accessToken', res.data.accessToken)
+              return res.data.accessToken
+            })
+            .finally(() => { refreshing = null })
+        }
+        const token = await refreshing
+        original.headers.Authorization = `Bearer ${token}`
+        return api.request(original)
       } catch {
         store.logout()
+        router.push('/login')
+        return Promise.reject(error)
       }
     }
     if (status === 401) router.push('/login')
