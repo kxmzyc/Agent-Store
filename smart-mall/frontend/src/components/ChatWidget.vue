@@ -1,5 +1,5 @@
 <template>
-  <button class="chat-fab" title="AI导购助手" @click="open = !open">
+  <button class="chat-fab" title="AI 导购助手" @click="open = !open">
     <Bot size="22" />
   </button>
   <section v-if="open" class="chat-panel">
@@ -8,7 +8,7 @@
         <strong>AI 导购助手</strong>
         <small>工具调用 · 短期记忆 · 偏好记忆</small>
       </div>
-      <button class="ghost" @click="open = false">×</button>
+      <button class="ghost" title="关闭" @click="open = false">×</button>
     </header>
     <div class="messages">
       <div v-for="(m, i) in messages" :key="i" class="bubble" :class="m.role">
@@ -53,7 +53,7 @@ async function send() {
     })
     messages.value.push({ role: 'assistant', content: data.reply, tools: data.toolsUsed })
   } catch (error) {
-    messages.value.push({ role: 'assistant', content: 'AI服务暂时不可用，请稍后再试。' })
+    messages.value.push({ role: 'assistant', content: 'AI 服务暂时不可用，请稍后再试。' })
   } finally {
     loading.value = false
   }

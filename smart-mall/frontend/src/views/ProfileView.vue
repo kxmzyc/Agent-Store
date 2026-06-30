@@ -1,5 +1,5 @@
 <template>
-  <section class="panel">
+  <section class="panel profile-card">
     <div class="page-head">
       <div>
         <h1>个人中心</h1>
@@ -20,7 +20,10 @@
         <input :value="profile.createdAt" disabled />
       </label>
       <p v-if="message" :class="messageType">{{ message }}</p>
-      <button class="primary">保存</button>
+      <div class="profile-action-swap">
+        <span class="profile-edit-label">编辑资料</span>
+        <button class="profile-save-btn">保存</button>
+      </div>
     </form>
   </section>
 </template>
@@ -29,10 +32,12 @@
 import { onMounted, reactive, ref } from 'vue'
 import { api, errorMessage } from '../api/http'
 import { store } from '../store'
+import { useToast } from '../composables/useToast'
 
 const profile = reactive({ username: '', phone: '', avatarUrl: '', createdAt: '' })
 const message = ref('')
 const messageType = ref('muted')
+const toast = useToast()
 
 onMounted(load)
 
@@ -49,9 +54,11 @@ async function save() {
     localStorage.setItem('userInfo', JSON.stringify(data))
     messageType.value = 'muted'
     message.value = '已保存'
+    toast.show('个人资料已保存')
   } catch (e) {
     messageType.value = 'error'
     message.value = errorMessage(e)
+    toast.show(message.value)
   }
 }
 </script>

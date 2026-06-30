@@ -1,5 +1,5 @@
 <template>
-  <section>
+  <section class="page">
     <div class="page-head">
       <div>
         <h1>商品管理</h1>
@@ -9,7 +9,7 @@
     </div>
     <div class="panel" v-if="editing">
       <form class="form" @submit.prevent="save">
-        <label>商品名 <input v-model="form.name" required /></label>
+        <label>商品名<input v-model="form.name" required /></label>
         <label>分类
           <select v-model.number="form.categoryId" required>
             <option v-for="c in flatCategories" :key="c.id" :value="c.id">{{ c.name }}</option>
@@ -25,7 +25,7 @@
         </div>
       </form>
     </div>
-    <table class="table" style="margin-top: 18px;">
+    <table class="table table-spaced">
       <thead>
         <tr><th>ID</th><th>商品</th><th>价格</th><th>库存</th><th>销量</th><th>操作</th></tr>
       </thead>
@@ -49,11 +49,13 @@
 <script setup>
 import { computed, onMounted, reactive, ref } from 'vue'
 import { api, errorMessage } from '../api/http'
+import { useToast } from '../composables/useToast'
 
 const categories = ref([])
 const products = ref([])
 const editing = ref(false)
 const form = reactive(blank())
+const toast = useToast()
 
 const flatCategories = computed(() => categories.value.flatMap(c => [c, ...(c.children || [])]))
 
@@ -87,15 +89,17 @@ async function save() {
     if (form.id) await api.put(`/products/${form.id}`, form)
     else await api.post('/products', form)
     editing.value = false
+    toast.show('商品已保存')
     await load()
   } catch (e) {
-    alert(errorMessage(e))
+    toast.show(errorMessage(e))
   }
 }
 
 async function remove(product) {
   if (!confirm(`确认下架 ${product.name}？`)) return
   await api.delete(`/products/${product.id}`)
+  toast.show('商品已下架')
   await load()
 }
 </script>

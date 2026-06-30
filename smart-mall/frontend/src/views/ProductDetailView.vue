@@ -1,6 +1,8 @@
 <template>
   <section v-if="product" class="detail-layout">
-    <img :src="product.imageUrl" :alt="product.name" />
+    <div class="detail-media">
+      <img :src="product.imageUrl" :alt="product.name" />
+    </div>
     <div class="panel">
       <div class="page-head">
         <div>
@@ -28,9 +30,11 @@ import { useRoute } from 'vue-router'
 import { api, errorMessage } from '../api/http'
 import { router } from '../router'
 import { store } from '../store'
+import { useToast } from '../composables/useToast'
 
 const route = useRoute()
 const product = ref(null)
+const toast = useToast()
 
 onMounted(async () => {
   const { data } = await api.get(`/products/${route.params.id}`)
@@ -41,9 +45,9 @@ async function addCart() {
   if (!store.token) return router.push('/login')
   try {
     await api.post('/cart', { productId: product.value.id, quantity: 1 })
-    alert('已加入购物车')
+    toast.show('已加入购物车')
   } catch (e) {
-    alert(errorMessage(e))
+    toast.show(errorMessage(e))
   }
 }
 

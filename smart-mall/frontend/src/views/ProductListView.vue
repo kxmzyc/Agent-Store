@@ -1,5 +1,5 @@
 <template>
-  <section>
+  <section class="page">
     <div class="page-head">
       <div>
         <h1>商品中心</h1>
@@ -32,22 +32,32 @@
       </template>
     </div>
 
-    <div class="grid" style="margin-top: 18px;">
-      <article v-for="p in products" :key="p.id" class="card product-card">
-        <router-link :to="`/products/${p.id}`">
-          <img :src="p.imageUrl" :alt="p.name" />
+    <p v-if="loadError" class="error">{{ loadError }}</p>
+    <p v-else-if="isLoading" class="muted">商品加载中...</p>
+    <p v-else-if="!products.length" class="muted">暂无商品</p>
+
+    <div class="grid product-grid">
+      <article v-for="p in products" :key="p.id" class="product-card">
+        <router-link class="product-media" :to="`/products/${p.id}`">
+          <img class="product-image" :src="p.imageUrl" :alt="p.name" />
+          <span class="product-badge">{{ p.stock <= 0 ? 'SOLD' : p.salesCount > 300 ? 'HOT' : 'NEW' }}</span>
         </router-link>
         <div class="body">
           <router-link :to="`/products/${p.id}`"><h3>{{ p.name }}</h3></router-link>
           <p class="desc">{{ p.description }}</p>
-          <span class="price">¥{{ p.price }}</span>
-          <span class="muted">库存 {{ p.stock }} · 已售 {{ p.salesCount }}</span>
-          <button class="primary" :disabled="p.stock <= 0" @click="addCart(p)">
-            <ShoppingCart size="17" /> {{ p.stock <= 0 ? '已售罄' : '加入购物车' }}
-          </button>
+          <div class="price-cart-swap">
+            <div class="price-info">
+              <span class="price">¥{{ p.price }}</span>
+              <span class="meta">库存 {{ p.stock }} · 已售 {{ p.salesCount }}</span>
+            </div>
+            <button class="add-to-cart-btn" :disabled="p.stock <= 0" @click="addCart(p)">
+              <ShoppingCart size="17" /> {{ p.stock <= 0 ? '已售罄' : '加入购物车' }}
+            </button>
+          </div>
         </div>
       </article>
     </div>
+
     <div class="pager">
       <button :disabled="page <= 1" @click="loadProducts(page - 1)">上一页</button>
       <span class="muted">第 {{ page }} 页 · 共 {{ total }} 件</span>
@@ -61,6 +71,7 @@ import { onMounted, ref } from 'vue'
 import { api, errorMessage } from '../api/http'
 import { router } from '../router'
 import { store } from '../store'
+import { useToast } from '../composables/useToast'
 
 const categories = ref([])
 const products = ref([])
@@ -71,10 +82,17 @@ const page = ref(1)
 const size = 12
 const total = ref(0)
 const searchMode = ref(false)
+const isLoading = ref(false)
+const loadError = ref('')
+const toast = useToast()
 
 onMounted(async () => {
-  const cats = await api.get('/categories')
-  categories.value = cats.data
+  try {
+    const cats = await api.get('/categories')
+    categories.value = cats.data
+  } catch (e) {
+    toast.show(errorMessage(e))
+  }
   await loadProducts(1)
 })
 
@@ -91,16 +109,27 @@ function search() {
 
 async function loadProducts(nextPage) {
   page.value = nextPage
+  isLoading.value = true
+  loadError.value = ''
   const params = { page: page.value, size, sort: sort.value }
   if (categoryId.value) params.categoryId = categoryId.value
-  if (searchMode.value) {
-    const { data } = await api.get('/products/search', { params: { keyword: keyword.value, page: page.value, size } })
-    products.value = data.list
-    total.value = data.total
-  } else {
-    const { data } = await api.get('/products', { params })
-    products.value = data.list
-    total.value = data.total
+  try {
+    if (searchMode.value) {
+      const { data } = await api.get('/products/search', { params: { keyword: keyword.value, page: page.value, size } })
+      products.value = data.list || []
+      total.value = data.total || 0
+    } else {
+      const { data } = await api.get('/products', { params })
+      products.value = data.list || []
+      total.value = data.total || 0
+    }
+  } catch (e) {
+    products.value = []
+    total.value = 0
+    loadError.value = errorMessage(e)
+    toast.show(loadError.value)
+  } finally {
+    isLoading.value = false
   }
 }
 
@@ -111,9 +140,9 @@ async function addCart(product) {
   }
   try {
     await api.post('/cart', { productId: product.id, quantity: 1 })
-    alert('已加入购物车')
+    toast.show('已加入购物车')
   } catch (e) {
-    alert(errorMessage(e))
+    toast.show(errorMessage(e))
   }
 }
 </script>

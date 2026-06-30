@@ -4,6 +4,7 @@ import {
   Plus, Minus, Trash2, CreditCard, ClipboardList, Settings, Home
 } from 'lucide-vue-next'
 import App from './App.vue'
+import './styles/tokens.css'
 import './style.css'
 import { router } from './router'
 

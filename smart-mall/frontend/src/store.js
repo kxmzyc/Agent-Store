@@ -1,8 +1,23 @@
 import { reactive } from 'vue'
 
+function readUserInfo() {
+  const raw = localStorage.getItem('userInfo')
+  if (!raw) return null
+  try {
+    return JSON.parse(raw)
+  } catch {
+    localStorage.removeItem('userInfo')
+    localStorage.removeItem('accessToken')
+    localStorage.removeItem('refreshToken')
+    return null
+  }
+}
+
+const initialUser = readUserInfo()
+
 export const store = reactive({
-  user: JSON.parse(localStorage.getItem('userInfo') || 'null'),
-  token: localStorage.getItem('accessToken') || '',
+  user: initialUser,
+  token: initialUser ? localStorage.getItem('accessToken') || '' : '',
   router: null,
   setAuth(data) {
     this.user = data.userInfo

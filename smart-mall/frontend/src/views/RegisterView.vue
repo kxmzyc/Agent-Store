@@ -1,5 +1,5 @@
 <template>
-  <section class="panel">
+  <section class="panel auth-panel">
     <div class="page-head">
       <div>
         <h1>注册</h1>

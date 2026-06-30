@@ -30,10 +30,12 @@
       <router-view />
     </main>
     <ChatWidget />
+    <GlobalToast />
   </div>
 </template>
 
 <script setup>
 import { store } from './store'
 import ChatWidget from './components/ChatWidget.vue'
+import GlobalToast from './components/GlobalToast.vue'
 </script>
