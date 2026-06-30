@@ -12,7 +12,12 @@
     </header>
     <div class="messages">
       <div v-for="(m, i) in messages" :key="i" class="bubble" :class="m.role">
-        {{ m.content }}
+        <div v-if="m.loading && !m.content" class="typing-state" aria-live="polite">
+          <span class="typing-ring" aria-hidden="true"></span>
+          <span>{{ m.status || '正在组织回复' }}</span>
+          <span class="typing-dots" aria-hidden="true"><i></i><i></i><i></i></span>
+        </div>
+        <div v-else class="message-content" v-html="renderMarkdown(m.content)"></div>
         <small v-if="m.tools?.length">tools: {{ m.tools.join(', ') }}</small>
       </div>
     </div>
@@ -26,8 +31,9 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
-import { agentApi } from '../api/http'
+import { reactive, ref } from 'vue'
+import MarkdownIt from 'markdown-it'
+import DOMPurify from 'dompurify'
 import { store } from '../store'
 
 const open = ref(false)
@@ -35,9 +41,37 @@ const loading = ref(false)
 const draft = ref('')
 const sessionId = localStorage.getItem('agentSessionId') || crypto.randomUUID()
 localStorage.setItem('agentSessionId', sessionId)
+const md = new MarkdownIt({
+  breaks: true,
+  linkify: true
+})
 const messages = ref([
   { role: 'assistant', content: '可以帮你查商品、推荐商品，也能查询最近订单。' }
 ])
+
+function renderMarkdown(text) {
+  return DOMPurify.sanitize(md.render(text || ''))
+}
+
+function agentStreamUrl() {
+  return `${window.location.origin}/agent/chat/stream`
+}
+
+function readSseEvents(buffer) {
+  const events = []
+  const parts = buffer.split('\n\n')
+  const rest = parts.pop() || ''
+  for (const part of parts) {
+    const data = part
+      .split('\n')
+      .filter((line) => line.startsWith('data: '))
+      .map((line) => line.slice(6))
+      .join('\n')
+    if (!data) continue
+    events.push(JSON.parse(data))
+  }
+  return { events, rest }
+}
 
 async function send() {
   if (!draft.value.trim()) return
@@ -49,17 +83,63 @@ async function send() {
   }
   messages.value.push({ role: 'user', content })
   loading.value = true
+  const assistantMessage = reactive({
+    role: 'assistant',
+    content: '',
+    loading: true,
+    status: '正在连接导购助手'
+  })
+  messages.value.push(assistantMessage)
   try {
-    const { data } = await agentApi.post('/chat', {
-      userId: store.user.id,
-      sessionId,
-      message: content
+    const response = await fetch(agentStreamUrl(), {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        userId: store.user.id,
+        sessionId,
+        message: content
+      })
     })
-    messages.value.push({ role: 'assistant', content: data.reply, tools: data.toolsUsed })
+    if (!response.ok || !response.body) throw new Error(`HTTP ${response.status}`)
+
+    const reader = response.body.getReader()
+    const decoder = new TextDecoder()
+    let buffer = ''
+    while (true) {
+      const { done, value } = await reader.read()
+      if (done) break
+      buffer += decoder.decode(value, { stream: true })
+      const parsed = readSseEvents(buffer)
+      buffer = parsed.rest
+      for (const event of parsed.events) {
+        if (event.type === 'token') {
+          assistantMessage.loading = false
+          assistantMessage.content += event.content || ''
+        } else if (event.type === 'tool_start') {
+          assistantMessage.status = toolStatusText(event.name)
+        } else if (event.type === 'tool_end') {
+          assistantMessage.status = '已查询真实数据，正在整理回复'
+        } else if (event.type === 'done') {
+          assistantMessage.loading = false
+          assistantMessage.tools = event.toolsUsed || []
+          if (!assistantMessage.content && event.reply) assistantMessage.content = event.reply
+        } else if (event.type === 'error') {
+          assistantMessage.loading = false
+          assistantMessage.content = event.content || 'AI 服务暂时不可用，请稍后再试。'
+        }
+      }
+    }
   } catch (error) {
-    messages.value.push({ role: 'assistant', content: 'AI 服务暂时不可用，请稍后再试。' })
+    assistantMessage.loading = false
+    assistantMessage.content = 'AI 服务暂时不可用，请稍后再试。'
   } finally {
     loading.value = false
   }
+}
+
+function toolStatusText(name) {
+  if (name === 'search_products') return '正在检索真实商品和库存'
+  if (name === 'query_order_status') return '正在查询你的订单状态'
+  return '正在调用导购工具'
 }
 </script>

@@ -2,6 +2,8 @@ import json
 import logging
 import os
 import re
+import asyncio
+import time
 from collections import defaultdict, deque
 from contextlib import asynccontextmanager
 from decimal import Decimal
@@ -10,8 +12,9 @@ from typing import Any
 import httpx
 from fastapi import FastAPI, Query
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, StreamingResponse
 from langchain.agents import AgentExecutor, create_tool_calling_agent
+from langchain_core.callbacks import BaseCallbackHandler
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain_core.tools import tool
 from pydantic import BaseModel
@@ -77,6 +80,73 @@ class ChatResponse(BaseModel):
     reply: str
     toolsUsed: list[str]
     sessionId: str
+
+
+class AgentTiming(BaseCallbackHandler):
+    def __init__(self) -> None:
+        self._llm_starts: list[float] = []
+        self._tool_starts: list[float] = []
+        self.llm_calls: list[float] = []
+        self.tool_calls: list[float] = []
+
+    def on_llm_start(self, *args: Any, **kwargs: Any) -> None:
+        self._llm_starts.append(time.perf_counter())
+
+    def on_chat_model_start(self, *args: Any, **kwargs: Any) -> None:
+        self._llm_starts.append(time.perf_counter())
+
+    def on_llm_end(self, *args: Any, **kwargs: Any) -> None:
+        if self._llm_starts:
+            self.llm_calls.append(time.perf_counter() - self._llm_starts.pop())
+
+    def on_llm_error(self, *args: Any, **kwargs: Any) -> None:
+        self.on_llm_end(*args, **kwargs)
+
+    def on_tool_start(self, *args: Any, **kwargs: Any) -> None:
+        self._tool_starts.append(time.perf_counter())
+
+    def on_tool_end(self, *args: Any, **kwargs: Any) -> None:
+        if self._tool_starts:
+            self.tool_calls.append(time.perf_counter() - self._tool_starts.pop())
+
+    def on_tool_error(self, *args: Any, **kwargs: Any) -> None:
+        self.on_tool_end(*args, **kwargs)
+
+    def llm_duration(self, index: int) -> float:
+        return self.llm_calls[index] if len(self.llm_calls) > index else 0.0
+
+    def llm_after_first_total(self) -> float:
+        return sum(self.llm_calls[1:])
+
+    def tool_total(self) -> float:
+        return sum(self.tool_calls)
+
+
+class QueueStreamCallback(BaseCallbackHandler):
+    def __init__(self, loop: asyncio.AbstractEventLoop, queue: asyncio.Queue[dict[str, Any]]) -> None:
+        self.loop = loop
+        self.queue = queue
+
+    def _send(self, payload: dict[str, Any]) -> None:
+        self.loop.call_soon_threadsafe(self.queue.put_nowait, payload)
+
+    def on_llm_new_token(self, token: str, **kwargs: Any) -> None:
+        if token:
+            self._send({"type": "token", "content": token})
+
+    def on_tool_start(self, serialized: dict[str, Any], input_str: str, **kwargs: Any) -> None:
+        name = serialized.get("name") or "tool"
+        self._send({"type": "tool_start", "name": name})
+
+    def on_tool_end(self, output: Any, **kwargs: Any) -> None:
+        self._send({"type": "tool_end"})
+
+
+class ChatResult(BaseModel):
+    reply: str
+    toolsUsed: list[str]
+    sessionId: str
+    timing: dict[str, float]
 
 
 def _internal_headers() -> dict[str, str]:
@@ -263,6 +333,16 @@ def extract_preferences_rule(message: str) -> list[str]:
     return tags
 
 
+def has_preference_signal(message: str) -> bool:
+    keywords = [
+        "喜欢", "偏好", "预算", "便宜", "性价比", "不要太贵", "以内",
+        "键盘", "机械", "青轴", "茶轴", "敲代码", "编程",
+        "耳机", "显示器", "充电器", "鼠标", "电脑", "数码",
+        "办公", "学习", "宿舍",
+    ]
+    return any(keyword in message for keyword in keywords)
+
+
 def product_keyword(message: str, tags: list[str]) -> str:
     if any(word in message for word in ["键盘", "敲代码", "机械", "青轴", "茶轴"]):
         return "键盘"
@@ -278,19 +358,37 @@ def product_keyword(message: str, tags: list[str]) -> str:
     return message[:12] or "键盘"
 
 
-def llm() -> Any | None:
+def llm(streaming: bool = False) -> Any | None:
     if not llm_enabled():
         return None
     base_url = LLM_BASE_URL if is_configured(LLM_BASE_URL) else None
-    return ChatOpenAI(api_key=LLM_API_KEY, base_url=base_url, model=LLM_MODEL, temperature=0.3)
+    return ChatOpenAI(
+        api_key=LLM_API_KEY,
+        base_url=base_url,
+        model=LLM_MODEL,
+        temperature=0.3,
+        streaming=streaming,
+    )
 
 
-def extract_preferences(user_id: int, history: list[dict[str, str]], message: str, reply: str) -> list[str]:
+def extract_preferences(
+    user_id: int,
+    history: list[dict[str, str]],
+    message: str,
+    reply: str,
+    callbacks: list[BaseCallbackHandler] | None = None,
+) -> list[str]:
     conversation = "\n".join([f"{h['role']}: {h['content']}" for h in history[-8:]])
     conversation = f"{conversation}\nuser: {message}\nassistant: {reply}"
+    rule_tags = extract_preferences_rule(conversation)
+    if rule_tags:
+        return rule_tags
+    if not has_preference_signal(message):
+        return []
+
     model = llm()
     if model is None:
-        return extract_preferences_rule(conversation)
+        return []
 
     prompt = (
         "分析以下对话，提炼用户表现出的购物偏好标签，例如机械键盘、预算敏感、数码产品、办公学习。"
@@ -298,13 +396,13 @@ def extract_preferences(user_id: int, history: list[dict[str, str]], message: st
         f"对话内容：{conversation}"
     )
     try:
-        raw = model.invoke(prompt).content
+        raw = model.invoke(prompt, config={"callbacks": callbacks or []}).content
         parsed = json.loads(raw)
         if isinstance(parsed, list):
             return [str(tag)[:50] for tag in parsed if str(tag).strip()]
     except Exception as exc:
         logger.info("llm preference extraction failed, user_id=%s, error=%s", user_id, exc)
-    return extract_preferences_rule(conversation)
+    return []
 
 
 def system_prompt(tags: list[str]) -> str:
@@ -325,8 +423,15 @@ def history_text(history: list[dict[str, str]]) -> str:
     return "\n".join(f"{item['role']}: {item['content']}" for item in history[-6:])
 
 
-def run_langchain_agent(user_id: int, tags: list[str], history: list[dict[str, str]], message: str) -> tuple[str, list[str]]:
-    model = llm()
+def run_langchain_agent(
+    user_id: int,
+    tags: list[str],
+    history: list[dict[str, str]],
+    message: str,
+    callbacks: list[BaseCallbackHandler] | None = None,
+    streaming: bool = False,
+) -> tuple[str, list[str]]:
+    model = llm(streaming=streaming)
     if model is None:
         raise RuntimeError("LLM is not configured")
 
@@ -341,7 +446,7 @@ def run_langchain_agent(user_id: int, tags: list[str], history: list[dict[str, s
         "input": message,
         "user_id": user_id,
         "history": history_text(history),
-    })
+    }, config={"callbacks": callbacks or []})
     tools_used = [step[0].tool for step in result.get("intermediate_steps", [])]
     logger.info("langchain agent completed, user_id=%s, tools=%s", user_id, tools_used)
     return str(result["output"]), tools_used
@@ -365,15 +470,64 @@ def offline_agent(user_id: int, tags: list[str], message: str) -> tuple[str, lis
     return reply, ["search_products"]
 
 
-@app.post("/agent/chat", response_model=ChatResponse)
-def chat(request: ChatRequest) -> ChatResponse:
+def timing_payload(
+    t0: float,
+    t1: float,
+    t4: float,
+    t5: float,
+    t6: float,
+    agent_timing: AgentTiming,
+    preference_timing: AgentTiming,
+) -> dict[str, float]:
+    return {
+        "memory_load": t1 - t0,
+        "llm_call_1": agent_timing.llm_duration(0),
+        "tool_call": agent_timing.tool_total(),
+        "llm_call_2": agent_timing.llm_after_first_total(),
+        "preference_extract": preference_timing.llm_duration(0),
+        "memory_save": t6 - t5,
+        "total": t6 - t0,
+    }
+
+
+def log_timing(timing: dict[str, float]) -> None:
+    logger.info(
+        "timing breakdown: memory_load=%.2fs, llm_call_1=%.2fs, tool_call=%.2fs, "
+        "llm_call_2=%.2fs, preference_extract=%.2fs, memory_save=%.2fs, total=%.2fs",
+        timing["memory_load"],
+        timing["llm_call_1"],
+        timing["tool_call"],
+        timing["llm_call_2"],
+        timing["preference_extract"],
+        timing["memory_save"],
+        timing["total"],
+    )
+
+
+def handle_chat(
+    request: ChatRequest,
+    callbacks: list[BaseCallbackHandler] | None = None,
+    streaming: bool = False,
+) -> ChatResult:
+    t0 = time.perf_counter()
     history = load_history(request.sessionId, request.userId)
     tags = preference_tags(request.userId)
     message = request.message.strip()
+    t1 = time.perf_counter()
+
+    agent_timing = AgentTiming()
+    callback_list = [agent_timing, *(callbacks or [])]
     save_message(request.sessionId, request.userId, "user", message)
 
     try:
-        reply, tools_used = run_langchain_agent(request.userId, tags, history, message)
+        reply, tools_used = run_langchain_agent(
+            request.userId,
+            tags,
+            history,
+            message,
+            callbacks=callback_list,
+            streaming=streaming,
+        )
         if not reply.strip():
             logger.info("agent reply empty, falling back to deterministic tools")
             reply, tools_used = offline_agent(request.userId, tags, message)
@@ -385,11 +539,67 @@ def chat(request: ChatRequest) -> ChatResponse:
             reply = f"服务暂时无法完成工具查询：{tool_exc}"
             tools_used = []
 
-    new_tags = extract_preferences(request.userId, history, message, reply)
+    t4 = time.perf_counter()
+    preference_timing = AgentTiming()
+    new_tags = extract_preferences(request.userId, history, message, reply, callbacks=[preference_timing])
+    t5 = time.perf_counter()
     upsert_preferences(request.userId, new_tags)
     save_message(request.sessionId, request.userId, "assistant", reply)
+    t6 = time.perf_counter()
+
+    timing = timing_payload(t0, t1, t4, t5, t6, agent_timing, preference_timing)
+    log_timing(timing)
     logger.info("chat completed, user_id=%s, session_id=%s, tools=%s", request.userId, request.sessionId, tools_used)
-    return ChatResponse(reply=reply, toolsUsed=tools_used, sessionId=request.sessionId)
+    return ChatResult(reply=reply, toolsUsed=tools_used, sessionId=request.sessionId, timing=timing)
+
+
+@app.post("/agent/chat", response_model=ChatResponse)
+def chat(request: ChatRequest) -> ChatResponse:
+    result = handle_chat(request)
+    return ChatResponse(reply=result.reply, toolsUsed=result.toolsUsed, sessionId=result.sessionId)
+
+
+@app.post("/agent/chat/stream")
+async def chat_stream(request: ChatRequest) -> StreamingResponse:
+    async def event_generator():
+        loop = asyncio.get_running_loop()
+        queue: asyncio.Queue[dict[str, Any]] = asyncio.Queue()
+        stream_callback = QueueStreamCallback(loop, queue)
+
+        def run_chat() -> None:
+            try:
+                result = handle_chat(request, callbacks=[stream_callback], streaming=True)
+                loop.call_soon_threadsafe(queue.put_nowait, {
+                    "type": "done",
+                    "reply": result.reply,
+                    "toolsUsed": result.toolsUsed,
+                    "sessionId": result.sessionId,
+                    "timing": result.timing,
+                })
+            except Exception as exc:
+                logger.exception("stream chat failed")
+                loop.call_soon_threadsafe(queue.put_nowait, {
+                    "type": "error",
+                    "content": f"AI 服务暂时不可用：{exc}",
+                })
+
+        task = asyncio.create_task(asyncio.to_thread(run_chat))
+        emitted_tokens = False
+        try:
+            while True:
+                event = await queue.get()
+                if event.get("type") == "token":
+                    emitted_tokens = True
+                if event.get("type") == "done" and not emitted_tokens and event.get("reply"):
+                    fallback = {"type": "token", "content": event["reply"]}
+                    yield f"data: {json.dumps(fallback, ensure_ascii=False)}\n\n"
+                yield f"data: {json.dumps(event, ensure_ascii=False, default=_json_default)}\n\n"
+                if event.get("type") in {"done", "error"}:
+                    break
+        finally:
+            await task
+
+    return StreamingResponse(event_generator(), media_type="text/event-stream; charset=utf-8")
 
 
 @app.get("/agent/history")
