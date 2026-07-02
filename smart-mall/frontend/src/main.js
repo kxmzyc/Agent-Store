@@ -1,7 +1,8 @@
 import { createApp } from 'vue'
 import {
   LogOut, Search, ShoppingCart, UserRound, PackageSearch, Bot, Send,
-  Plus, Minus, Trash2, CreditCard, ClipboardList, Settings, Home
+  Plus, Minus, Trash2, CreditCard, ClipboardList, Settings, Home, ArrowLeft,
+  Heart, RotateCcw, Eye
 } from 'lucide-vue-next'
 import App from './App.vue'
 import './styles/tokens.css'
@@ -24,4 +25,8 @@ app.component('CreditCard', CreditCard)
 app.component('ClipboardList', ClipboardList)
 app.component('Settings', Settings)
 app.component('Home', Home)
+app.component('ArrowLeft', ArrowLeft)
+app.component('Heart', Heart)
+app.component('RotateCcw', RotateCcw)
+app.component('Eye', Eye)
 app.mount('#app')

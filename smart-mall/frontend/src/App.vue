@@ -7,7 +7,8 @@
       </router-link>
       <nav>
         <router-link to="/"><Home size="18" /> 商品</router-link>
-        <router-link to="/cart"><ShoppingCart size="18" /> 购物车</router-link>
+        <router-link to="/cart" data-cart-target><ShoppingCart size="18" /> 购物车</router-link>
+        <router-link to="/favorites"><Heart size="18" /> 收藏</router-link>
         <router-link to="/orders"><ClipboardList size="18" /> 订单</router-link>
         <router-link to="/profile"><UserRound size="18" /> 个人中心</router-link>
         <router-link v-if="store.user?.role === 'ADMIN'" to="/admin"><Settings size="18" /> 管理</router-link>

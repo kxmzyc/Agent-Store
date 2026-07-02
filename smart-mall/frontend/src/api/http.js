@@ -17,6 +17,11 @@ api.interceptors.request.use((config) => {
   return config
 })
 
+agentApi.interceptors.request.use((config) => {
+  if (store.token) config.headers.Authorization = `Bearer ${store.token}`
+  return config
+})
+
 // 单飞锁：并发 401 只触发一次刷新，其余请求复用同一个刷新 Promise
 let refreshing = null
 

@@ -42,9 +42,33 @@ public class ApiSupport {
           p.salesCount, p.imageUrl, p.status, p.version);
     }
   }
+  public record FavoriteStatusResponse(boolean favorited) {}
+  public record ProductBriefResponse(Long id, String name, String description, BigDecimal price,
+                                     Integer stock, Integer salesCount, String imageUrl) {
+    public static ProductBriefResponse from(Product p) {
+      return new ProductBriefResponse(p.id, p.name, p.description, p.price, p.stock, p.salesCount, p.imageUrl);
+    }
+  }
+  public record FavoriteResponse(Long id, LocalDateTime createdAt, ProductBriefResponse product) {
+    public static FavoriteResponse from(ProductFavorite f) {
+      return new FavoriteResponse(f.id, f.createdAt, ProductBriefResponse.from(f.product));
+    }
+  }
+  public record ProductViewHistoryResponse(Long id, Integer viewCount, LocalDateTime lastViewedAt,
+                                           ProductBriefResponse product) {
+    public static ProductViewHistoryResponse from(ProductViewHistory h) {
+      return new ProductViewHistoryResponse(h.id, h.viewCount, h.lastViewedAt, ProductBriefResponse.from(h.product));
+    }
+  }
+  public record UserOverviewResponse(long cartItems, long favorites, long viewedProducts,
+                                     long pendingPaymentOrders, long paidOrders, long shippedOrders,
+                                     long completedOrders, long cancelledOrders,
+                                     List<ProductViewHistoryResponse> recentViews,
+                                     List<FavoriteResponse> recentFavorites) {}
 
   public record CartRequest(@NotNull Long productId, @Min(1) Integer quantity) {}
   public record CartUpdateRequest(@Min(1) Integer quantity) {}
+  public record InternalCartRequest(@NotNull Long userId, @NotNull Long productId, @Min(1) Integer quantity) {}
   public record CartResponse(Long id, Long productId, String productName, BigDecimal price, String imageUrl,
                              Integer stock, Integer quantity, BigDecimal subtotal) {
     public static CartResponse from(CartItem item) {
@@ -65,11 +89,28 @@ public class ApiSupport {
   public record OrderResponse(Long id, String orderNo, BigDecimal totalAmount, String status,
                               String shippingAddress, LocalDateTime createdAt, LocalDateTime paidAt,
                               List<OrderItemResponse> items) {}
+  public record RebuyResponse(int addedCount, List<CartResponse> cartItems) {}
   public record InternalOrderResponse(Long id, String orderNo, String status, BigDecimal totalAmount, LocalDateTime createdAt) {
     public static InternalOrderResponse from(Order o) {
       return new InternalOrderResponse(o.id, o.orderNo, o.status, o.totalAmount, o.createdAt);
     }
   }
+  public record AdminMetricResponse(long users, long products, long soldOutProducts, long orders,
+                                    long pendingPaymentOrders, long paidOrders, long shippedOrders,
+                                    long completedOrders, BigDecimal effectiveRevenue) {}
+  public record AdminProductBrief(Long id, String name, BigDecimal price, Integer stock,
+                                  Integer salesCount, Integer status, String imageUrl) {
+    public static AdminProductBrief from(Product p) {
+      return new AdminProductBrief(p.id, p.name, p.price, p.stock, p.salesCount, p.status, p.imageUrl);
+    }
+  }
+  public record AdminOrderBrief(Long id, String orderNo, String status, BigDecimal totalAmount, LocalDateTime createdAt) {
+    public static AdminOrderBrief from(Order o) {
+      return new AdminOrderBrief(o.id, o.orderNo, o.status, o.totalAmount, o.createdAt);
+    }
+  }
+  public record AdminDashboardResponse(AdminMetricResponse metrics, List<AdminProductBrief> lowStockProducts,
+                                       List<AdminProductBrief> topProducts, List<AdminOrderBrief> recentOrders) {}
 }
 
 @RestControllerAdvice

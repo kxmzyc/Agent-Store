@@ -50,7 +50,7 @@
               <span class="price">¥{{ p.price }}</span>
               <span class="meta">库存 {{ p.stock }} · 已售 {{ p.salesCount }}</span>
             </div>
-            <button class="add-to-cart-btn" :disabled="p.stock <= 0" @click="addCart(p)">
+            <button class="add-to-cart-btn" :class="{ added: addedIds.includes(p.id) }" :disabled="p.stock <= 0" @click="addCart(p, $event)">
               <ShoppingCart size="17" /> {{ p.stock <= 0 ? '已售罄' : '加入购物车' }}
             </button>
           </div>
@@ -72,6 +72,7 @@ import { api, errorMessage } from '../api/http'
 import { router } from '../router'
 import { store } from '../store'
 import { useToast } from '../composables/useToast'
+import { flyToCart } from '../composables/useFlyToCart'
 
 const categories = ref([])
 const products = ref([])
@@ -84,6 +85,7 @@ const total = ref(0)
 const searchMode = ref(false)
 const isLoading = ref(false)
 const loadError = ref('')
+const addedIds = ref([])
 const toast = useToast()
 
 onMounted(async () => {
@@ -133,16 +135,26 @@ async function loadProducts(nextPage) {
   }
 }
 
-async function addCart(product) {
+async function addCart(product, event) {
   if (!store.token) {
     router.push('/login')
     return
   }
+  const card = event?.currentTarget?.closest('.product-card')
+  markAdded(product.id)
+  flyToCart(card?.querySelector('.product-image'), { origin: event?.currentTarget })
   try {
     await api.post('/cart', { productId: product.id, quantity: 1 })
     toast.show('已加入购物车')
   } catch (e) {
     toast.show(errorMessage(e))
   }
+}
+
+function markAdded(id) {
+  if (!addedIds.value.includes(id)) addedIds.value.push(id)
+  window.setTimeout(() => {
+    addedIds.value = addedIds.value.filter((value) => value !== id)
+  }, 900)
 }
 </script>

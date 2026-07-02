@@ -6,12 +6,31 @@
   <component name="ChangeListManager">
     <list default="true" id="26d1c8ba-898e-402c-ac3a-d8907526f195" name="更改" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CODEX_FIX_LLM_INTEGRATION.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/smart-mall/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/smart-mall/README.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/smart-mall/agent-service/app/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/smart-mall/agent-service/app/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/smart-mall/frontend/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/smart-mall/frontend/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/smart-mall/frontend/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/smart-mall/frontend/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/smart-mall/backend/src/main/java/com/example/smartmall/api/ApiSupport.java" beforeDir="false" afterPath="$PROJECT_DIR$/smart-mall/backend/src/main/java/com/example/smartmall/api/ApiSupport.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/smart-mall/backend/src/main/java/com/example/smartmall/api/OrderController.java" beforeDir="false" afterPath="$PROJECT_DIR$/smart-mall/backend/src/main/java/com/example/smartmall/api/OrderController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/smart-mall/backend/src/main/java/com/example/smartmall/api/ProductController.java" beforeDir="false" afterPath="$PROJECT_DIR$/smart-mall/backend/src/main/java/com/example/smartmall/api/ProductController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/smart-mall/backend/src/main/java/com/example/smartmall/repo/CartRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/smart-mall/backend/src/main/java/com/example/smartmall/repo/CartRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/smart-mall/backend/src/main/java/com/example/smartmall/repo/OrderRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/smart-mall/backend/src/main/java/com/example/smartmall/repo/OrderRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/smart-mall/backend/src/main/java/com/example/smartmall/repo/ProductRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/smart-mall/backend/src/main/java/com/example/smartmall/repo/ProductRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/smart-mall/docs/api-spec.md" beforeDir="false" afterPath="$PROJECT_DIR$/smart-mall/docs/api-spec.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/smart-mall/docs/architecture.md" beforeDir="false" afterPath="$PROJECT_DIR$/smart-mall/docs/architecture.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/smart-mall/docs/er-diagram.md" beforeDir="false" afterPath="$PROJECT_DIR$/smart-mall/docs/er-diagram.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/smart-mall/docs/seed.sql" beforeDir="false" afterPath="$PROJECT_DIR$/smart-mall/docs/seed.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/smart-mall/frontend/src/App.vue" beforeDir="false" afterPath="$PROJECT_DIR$/smart-mall/frontend/src/App.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/smart-mall/frontend/src/api/http.js" beforeDir="false" afterPath="$PROJECT_DIR$/smart-mall/frontend/src/api/http.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/smart-mall/frontend/src/components/ChatWidget.vue" beforeDir="false" afterPath="$PROJECT_DIR$/smart-mall/frontend/src/components/ChatWidget.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/smart-mall/frontend/src/main.js" beforeDir="false" afterPath="$PROJECT_DIR$/smart-mall/frontend/src/main.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/smart-mall/frontend/src/router.js" beforeDir="false" afterPath="$PROJECT_DIR$/smart-mall/frontend/src/router.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/smart-mall/frontend/src/style.css" beforeDir="false" afterPath="$PROJECT_DIR$/smart-mall/frontend/src/style.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/smart-mall/frontend/src/views/AdminView.vue" beforeDir="false" afterPath="$PROJECT_DIR$/smart-mall/frontend/src/views/AdminView.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/smart-mall/frontend/src/views/CartView.vue" beforeDir="false" afterPath="$PROJECT_DIR$/smart-mall/frontend/src/views/CartView.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/smart-mall/frontend/src/views/OrdersView.vue" beforeDir="false" afterPath="$PROJECT_DIR$/smart-mall/frontend/src/views/OrdersView.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/smart-mall/frontend/src/views/ProductDetailView.vue" beforeDir="false" afterPath="$PROJECT_DIR$/smart-mall/frontend/src/views/ProductDetailView.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/smart-mall/frontend/src/views/ProductListView.vue" beforeDir="false" afterPath="$PROJECT_DIR$/smart-mall/frontend/src/views/ProductListView.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/smart-mall/frontend/src/views/ProfileView.vue" beforeDir="false" afterPath="$PROJECT_DIR$/smart-mall/frontend/src/views/ProfileView.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/smart-mall/scripts/agent_smoke.py" beforeDir="false" afterPath="$PROJECT_DIR$/smart-mall/scripts/agent_smoke.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -29,25 +48,25 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
-    "git-widget-placeholder": "main",
-    "ignore.virus.scanning.warn.message": "true",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "G:/claudeproject/Agent Store",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;G:/claudeproject/Agent Store&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="G:\claudeproject\Agent Store" />
@@ -80,11 +99,30 @@
       <workItem from="1782717997858" duration="21449000" />
       <workItem from="1782751942835" duration="1334000" />
       <workItem from="1782778611585" duration="100000" />
-      <workItem from="1782779009524" duration="27307000" />
+      <workItem from="1782779009524" duration="27430000" />
+      <workItem from="1782817711169" duration="333000" />
+      <workItem from="1782838329296" duration="314000" />
+      <workItem from="1782887269698" duration="294000" />
+      <workItem from="1782887742313" duration="8867000" />
+      <workItem from="1782909926780" duration="7597000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="UnknownFeatures">
+    <option featureType="dependencySupport" implementationName="java:org.springframework:spring-core" />
+    <option featureType="dependencySupport" implementationName="java:org.springframework.security:spring-security-core" />
+    <option featureType="dependencySupport" implementationName="executable:docker" />
+    <option featureType="dependencySupport" implementationName="java:jakarta.validation:jakarta.validation-api" />
+    <option featureType="dependencySupport" implementationName="java:jakarta.persistence:jakarta.persistence-api" />
+    <option featureType="dependencySupport" implementationName="javascript:npm:vite" />
+    <option featureType="dependencySupport" implementationName="executable:kubectl" />
+    <option featureType="dependencySupport" implementationName="java:org.springframework.data:spring-data-commons" />
+    <option featureType="dependencySupport" implementationName="java:org.hibernate.validator:hibernate-validator" />
+    <option featureType="dependencySupport" implementationName="javascript:npm:vue" />
+    <option featureType="dependencySupport" implementationName="java:org.springframework.boot:spring-boot" />
+    <option featureType="dependencySupport" implementationName="java:org.springframework:spring-webmvc" />
   </component>
 </project>

@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface CartRepository extends JpaRepository<CartItem, Long> {
+  long countByUserId(Long userId);
   @EntityGraph(attributePaths = "product")
   List<CartItem> findByUserIdOrderByCreatedAtDesc(Long userId);
   @EntityGraph(attributePaths = "product")
@@ -15,4 +16,5 @@ public interface CartRepository extends JpaRepository<CartItem, Long> {
   @EntityGraph(attributePaths = "product")
   Optional<CartItem> findByIdAndUserId(Long id, Long userId);
   void deleteByUserIdAndIdIn(Long userId, List<Long> ids);
+  void deleteByUserId(Long userId);
 }

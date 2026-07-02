@@ -6,11 +6,12 @@ import asyncio
 import time
 from collections import defaultdict, deque
 from contextlib import asynccontextmanager
+from contextvars import ContextVar
 from decimal import Decimal
 from typing import Any
 
 import httpx
-from fastapi import FastAPI, Query
+from fastapi import Depends, FastAPI, Header, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse, StreamingResponse
 from langchain.agents import AgentExecutor, create_tool_calling_agent
@@ -40,6 +41,9 @@ LLM_PLACEHOLDER = "__PLACEHOLDER_WILL_BE_PROVIDED_BY_USER__"
 engine = create_engine(DATABASE_URL, pool_pre_ping=True)
 SessionLocal = sessionmaker(bind=engine)
 memory: dict[str, deque[dict[str, str]]] = defaultdict(lambda: deque(maxlen=12))
+pending_cart_actions: dict[str, dict[str, int]] = {}
+cart_confirmation_grants: dict[tuple[int, int, int], int] = defaultdict(int)
+active_tool_user_id: ContextVar[int | None] = ContextVar("active_tool_user_id", default=None)
 
 
 class Utf8JSONResponse(JSONResponse):
@@ -71,7 +75,7 @@ app.add_middleware(
 
 
 class ChatRequest(BaseModel):
-    userId: int
+    userId: int | None = None
     sessionId: str
     message: str
 
@@ -149,11 +153,56 @@ class ChatResult(BaseModel):
     timing: dict[str, float]
 
 
+class AuthenticatedUser(BaseModel):
+    id: int
+    username: str
+    role: str
+
+
+class PreferenceResponse(BaseModel):
+    tag: str
+    weight: float
+
+
 def _internal_headers() -> dict[str, str]:
     return {
         "X-Internal-Service": "agent",
         "X-Internal-Secret": INTERNAL_SERVICE_SECRET,
     }
+
+
+def _bearer_token(authorization: str | None) -> str:
+    if not authorization or not authorization.startswith("Bearer "):
+        raise HTTPException(status_code=401, detail="请先登录后再使用 AI 助手")
+    return authorization[7:]
+
+
+def current_user(authorization: str | None = Header(default=None)) -> AuthenticatedUser:
+    token = _bearer_token(authorization)
+    try:
+        with httpx.Client(timeout=8) as client:
+            resp = client.get(
+                f"{BACKEND_BASE}/api/user/profile",
+                headers={"Authorization": f"Bearer {token}"},
+            )
+            if resp.status_code == 401:
+                raise HTTPException(status_code=401, detail="登录已过期，请重新登录")
+            resp.raise_for_status()
+            data = resp.json()
+    except HTTPException:
+        raise
+    except Exception as exc:
+        logger.info("failed to validate user token via backend, error=%s", exc)
+        raise HTTPException(status_code=401, detail="无法校验登录状态")
+    return AuthenticatedUser(id=int(data["id"]), username=data["username"], role=data.get("role", "USER"))
+
+
+def require_tool_user(user_id: int) -> int:
+    active_user_id = active_tool_user_id.get()
+    if active_user_id is not None and int(user_id) != active_user_id:
+        logger.warning("blocked cross-user tool call, active_user_id=%s, requested_user_id=%s", active_user_id, user_id)
+        raise ValueError("工具调用用户身份不匹配")
+    return int(user_id)
 
 
 def memory_key(user_id: int, session_id: str) -> str:
@@ -179,12 +228,92 @@ def search_products(keyword: str, max_price: float | None = None) -> str:
         products = [p for p in products if float(p["price"]) <= max_price]
     if not products:
         return "未找到符合条件的商品"
-    return "\n".join(f"{p['name']} - ¥{p['price']} - 库存{p['stock']}" for p in products)
+    return "\n".join(f"ID {p['id']} - {p['name']} - ¥{p['price']} - 库存{p['stock']}" for p in products)
+
+
+@tool
+def get_product_detail(product_id: int) -> str:
+    """查询指定商品的真实详情，包括名称、价格、库存和描述。"""
+    logger.info("tool get_product_detail called, product_id=%s", product_id)
+    with httpx.Client(timeout=8) as client:
+        resp = client.get(f"{BACKEND_BASE}/api/products/{product_id}")
+        resp.raise_for_status()
+        product = resp.json()
+    return (
+        f"商品ID {product['id']}：{product['name']}\n"
+        f"价格：¥{product['price']}，库存：{product['stock']}，销量：{product['salesCount']}\n"
+        f"描述：{product.get('description') or '暂无描述'}"
+    )
+
+
+@tool
+def compare_products(product_ids: list[int]) -> str:
+    """对比多个真实商品的价格、库存、销量和描述，最多对比 4 个。"""
+    ids = [int(product_id) for product_id in product_ids[:4]]
+    logger.info("tool compare_products called, product_ids=%s", ids)
+    if len(ids) < 2:
+        return "请至少提供两个商品ID用于对比"
+
+    rows = []
+    with httpx.Client(timeout=8) as client:
+        for product_id in ids:
+            resp = client.get(f"{BACKEND_BASE}/api/products/{product_id}")
+            resp.raise_for_status()
+            product = resp.json()
+            rows.append(
+                f"ID {product['id']}｜{product['name']}｜¥{product['price']}｜"
+                f"库存{product['stock']}｜销量{product['salesCount']}｜{product.get('description') or '暂无描述'}"
+            )
+    return "\n".join(rows)
+
+
+@tool
+def recommend_by_preference(user_id: int, max_price: float | None = None) -> str:
+    """根据用户长期偏好标签推荐真实商品，可选传入最高预算。"""
+    user_id = require_tool_user(user_id)
+    tags = preference_tags(user_id)
+    keyword = product_keyword("", tags)
+    logger.info("tool recommend_by_preference called, user_id=%s, tags=%s, max_price=%s", user_id, tags, max_price)
+    result = search_products.invoke({"keyword": keyword, "max_price": max_price})
+    return f"用户偏好标签：{', '.join(tags) or '暂无'}\n推荐结果：\n{result}"
+
+
+@tool
+def add_to_cart(user_id: int, product_id: int, quantity: int = 1) -> str:
+    """确认用户要购买后，将真实商品加入该用户购物车。调用前必须已获得用户明确确认。"""
+    user_id = require_tool_user(user_id)
+    logger.info("tool add_to_cart called, user_id=%s, product_id=%s, quantity=%s", user_id, product_id, quantity)
+    quantity = max(1, int(quantity))
+    grant_key = (int(user_id), int(product_id), quantity)
+    if cart_confirmation_grants[grant_key] <= 0:
+        with httpx.Client(timeout=8) as client:
+            resp = client.get(f"{BACKEND_BASE}/api/products/{product_id}")
+            resp.raise_for_status()
+            product = resp.json()
+        pending_cart_actions[memory_key(int(user_id), "__pending_cart__")] = {
+            "product_id": int(product_id),
+            "quantity": quantity,
+        }
+        return f"请先向用户确认：是否将「{product['name']}」x {quantity} 加入购物车？用户确认后再调用本工具。"
+    cart_confirmation_grants[grant_key] -= 1
+    with httpx.Client(timeout=8) as client:
+        resp = client.post(
+            f"{BACKEND_BASE}/api/internal/cart",
+            headers=_internal_headers(),
+            json={"userId": user_id, "productId": product_id, "quantity": quantity},
+        )
+        resp.raise_for_status()
+        item = resp.json()
+    return (
+        f"已加入购物车：{item['productName']} x {item['quantity']}，"
+        f"小计 ¥{item['subtotal']}。你可以到购物车结算。"
+    )
 
 
 @tool
 def query_order_status(user_id: int, order_id: int | None = None) -> str:
     """查询指定用户的真实订单状态。不传 order_id 时返回最近订单。"""
+    user_id = require_tool_user(user_id)
     logger.info("tool query_order_status called, user_id=%s, order_id=%s", user_id, order_id)
     with httpx.Client(timeout=8) as client:
         if order_id:
@@ -207,7 +336,7 @@ def query_order_status(user_id: int, order_id: int | None = None) -> str:
     return "\n".join(f"{o['orderNo']} - {o['status']} - ¥{o['totalAmount']}" for o in rows)
 
 
-TOOLS = [search_products, query_order_status]
+TOOLS = [search_products, get_product_detail, compare_products, recommend_by_preference, add_to_cart, query_order_status]
 
 def ensure_tables() -> None:
     with engine.begin() as conn:
@@ -319,6 +448,56 @@ def extract_budget(message: str) -> float | None:
     return None
 
 
+def extract_product_id(message: str) -> int | None:
+    patterns = [
+        r"(?:商品\s*ID|ID|编号)\s*[:：]?\s*(\d+)",
+        r"第\s*(\d+)\s*(?:个|款|件)",
+    ]
+    for pattern in patterns:
+        match = re.search(pattern, message, re.IGNORECASE)
+        if match:
+            return int(match.group(1))
+    return None
+
+
+def extract_quantity(message: str) -> int:
+    match = re.search(r"(\d+)\s*(?:件|个|台|把|份)", message)
+    if match:
+        return max(1, int(match.group(1)))
+    return 1
+
+
+def wants_add_to_cart(message: str) -> bool:
+    return any(word in message for word in ["加入购物车", "加购物车", "放购物车", "加到购物车", "加入我的购物车"])
+
+
+def is_confirmation(message: str) -> bool:
+    normalized = message.strip().lower()
+    return normalized in {"确认", "确定", "可以", "是的", "好的", "好", "ok", "yes", "y"} or "确认加入" in normalized
+
+
+def confirm_pending_cart(user_id: int) -> str:
+    pending_key = memory_key(user_id, "__pending_cart__")
+    action = pending_cart_actions.pop(pending_key)
+    grant_key = (user_id, action["product_id"], action["quantity"])
+    cart_confirmation_grants[grant_key] += 1
+    return add_to_cart.invoke({
+        "user_id": user_id,
+        "product_id": action["product_id"],
+        "quantity": action["quantity"],
+    })
+
+
+def request_cart_confirmation(user_id: int, message: str) -> tuple[str, list[str]]:
+    product_id = extract_product_id(message)
+    if product_id is None:
+        return "请告诉我要加入购物车的商品 ID，例如：把商品 ID 1 加入购物车。", []
+    quantity = extract_quantity(message)
+    pending_cart_actions[memory_key(user_id, "__pending_cart__")] = {"product_id": product_id, "quantity": quantity}
+    detail = get_product_detail.invoke({"product_id": product_id})
+    return f"{detail}\n确认将商品 ID {product_id} x {quantity} 加入购物车吗？", ["get_product_detail"]
+
+
 def extract_preferences_rule(message: str) -> list[str]:
     tags = []
     rules = {
@@ -413,6 +592,9 @@ def system_prompt(tags: list[str]) -> str:
         "推荐商品时必须基于工具返回的真实商品数据，不要编造不存在的商品。"
         "回复使用简洁中文，不要使用 emoji。"
         "用户问订单时必须调用订单工具。用户问商品或推荐时必须调用商品搜索工具。"
+        "用户问某个商品详情时调用 get_product_detail；用户要求对比商品时调用 compare_products。"
+        "用户问新品推荐、猜你喜欢、按我的偏好推荐时优先调用 recommend_by_preference。"
+        "只有用户明确确认加入购物车后，才可以调用 add_to_cart；否则先询问确认。"
         "用户问天气、新闻、股票等非购物问题时，礼貌说明自己只能处理商城购物相关问题。"
     )
 
@@ -453,6 +635,26 @@ def run_langchain_agent(
 
 
 def offline_agent(user_id: int, tags: list[str], message: str) -> tuple[str, list[str]]:
+    pending_key = memory_key(user_id, "__pending_cart__")
+    if is_confirmation(message) and pending_key in pending_cart_actions:
+        tool_result = confirm_pending_cart(user_id)
+        return tool_result, ["add_to_cart"]
+
+    if wants_add_to_cart(message):
+        return request_cart_confirmation(user_id, message)
+
+    if any(word in message for word in ["对比", "比较", "哪个好"]):
+        ids = [int(value) for value in re.findall(r"\d+", message)[:4]]
+        if len(ids) >= 2:
+            tool_result = compare_products.invoke({"product_ids": ids})
+            return f"我查到这些真实商品信息，方便你对比：\n{tool_result}", ["compare_products"]
+
+    if any(word in message for word in ["详情", "详细", "具体参数", "介绍一下"]):
+        product_id = extract_product_id(message)
+        if product_id is not None:
+            tool_result = get_product_detail.invoke({"product_id": product_id})
+            return tool_result, ["get_product_detail"]
+
     if any(word in message for word in ["订单", "买的", "购买", "上次", "到哪", "物流", "发货", "状态"]):
         tool_result = query_order_status.invoke({"user_id": user_id, "order_id": None})
         return f"我查到你的最近订单：\n{tool_result}", ["query_order_status"]
@@ -460,8 +662,13 @@ def offline_agent(user_id: int, tags: list[str], message: str) -> tuple[str, lis
     if any(word in message for word in ["天气", "新闻", "股票", "世界杯"]):
         return "我是智能商城导购助手，主要帮你查商品、做推荐和查询订单，这类问题我不能可靠回答。", []
 
+    budget = extract_budget(message)
+    if any(word in message for word in ["新品推荐", "猜你喜欢", "按我的偏好", "给我推荐", "推荐一下"]):
+        tool_result = recommend_by_preference.invoke({"user_id": user_id, "max_price": budget})
+        return f"我按你的长期偏好找了一组真实商品：\n{tool_result}", ["recommend_by_preference", "search_products"]
+
     keyword = product_keyword(message, tags)
-    tool_result = search_products.invoke({"keyword": keyword, "max_price": extract_budget(message)})
+    tool_result = search_products.invoke({"keyword": keyword, "max_price": budget})
     reply = (
         f"结合你的偏好（{', '.join(tags) or '暂未记录'}），我从真实商品里找到这些选择：\n"
         f"{tool_result}\n"
@@ -506,61 +713,82 @@ def log_timing(timing: dict[str, float]) -> None:
 
 def handle_chat(
     request: ChatRequest,
+    user_id: int,
     callbacks: list[BaseCallbackHandler] | None = None,
     streaming: bool = False,
 ) -> ChatResult:
+    user_id = int(user_id)
+    tool_user_token = active_tool_user_id.set(user_id)
     t0 = time.perf_counter()
-    history = load_history(request.sessionId, request.userId)
-    tags = preference_tags(request.userId)
-    message = request.message.strip()
-    t1 = time.perf_counter()
-
-    agent_timing = AgentTiming()
-    callback_list = [agent_timing, *(callbacks or [])]
-    save_message(request.sessionId, request.userId, "user", message)
-
     try:
-        reply, tools_used = run_langchain_agent(
-            request.userId,
-            tags,
-            history,
-            message,
-            callbacks=callback_list,
-            streaming=streaming,
-        )
-        if not reply.strip():
-            logger.info("agent reply empty, falling back to deterministic tools")
-            reply, tools_used = offline_agent(request.userId, tags, message)
-    except Exception as exc:
-        logger.info("langchain agent unavailable, using offline fallback, error=%s", exc)
-        try:
-            reply, tools_used = offline_agent(request.userId, tags, message)
-        except Exception as tool_exc:
-            reply = f"服务暂时无法完成工具查询：{tool_exc}"
-            tools_used = []
+        history = load_history(request.sessionId, user_id)
+        tags = preference_tags(user_id)
+        message = request.message.strip()
+        t1 = time.perf_counter()
 
-    t4 = time.perf_counter()
-    preference_timing = AgentTiming()
-    new_tags = extract_preferences(request.userId, history, message, reply, callbacks=[preference_timing])
-    t5 = time.perf_counter()
-    upsert_preferences(request.userId, new_tags)
-    save_message(request.sessionId, request.userId, "assistant", reply)
-    t6 = time.perf_counter()
+        agent_timing = AgentTiming()
+        callback_list = [agent_timing, *(callbacks or [])]
+        save_message(request.sessionId, user_id, "user", message)
 
-    timing = timing_payload(t0, t1, t4, t5, t6, agent_timing, preference_timing)
-    log_timing(timing)
-    logger.info("chat completed, user_id=%s, session_id=%s, tools=%s", request.userId, request.sessionId, tools_used)
-    return ChatResult(reply=reply, toolsUsed=tools_used, sessionId=request.sessionId, timing=timing)
+        pending_key = memory_key(user_id, "__pending_cart__")
+        if is_confirmation(message) and pending_key in pending_cart_actions:
+            try:
+                reply = confirm_pending_cart(user_id)
+                tools_used = ["add_to_cart"]
+            except Exception as tool_exc:
+                reply = f"服务暂时无法加入购物车：{tool_exc}"
+                tools_used = []
+        elif wants_add_to_cart(message):
+            try:
+                reply, tools_used = request_cart_confirmation(user_id, message)
+            except Exception as tool_exc:
+                reply = f"服务暂时无法读取商品信息：{tool_exc}"
+                tools_used = []
+        else:
+            try:
+                reply, tools_used = run_langchain_agent(
+                    user_id,
+                    tags,
+                    history,
+                    message,
+                    callbacks=callback_list,
+                    streaming=streaming,
+                )
+                if not reply.strip():
+                    logger.info("agent reply empty, falling back to deterministic tools")
+                    reply, tools_used = offline_agent(user_id, tags, message)
+            except Exception as exc:
+                logger.info("langchain agent unavailable, using offline fallback, error=%s", exc)
+                try:
+                    reply, tools_used = offline_agent(user_id, tags, message)
+                except Exception as tool_exc:
+                    reply = f"服务暂时无法完成工具查询：{tool_exc}"
+                    tools_used = []
+
+        t4 = time.perf_counter()
+        preference_timing = AgentTiming()
+        new_tags = extract_preferences(user_id, history, message, reply, callbacks=[preference_timing])
+        t5 = time.perf_counter()
+        upsert_preferences(user_id, new_tags)
+        save_message(request.sessionId, user_id, "assistant", reply)
+        t6 = time.perf_counter()
+
+        timing = timing_payload(t0, t1, t4, t5, t6, agent_timing, preference_timing)
+        log_timing(timing)
+        logger.info("chat completed, user_id=%s, session_id=%s, tools=%s", user_id, request.sessionId, tools_used)
+        return ChatResult(reply=reply, toolsUsed=tools_used, sessionId=request.sessionId, timing=timing)
+    finally:
+        active_tool_user_id.reset(tool_user_token)
 
 
 @app.post("/agent/chat", response_model=ChatResponse)
-def chat(request: ChatRequest) -> ChatResponse:
-    result = handle_chat(request)
+def chat(request: ChatRequest, user: AuthenticatedUser = Depends(current_user)) -> ChatResponse:
+    result = handle_chat(request, user.id)
     return ChatResponse(reply=result.reply, toolsUsed=result.toolsUsed, sessionId=result.sessionId)
 
 
 @app.post("/agent/chat/stream")
-async def chat_stream(request: ChatRequest) -> StreamingResponse:
+async def chat_stream(request: ChatRequest, user: AuthenticatedUser = Depends(current_user)) -> StreamingResponse:
     async def event_generator():
         loop = asyncio.get_running_loop()
         queue: asyncio.Queue[dict[str, Any]] = asyncio.Queue()
@@ -568,7 +796,7 @@ async def chat_stream(request: ChatRequest) -> StreamingResponse:
 
         def run_chat() -> None:
             try:
-                result = handle_chat(request, callbacks=[stream_callback], streaming=True)
+                result = handle_chat(request, user.id, callbacks=[stream_callback], streaming=True)
                 loop.call_soon_threadsafe(queue.put_nowait, {
                     "type": "done",
                     "reply": result.reply,
@@ -603,9 +831,33 @@ async def chat_stream(request: ChatRequest) -> StreamingResponse:
 
 
 @app.get("/agent/history")
-def history(sessionId: str = Query(...), userId: int | None = Query(default=None)) -> list[dict[str, str]]:
-    # 传入 userId 时使用与 chat 一致的内存键（userId:sessionId），避免命名空间割裂
-    return load_history(sessionId, userId)
+def history(sessionId: str = Query(...), user: AuthenticatedUser = Depends(current_user)) -> list[dict[str, str]]:
+    return load_history(sessionId, user.id)
+
+
+@app.get("/agent/preferences", response_model=list[PreferenceResponse])
+def preferences(user: AuthenticatedUser = Depends(current_user)) -> list[PreferenceResponse]:
+    with SessionLocal() as db:
+        rows = db.execute(
+            text("""
+                SELECT preference_tag, weight FROM user_preference
+                WHERE user_id = :user_id
+                ORDER BY weight DESC, updated_at DESC
+            """),
+            {"user_id": user.id},
+        ).mappings().all()
+    return [PreferenceResponse(tag=row["preference_tag"], weight=float(row["weight"])) for row in rows]
+
+
+@app.delete("/agent/preferences/{tag}")
+def delete_preference(tag: str, user: AuthenticatedUser = Depends(current_user)) -> dict[str, bool]:
+    with engine.begin() as conn:
+        conn.execute(
+            text("DELETE FROM user_preference WHERE user_id = :user_id AND preference_tag = :tag"),
+            {"user_id": user.id, "tag": tag},
+        )
+    logger.info("preference deleted, user_id=%s, tag=%s", user.id, tag)
+    return {"ok": True}
 
 
 @app.get("/health")
