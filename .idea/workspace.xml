@@ -6,31 +6,11 @@
   <component name="ChangeListManager">
     <list default="true" id="26d1c8ba-898e-402c-ac3a-d8907526f195" name="更改" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/smart-mall/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/smart-mall/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/smart-mall/agent-service/app/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/smart-mall/agent-service/app/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/smart-mall/backend/src/main/java/com/example/smartmall/api/ApiSupport.java" beforeDir="false" afterPath="$PROJECT_DIR$/smart-mall/backend/src/main/java/com/example/smartmall/api/ApiSupport.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/smart-mall/backend/src/main/java/com/example/smartmall/api/OrderController.java" beforeDir="false" afterPath="$PROJECT_DIR$/smart-mall/backend/src/main/java/com/example/smartmall/api/OrderController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/smart-mall/backend/src/main/java/com/example/smartmall/api/ProductController.java" beforeDir="false" afterPath="$PROJECT_DIR$/smart-mall/backend/src/main/java/com/example/smartmall/api/ProductController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/smart-mall/backend/src/main/java/com/example/smartmall/repo/CartRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/smart-mall/backend/src/main/java/com/example/smartmall/repo/CartRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/smart-mall/backend/src/main/java/com/example/smartmall/repo/OrderRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/smart-mall/backend/src/main/java/com/example/smartmall/repo/OrderRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/smart-mall/backend/src/main/java/com/example/smartmall/repo/ProductRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/smart-mall/backend/src/main/java/com/example/smartmall/repo/ProductRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/smart-mall/docs/api-spec.md" beforeDir="false" afterPath="$PROJECT_DIR$/smart-mall/docs/api-spec.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/smart-mall/docs/architecture.md" beforeDir="false" afterPath="$PROJECT_DIR$/smart-mall/docs/architecture.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/smart-mall/docs/er-diagram.md" beforeDir="false" afterPath="$PROJECT_DIR$/smart-mall/docs/er-diagram.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/smart-mall/docs/seed.sql" beforeDir="false" afterPath="$PROJECT_DIR$/smart-mall/docs/seed.sql" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/smart-mall/frontend/src/App.vue" beforeDir="false" afterPath="$PROJECT_DIR$/smart-mall/frontend/src/App.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/smart-mall/frontend/src/api/http.js" beforeDir="false" afterPath="$PROJECT_DIR$/smart-mall/frontend/src/api/http.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/smart-mall/frontend/src/components/ChatWidget.vue" beforeDir="false" afterPath="$PROJECT_DIR$/smart-mall/frontend/src/components/ChatWidget.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/smart-mall/frontend/src/main.js" beforeDir="false" afterPath="$PROJECT_DIR$/smart-mall/frontend/src/main.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/smart-mall/frontend/src/router.js" beforeDir="false" afterPath="$PROJECT_DIR$/smart-mall/frontend/src/router.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CODEX_FIX_AGENT_UX.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/DESIGN_SYSTEM_FINAL.md" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/smart-mall/frontend/src/style.css" beforeDir="false" afterPath="$PROJECT_DIR$/smart-mall/frontend/src/style.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/smart-mall/frontend/src/views/AdminView.vue" beforeDir="false" afterPath="$PROJECT_DIR$/smart-mall/frontend/src/views/AdminView.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/smart-mall/frontend/src/views/CartView.vue" beforeDir="false" afterPath="$PROJECT_DIR$/smart-mall/frontend/src/views/CartView.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/smart-mall/frontend/src/views/OrdersView.vue" beforeDir="false" afterPath="$PROJECT_DIR$/smart-mall/frontend/src/views/OrdersView.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/smart-mall/frontend/src/views/ProductDetailView.vue" beforeDir="false" afterPath="$PROJECT_DIR$/smart-mall/frontend/src/views/ProductDetailView.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/smart-mall/frontend/src/styles/tokens.css" beforeDir="false" afterPath="$PROJECT_DIR$/smart-mall/frontend/src/styles/tokens.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/smart-mall/frontend/src/views/ProductListView.vue" beforeDir="false" afterPath="$PROJECT_DIR$/smart-mall/frontend/src/views/ProductListView.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/smart-mall/frontend/src/views/ProfileView.vue" beforeDir="false" afterPath="$PROJECT_DIR$/smart-mall/frontend/src/views/ProfileView.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/smart-mall/scripts/agent_smoke.py" beforeDir="false" afterPath="$PROJECT_DIR$/smart-mall/scripts/agent_smoke.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -104,7 +84,8 @@
       <workItem from="1782838329296" duration="314000" />
       <workItem from="1782887269698" duration="294000" />
       <workItem from="1782887742313" duration="8867000" />
-      <workItem from="1782909926780" duration="7597000" />
+      <workItem from="1782909926780" duration="9294000" />
+      <workItem from="1783002214499" duration="2325000" />
     </task>
     <servers />
   </component>

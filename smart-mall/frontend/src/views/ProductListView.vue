@@ -8,55 +8,46 @@
       <router-link class="btn dark" to="/cart"><ShoppingCart size="18" /> 购物车</router-link>
     </div>
 
-    <div class="toolbar">
-      <form class="search-box" @submit.prevent="search">
+    <div class="toolbar product-toolbar">
+      <form class="search-box catalog-search" @submit.prevent="search">
         <Search size="18" />
         <input v-model="keyword" placeholder="搜索机械键盘、显示器、耳机" />
+        <select v-model="sort" aria-label="商品排序" @change="loadProducts(1)">
+          <option value="sales_desc">销量优先</option>
+          <option value="price_asc">价格升序</option>
+          <option value="price_desc">价格降序</option>
+          <option value="new_desc">最新上架</option>
+        </select>
+        <button class="primary search-submit" type="submit">搜索</button>
       </form>
-      <select v-model="sort" @change="loadProducts(1)">
-        <option value="sales_desc">销量优先</option>
-        <option value="price_asc">价格升序</option>
-        <option value="price_desc">价格降序</option>
-        <option value="new_desc">最新上架</option>
-      </select>
-      <button class="primary" @click="search">搜索</button>
     </div>
 
-    <div class="category-strip">
-      <button class="chip" :class="{ active: !categoryId }" @click="selectCategory(null)">全部</button>
-      <template v-for="c in categories" :key="c.id">
-        <button class="chip" :class="{ active: categoryId === c.id }" @click="selectCategory(c.id)">{{ c.name }}</button>
-        <button v-for="child in c.children" :key="child.id" class="chip" :class="{ active: categoryId === child.id }" @click="selectCategory(child.id)">
-          {{ child.name }}
-        </button>
-      </template>
+    <div class="category-scroll">
+      <div class="category-strip">
+        <button class="chip" :class="{ active: !categoryId }" @click="selectCategory(null)">全部</button>
+        <template v-for="c in categories" :key="c.id">
+          <button class="chip" :class="{ active: categoryId === c.id }" @click="selectCategory(c.id)">{{ c.name }}</button>
+          <button v-for="child in c.children" :key="child.id" class="chip" :class="{ active: categoryId === child.id }" @click="selectCategory(child.id)">
+            {{ child.name }}
+          </button>
+        </template>
+      </div>
     </div>
 
     <p v-if="loadError" class="error">{{ loadError }}</p>
     <p v-else-if="isLoading" class="muted">商品加载中...</p>
     <p v-else-if="!products.length" class="muted">暂无商品</p>
 
-    <div class="grid product-grid">
-      <article v-for="p in products" :key="p.id" class="product-card">
-        <router-link class="product-media" :to="`/products/${p.id}`">
-          <img class="product-image" :src="p.imageUrl" :alt="p.name" />
-          <span class="product-badge">{{ p.stock <= 0 ? 'SOLD' : p.salesCount > 300 ? 'HOT' : 'NEW' }}</span>
-        </router-link>
-        <div class="body">
-          <router-link :to="`/products/${p.id}`"><h3>{{ p.name }}</h3></router-link>
-          <p class="desc">{{ p.description }}</p>
-          <div class="price-cart-swap">
-            <div class="price-info">
-              <span class="price">¥{{ p.price }}</span>
-              <span class="meta">库存 {{ p.stock }} · 已售 {{ p.salesCount }}</span>
-            </div>
-            <button class="add-to-cart-btn" :class="{ added: addedIds.includes(p.id) }" :disabled="p.stock <= 0" @click="addCart(p, $event)">
-              <ShoppingCart size="17" /> {{ p.stock <= 0 ? '已售罄' : '加入购物车' }}
-            </button>
-          </div>
-        </div>
-      </article>
-    </div>
+    <TransitionGroup :key="gridKey" tag="div" class="grid product-grid" name="product-card-list" appear>
+      <ProductCard
+        v-for="(p, index) in products"
+        :key="p.id"
+        :product="p"
+        :index="index"
+        :added="addedIds.includes(p.id)"
+        @add-cart="addCart"
+      />
+    </TransitionGroup>
 
     <div class="pager">
       <button :disabled="page <= 1" @click="loadProducts(page - 1)">上一页</button>
@@ -73,6 +64,7 @@ import { router } from '../router'
 import { store } from '../store'
 import { useToast } from '../composables/useToast'
 import { flyToCart } from '../composables/useFlyToCart'
+import ProductCard from '../components/ProductCard.vue'
 
 const categories = ref([])
 const products = ref([])
@@ -86,6 +78,7 @@ const searchMode = ref(false)
 const isLoading = ref(false)
 const loadError = ref('')
 const addedIds = ref([])
+const gridKey = ref(0)
 const toast = useToast()
 
 onMounted(async () => {
@@ -125,6 +118,7 @@ async function loadProducts(nextPage) {
       products.value = data.list || []
       total.value = data.total || 0
     }
+    gridKey.value += 1
   } catch (e) {
     products.value = []
     total.value = 0
