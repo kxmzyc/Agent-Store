@@ -27,6 +27,9 @@
 
   --space-page-x: clamp(20px, 5vw, 72px);
   --space-card-gap: clamp(24px, 3.6vw, 44px);
+  --topbar-height: 44px;
+  --search-dock-height: 86px;
+  --category-dock-top: calc(var(--topbar-height) + var(--search-dock-height));
 
   --color-bg: var(--paper);
   --color-surface: var(--surface);

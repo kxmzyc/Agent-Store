@@ -3,11 +3,10 @@
     <div ref="heroRef" class="commerce-hero">
       <p class="hero-kicker">SMART MALL</p>
       <h1>把真实商品数据，摆进一个安静的展厅。</h1>
-      <p class="hero-copy">搜索、分类、排序和库存状态都来自后端接口，前台只保留浏览与购买的关键动作。</p>
+      <p class="hero-copy">没有虚构的好评，没有摆拍的库存。这里的每一件，都是它本来的样子。</p>
       <div class="hero-stats" aria-label="商品统计">
         <span>{{ total }} 件商品</span>
         <span>{{ categories.length }} 个一级分类</span>
-        <span>第 {{ page }} 页</span>
       </div>
     </div>
 
@@ -51,6 +50,7 @@
         v-for="(p, index) in products"
         :key="p.id"
         :product="p"
+        :class="{ 'product-card--featured': isFeaturedProduct(p, index) }"
         :style="{ '--card-index': index % 12 }"
         @add-cart="addCart"
       />
@@ -160,5 +160,9 @@ async function addCart(product, event) {
   } catch (e) {
     toast.show(errorMessage(e))
   }
+}
+
+function isFeaturedProduct(product, index) {
+  return page.value === 1 && index === 0 && product.salesCount > 300
 }
 </script>

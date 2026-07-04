@@ -48,7 +48,7 @@ textarea {
   position: sticky;
   top: 0;
   z-index: 30;
-  height: 44px;
+  height: var(--topbar-height);
   display: grid;
   grid-template-columns: minmax(128px, 0.72fr) auto minmax(128px, 0.72fr);
   align-items: center;
@@ -329,13 +329,13 @@ textarea {
   --scroll-progress: 0;
   --hero-opacity: 1;
   --hero-shift: 0px;
-  min-height: clamp(300px, 44vh, 470px);
+  min-height: clamp(250px, 36vh, 360px);
   display: grid;
   place-items: center;
   align-content: center;
   gap: 18px;
   text-align: center;
-  padding: clamp(58px, 9vh, 92px) clamp(18px, 4vw, 56px) clamp(78px, 12vh, 118px);
+  padding: clamp(38px, 6vh, 62px) clamp(18px, 4vw, 56px) clamp(54px, 8vh, 78px);
   border-bottom: 1px solid rgba(17, 19, 24, 0.08);
   background:
     linear-gradient(135deg, rgba(255, 255, 255, 0.72), rgba(240, 242, 245, 0.96)),
@@ -424,7 +424,7 @@ textarea {
   --scroll-progress: 0;
   --dock-shift: 0px;
   position: sticky;
-  top: 44px;
+  top: calc(var(--topbar-height) + 8px);
   z-index: 24;
   display: grid;
   justify-items: center;
@@ -459,7 +459,15 @@ textarea {
 }
 
 .product-page .category-scroll {
-  margin-top: clamp(28px, 5vw, 58px);
+  position: sticky;
+  top: var(--category-dock-top);
+  z-index: 18;
+  margin-top: clamp(18px, 3vw, 34px);
+  margin-right: calc(var(--space-page-x) * -1);
+  margin-left: calc(var(--space-page-x) * -1);
+  padding: 9px var(--space-page-x) 11px;
+  background: rgba(245, 246, 248, 0.96);
+  border-bottom: 1px solid rgba(227, 230, 235, 0.72);
   transform: none;
 }
 
@@ -567,6 +575,7 @@ select:focus {
 }
 
 .product-grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   margin-top: clamp(34px, 5vw, 70px);
   position: relative;
   align-items: stretch;
@@ -620,7 +629,7 @@ select:focus {
   border: 1px solid rgba(17, 19, 24, 0.10);
   border-radius: var(--radius-card);
   padding: 10px;
-  min-height: 456px;
+  min-height: 0;
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -629,10 +638,15 @@ select:focus {
   touch-action: manipulation;
   contain: layout style;
   content-visibility: auto;
-  contain-intrinsic-size: 456px;
+  contain-intrinsic-size: 430px;
   transition:
     transform 220ms var(--ease-out-soft),
     border-color 180ms var(--ease-out-soft);
+}
+
+.product-card--featured {
+  grid-column: span 2;
+  grid-row: span 2;
 }
 
 .product-card::before {
@@ -691,8 +705,12 @@ select:focus {
     linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(241, 243, 247, 0.98)),
     linear-gradient(135deg, rgba(43, 69, 216, 0.075), rgba(22, 163, 74, 0.045) 52%, transparent);
   padding: 24px;
-  min-height: 280px;
+  aspect-ratio: 4 / 5;
   box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.86);
+}
+
+.product-card--featured .product-media {
+  aspect-ratio: 1 / 1;
 }
 
 .product-image,
@@ -700,8 +718,8 @@ select:focus {
   position: relative;
   z-index: 1;
   width: 100%;
+  height: 100%;
   display: block;
-  aspect-ratio: 4 / 3;
   object-fit: cover;
   border-radius: var(--radius-image);
   background: var(--paper);
@@ -818,7 +836,7 @@ select:focus {
 
 .category-scroll {
   max-width: 100%;
-  max-height: 48px;
+  max-height: 62px;
   overflow-x: auto;
   overflow-y: hidden;
   mask-image: linear-gradient(90deg, #000 calc(100% - 64px), transparent);
@@ -834,7 +852,7 @@ select:focus {
   gap: 10px;
   flex-wrap: nowrap;
   min-width: max-content;
-  padding: 2px 72px 2px 0;
+  padding: 0 72px 0 0;
 }
 
 .chip {
@@ -962,6 +980,18 @@ tr:hover .cart-delete-btn,
   .topnav a:hover {
     background: var(--accent-soft);
     color: var(--ink-900);
+  }
+}
+
+@media (max-width: 1180px) {
+  .product-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 960px) {
+  .product-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
@@ -3036,6 +3066,10 @@ html.fx-off-toast .toast-leave-to {
 }
 
 @media (max-width: 820px) {
+  :root {
+    --search-dock-height: 112px;
+  }
+
   .shell {
     min-height: 100vh;
   }
@@ -3079,8 +3113,8 @@ html.fx-off-toast .toast-leave-to {
   }
 
   .commerce-hero {
-    min-height: 430px;
-    padding: 72px 0 132px;
+    min-height: 360px;
+    padding: 46px 0 104px;
     gap: 15px;
   }
 
@@ -3099,7 +3133,7 @@ html.fx-off-toast .toast-leave-to {
   }
 
   .search-dock {
-    margin-top: -118px;
+    margin-top: -96px;
   }
 
   .detail-layout {
@@ -3148,9 +3182,18 @@ html.fx-off-toast .toast-leave-to {
     gap: 34px;
   }
 
+  .product-card--featured {
+    grid-column: span 1;
+    grid-row: span 1;
+  }
+
   .product-media {
-    min-height: 246px;
+    min-height: 0;
     padding: 18px;
+  }
+
+  .product-card--featured .product-media {
+    aspect-ratio: 4 / 5;
   }
 
   .image-skeleton {

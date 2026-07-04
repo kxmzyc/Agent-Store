@@ -198,7 +198,7 @@ VALUES
   (6, 1, '降噪蓝牙耳机', '主动降噪，通勤学习都适合', 699.00, 60, 260, 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=900&q=80', 1, 0),
   (7, 1, '运动智能手表', '心率、睡眠、运动记录，7 天续航', 899.00, 50, 150, 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=900&q=80', 1, 0),
   (8, 5, '65W 氮化镓充电器', '三口快充，适合手机和平板', 129.00, 150, 410, 'https://images.unsplash.com/photo-1603539444875-76e7684265f6?auto=format&fit=crop&w=900&q=80', 1, 0),
-  (9, 5, '编织数据线套装', 'Type-C 快充线，耐弯折', 39.00, 300, 800, 'https://images.unsplash.com/photo-1619410283995-43d9134e7656?auto=format&fit=crop&w=900&q=80', 1, 0),
+  (9, 5, '编织数据线套装', 'Type-C 快充线，耐弯折', 39.00, 300, 800, 'https://placehold.co/900x1125/f5f6f8/111318?text=USB-C+Cable', 1, 0),
   (10, 6, '智能台灯 Pro', '护眼照明，手机 App 控制，学习办公适用', 259.00, 70, 170, 'https://images.unsplash.com/photo-1507473885765-e6ed057f782c?auto=format&fit=crop&w=900&q=80', 1, 0),
   (11, 6, '智能插座 Mini', '远程开关，电量统计，定时任务', 59.00, 180, 390, 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&w=900&q=80', 1, 0),
   (12, 3, '人体工学椅', '腰托可调，适合长时间办公', 799.00, 32, 90, 'https://images.unsplash.com/photo-1580480055273-228ff5388ef8?auto=format&fit=crop&w=900&q=80', 1, 0),
