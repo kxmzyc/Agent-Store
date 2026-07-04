@@ -1,47 +1,56 @@
 :root {
-  --bg: #FAFAF9;
+  --paper: #F5F6F8;
+  --ink: #111318;
+  --graphite: #6B7280;
+  --hairline: #E3E6EB;
+  --klein: #2B45D8;
+  --klein-ghost: #EBEEFC;
+
+  --bg: var(--paper);
   --surface: #FFFFFF;
-  --ink-900: #17171A;
-  --ink-500: #8B8B8F;
-  --line: #EDEDEA;
-  --accent: #5F6F52;
-  --accent-soft: #EEF1EA;
+  --ink-900: var(--ink);
+  --ink-500: var(--graphite);
+  --line: var(--hairline);
+  --accent: var(--klein);
+  --accent-soft: var(--klein-ghost);
 
-  --radius-card: 22px;
+  --radius-card: 8px;
   --radius-input: 999px;
-  --radius-image: 14px;
+  --radius-image: 8px;
 
-  --shadow-rest: 0 1px 2px rgba(0,0,0,0.04), 0 12px 24px rgba(0,0,0,0.06);
-  --shadow-hover: 0 4px 8px rgba(0,0,0,0.06), 0 24px 48px rgba(0,0,0,0.10);
+  --shadow-rest: 0 18px 44px rgba(17, 19, 24, 0.08);
+  --shadow-hover: 0 26px 70px rgba(17, 19, 24, 0.13);
+  --shadow-ambient: 0 38px 90px rgba(17, 19, 24, 0.12);
 
   --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
-  --ease-spring: cubic-bezier(0.68, -0.55, 0.27, 1.55);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
 
-  --space-page-x: 72px;
-  --space-card-gap: 36px;
+  --space-page-x: clamp(20px, 5vw, 72px);
+  --space-card-gap: clamp(24px, 3.6vw, 44px);
 
-  --color-bg: var(--bg);
+  --color-bg: var(--paper);
   --color-surface: var(--surface);
-  --color-surface-subtle: #F6F6F2;
-  --color-border: var(--line);
-  --color-border-soft: var(--line);
-  --color-text-primary: var(--ink-900);
-  --color-text-secondary: var(--ink-500);
-  --color-text-muted: #A7A7A1;
-  --color-accent: var(--accent);
-  --color-accent-hover: #4E5C44;
+  --color-surface-subtle: #F0F2F5;
+  --color-border: var(--hairline);
+  --color-border-soft: var(--hairline);
+  --color-text-primary: var(--ink);
+  --color-text-secondary: var(--graphite);
+  --color-text-muted: #8E96A3;
+  --color-accent: var(--klein);
+  --color-accent-hover: #1F35B2;
   --color-on-accent: #ffffff;
   --color-danger: #b42318;
   --color-success: #16a34a;
 
   --radius-pill: 999px;
-  --radius-tag: 12px;
+  --radius-tag: 8px;
 
   --ease-premium: var(--ease-out-soft);
   --duration-base: 220ms;
-  --duration-card: 380ms;
-  --duration-image: 600ms;
+  --duration-card: 360ms;
+  --duration-image: 620ms;
+  --duration-route: 320ms;
 
   --shadow-card-hover: var(--shadow-hover);
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04);
+  --shadow-sm: 0 1px 2px rgba(17, 19, 24, 0.05);
 }

@@ -9,6 +9,11 @@ import './styles/tokens.css'
 import './style.css'
 import { router } from './router'
 
+if (import.meta.env.DEV || import.meta.env.VITE_PERF_HUD === '1') {
+  import('./dev/fxDiagnostics').then((module) => module.mountFxDiagnostics())
+  import('./dev/perfHud').then((module) => module.mountPerfHud())
+}
+
 const app = createApp(App)
 app.use(router)
 app.component('LogOut', LogOut)

@@ -25,7 +25,7 @@
 
         <div class="checkout-lines">
           <article v-for="line in lines" :key="line.key" class="checkout-line">
-            <img :src="line.imageUrl" :alt="line.name" />
+            <img :src="line.imageUrl" :alt="line.name" width="74" height="74" loading="lazy" decoding="async" />
             <div>
               <strong>{{ line.name }}</strong>
               <small>{{ line.description || `库存 ${line.stock}` }}</small>

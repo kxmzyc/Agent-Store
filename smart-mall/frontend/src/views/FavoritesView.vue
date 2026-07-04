@@ -21,7 +21,7 @@
     <div v-else class="grid product-grid">
       <article v-for="item in favorites" :key="item.id" class="product-card">
         <router-link class="product-media" :to="`/products/${item.product.id}`">
-          <img class="product-image" :src="item.product.imageUrl" :alt="item.product.name" />
+          <img class="product-image" :src="item.product.imageUrl" :alt="item.product.name" width="640" height="480" loading="lazy" decoding="async" />
           <span class="product-badge">{{ item.product.stock <= 0 ? 'SOLD' : 'WISH' }}</span>
         </router-link>
         <div class="body">
@@ -74,8 +74,7 @@ async function load() {
 }
 
 async function addCart(product, event) {
-  const card = event?.currentTarget?.closest('.product-card')
-  flyToCart(card?.querySelector('.product-image'), { origin: event?.currentTarget })
+  flyToCart(event, { imageUrl: product.imageUrl })
   try {
     await api.post('/cart', { productId: product.id, quantity: 1 })
     toast.show('已加入购物车')

@@ -1,7 +1,7 @@
 <template>
   <section v-if="product" class="detail-layout">
     <div class="detail-media">
-      <img :src="product.imageUrl" :alt="product.name" />
+      <img :src="product.imageUrl" :alt="product.name" width="800" height="800" decoding="async" />
     </div>
     <div class="panel">
       <div class="page-head">
@@ -23,7 +23,7 @@
         <button type="button" :disabled="quantity >= product.stock" @click="quantity++"><Plus size="15" /></button>
       </div>
       <div class="toolbar">
-        <button class="primary" :class="{ added: added }" :disabled="product.stock <= 0" @click="addCart">
+        <button class="primary" :disabled="product.stock <= 0" @click="addCart($event)">
           <ShoppingCart size="18" /> 加入购物车
         </button>
         <button class="dark" :disabled="product.stock <= 0" @click="buyNow">
@@ -51,7 +51,6 @@ const route = useRoute()
 const product = ref(null)
 const favorited = ref(false)
 const quantity = ref(1)
-const added = ref(false)
 const toast = useToast()
 
 onMounted(async () => {
@@ -67,11 +66,9 @@ onMounted(async () => {
   }
 })
 
-async function addCart() {
+async function addCart(event) {
   if (!store.token) return router.push('/login')
-  added.value = true
-  flyToCart(document.querySelector('.detail-media img'))
-  window.setTimeout(() => { added.value = false }, 900)
+  flyToCart(event, { imageUrl: product.value.imageUrl })
   try {
     await api.post('/cart', { productId: product.value.id, quantity: quantity.value })
     toast.show('已加入购物车')

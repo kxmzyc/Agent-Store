@@ -1,14 +1,17 @@
 <template>
-  <section class="page">
-    <div class="page-head">
-      <div>
-        <h1>商品中心</h1>
-        <p>分类浏览、模糊搜索、排序分页都在这里演示。</p>
+  <section class="page product-page">
+    <div ref="heroRef" class="commerce-hero">
+      <p class="hero-kicker">SMART MALL</p>
+      <h1>把真实商品数据，摆进一个安静的展厅。</h1>
+      <p class="hero-copy">搜索、分类、排序和库存状态都来自后端接口，前台只保留浏览与购买的关键动作。</p>
+      <div class="hero-stats" aria-label="商品统计">
+        <span>{{ total }} 件商品</span>
+        <span>{{ categories.length }} 个一级分类</span>
+        <span>第 {{ page }} 页</span>
       </div>
-      <router-link class="btn dark" to="/cart"><ShoppingCart size="18" /> 购物车</router-link>
     </div>
 
-    <div class="toolbar product-toolbar">
+    <div ref="dockRef" class="search-dock">
       <form class="search-box catalog-search" @submit.prevent="search">
         <Search size="18" />
         <input v-model="keyword" placeholder="搜索机械键盘、显示器、耳机" />
@@ -22,7 +25,7 @@
       </form>
     </div>
 
-    <div class="category-scroll">
+    <div class="category-scroll" aria-label="商品分类">
       <div class="category-strip">
         <button class="chip" :class="{ active: !categoryId }" @click="selectCategory(null)">全部</button>
         <template v-for="c in categories" :key="c.id">
@@ -35,16 +38,20 @@
     </div>
 
     <p v-if="loadError" class="error">{{ loadError }}</p>
-    <p v-else-if="isLoading" class="muted">商品加载中...</p>
-    <p v-else-if="!products.length" class="muted">暂无商品</p>
+    <p v-else-if="isLoading" class="muted product-state">商品加载中...</p>
+    <p v-else-if="!products.length" class="muted product-state">暂无商品</p>
 
-    <TransitionGroup :key="gridKey" tag="div" class="grid product-grid" name="product-card-list" appear>
+    <TransitionGroup
+      name="product-list"
+      tag="div"
+      class="grid product-grid"
+      :css="categoryTransition"
+    >
       <ProductCard
         v-for="(p, index) in products"
         :key="p.id"
         :product="p"
-        :index="index"
-        :added="addedIds.includes(p.id)"
+        :style="{ '--card-index': index % 12 }"
         @add-cart="addCart"
       />
     </TransitionGroup>
@@ -64,8 +71,11 @@ import { router } from '../router'
 import { store } from '../store'
 import { useToast } from '../composables/useToast'
 import { flyToCart } from '../composables/useFlyToCart'
+import { useScrollInertia } from '../composables/useScrollInertia'
 import ProductCard from '../components/ProductCard.vue'
 
+const heroRef = ref(null)
+const dockRef = ref(null)
 const categories = ref([])
 const products = ref([])
 const keyword = ref('')
@@ -77,9 +87,11 @@ const total = ref(0)
 const searchMode = ref(false)
 const isLoading = ref(false)
 const loadError = ref('')
-const addedIds = ref([])
-const gridKey = ref(0)
+const categoryTransition = ref(false)
 const toast = useToast()
+let categoryTransitionTimer = null
+
+useScrollInertia(heroRef, dockRef)
 
 onMounted(async () => {
   try {
@@ -94,6 +106,8 @@ onMounted(async () => {
 function selectCategory(id) {
   categoryId.value = id
   searchMode.value = false
+  // Diagnostic-only switch, populated by dev/fxDiagnostics.js for isolated perf runs.
+  categoryTransition.value = !document.documentElement.classList.contains('fx-off-product-list')
   loadProducts(1)
 }
 
@@ -118,7 +132,6 @@ async function loadProducts(nextPage) {
       products.value = data.list || []
       total.value = data.total || 0
     }
-    gridKey.value += 1
   } catch (e) {
     products.value = []
     total.value = 0
@@ -126,6 +139,12 @@ async function loadProducts(nextPage) {
     toast.show(loadError.value)
   } finally {
     isLoading.value = false
+    if (categoryTransition.value) {
+      window.clearTimeout(categoryTransitionTimer)
+      categoryTransitionTimer = window.setTimeout(() => {
+        categoryTransition.value = false
+      }, 360)
+    }
   }
 }
 
@@ -134,21 +153,12 @@ async function addCart(product, event) {
     router.push('/login')
     return
   }
-  const card = event?.currentTarget?.closest('.product-card')
-  markAdded(product.id)
-  flyToCart(card?.querySelector('.product-image'), { origin: event?.currentTarget })
+  flyToCart(event, { imageUrl: product.imageUrl })
   try {
     await api.post('/cart', { productId: product.id, quantity: 1 })
     toast.show('已加入购物车')
   } catch (e) {
     toast.show(errorMessage(e))
   }
-}
-
-function markAdded(id) {
-  if (!addedIds.value.includes(id)) addedIds.value.push(id)
-  window.setTimeout(() => {
-    addedIds.value = addedIds.value.filter((value) => value !== id)
-  }, 900)
 }
 </script>

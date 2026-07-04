@@ -1,49 +1,69 @@
-export function flyToCart(sourceEl, options = {}) {
+export function flyToCart(event, options = {}) {
   const cartLink = document.querySelector('[data-cart-target]')
   if (!cartLink) return null
+  const cartIcon = cartLink.querySelector('.cart-icon')
+  if (!cartIcon) return null
+  const fxOff = document.documentElement.classList
 
-  const originRect = options.origin?.getBoundingClientRect?.()
-  const sourceRect = sourceEl?.getBoundingClientRect?.() || originRect
-  const targetRect = cartLink.getBoundingClientRect()
-  if (!sourceRect) {
-    cartLink.classList.add('cart-target-pop')
-    window.setTimeout(() => cartLink.classList.remove('cart-target-pop'), 780)
-    return null
+  const motionReduced = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches
+  // Diagnostic-only switches, populated by dev/fxDiagnostics.js for isolated perf runs.
+  const canFly = !motionReduced && !fxOff.contains('fx-off-cart-fly')
+  const canBurst = !motionReduced && !fxOff.contains('fx-off-cart-burst')
+  const shouldBurstOnly = canBurst && fxOff.contains('fx-off-cart-fly')
+
+  if (canFly || shouldBurstOnly) {
+    const targetRect = cartIcon.getBoundingClientRect()
+    const endX = targetRect.left + targetRect.width / 2
+    const endY = targetRect.top + targetRect.height / 2
+
+    if (canFly) {
+      const sourceRect = event?.currentTarget?.getBoundingClientRect()
+      const startX = sourceRect ? sourceRect.left + sourceRect.width / 2 : window.innerWidth / 2
+      const startY = sourceRect ? sourceRect.top + sourceRect.height / 2 : window.innerHeight / 2
+      const orb = document.createElement('span')
+      orb.className = 'cart-fly-orb'
+      if (options.imageUrl) {
+        orb.classList.add('cart-fly-orb--thumb')
+        orb.style.backgroundImage = `url(${options.imageUrl})`
+      }
+      orb.style.setProperty('--start-x', `${startX}px`)
+      orb.style.setProperty('--start-y', `${startY}px`)
+      orb.style.setProperty('--fly-x', `${endX - startX}px`)
+      orb.style.setProperty('--fly-y', `${endY - startY}px`)
+      orb.style.setProperty('--arc-x', `${(endX - startX) * 0.48}px`)
+      orb.style.setProperty('--arc-y', `${(endY - startY) * 0.48 - 62}px`)
+      document.body.appendChild(orb)
+      orb.addEventListener('animationend', () => {
+        orb.remove()
+        spawnCartBurst(endX, endY, fxOff)
+      }, { once: true })
+    } else {
+      spawnCartBurst(endX, endY, fxOff)
+    }
   }
 
-  const startSize = sourceEl ? Math.min(Math.max(sourceRect.width, 72), 130) : 34
-  const clone = document.createElement('div')
-  clone.className = sourceEl ? 'fly-cart-image' : 'fly-cart-image fly-cart-dot'
-  if (sourceEl?.src) {
-    clone.style.backgroundImage = `url("${sourceEl.src}")`
-  } else {
-    clone.innerHTML = '<span>+</span>'
+  if (!fxOff.contains('fx-off-cart-pulse')) {
+    cartIcon.classList.remove('is-added')
+    window.requestAnimationFrame(() => {
+      cartIcon.classList.add('is-added')
+      cartIcon.addEventListener('animationend', () => cartIcon.classList.remove('is-added'), { once: true })
+    })
   }
-  const startLeft = sourceRect.left + sourceRect.width / 2 - startSize / 2
-  const startTop = sourceRect.top + sourceRect.height / 2 - startSize / 2
-  const targetX = targetRect.left + targetRect.width / 2 - sourceRect.left - sourceRect.width / 2
-  const targetY = targetRect.top + targetRect.height / 2 - sourceRect.top - sourceRect.height / 2
-  clone.style.left = `${startLeft}px`
-  clone.style.top = `${startTop}px`
-  clone.style.width = `${startSize}px`
-  clone.style.height = `${startSize}px`
-  document.body.appendChild(clone)
+  return null
+}
 
-  sourceEl?.closest('.product-card, .detail-layout, .favorites-page')?.classList.add('cart-added-pulse')
-  cartLink.classList.add('cart-target-pop')
-  const animation = clone.animate([
-    { transform: 'translate3d(0, 0, 0) scale(1) rotate(0deg)', opacity: 1, filter: 'saturate(1)' },
-    { transform: `translate3d(${targetX * 0.26}px, ${targetY * 0.08 - 84}px, 0) scale(0.92) rotate(-7deg)`, opacity: 1, filter: 'saturate(1.15)', offset: 0.25 },
-    { transform: `translate3d(${targetX * 0.7}px, ${targetY * 0.56 - 38}px, 0) scale(0.48) rotate(10deg)`, opacity: 0.96, filter: 'saturate(1.08)', offset: 0.68 },
-    { transform: `translate3d(${targetX}px, ${targetY}px, 0) scale(0.1) rotate(18deg)`, opacity: 0, filter: 'saturate(1)' }
-  ], {
-    duration: 1180,
-    easing: 'cubic-bezier(0.16, 1, 0.3, 1)',
-    fill: 'forwards'
-  })
-
-  animation.finished.finally(() => clone.remove())
-  window.setTimeout(() => cartLink.classList.remove('cart-target-pop'), 980)
-  window.setTimeout(() => sourceEl?.closest('.product-card, .detail-layout, .favorites-page')?.classList.remove('cart-added-pulse'), 760)
-  return animation
+function spawnCartBurst(x, y, fxOff) {
+  if (fxOff.contains('fx-off-cart-burst')) return
+  for (let i = 0; i < 4; i += 1) {
+    const spark = document.createElement('span')
+    spark.className = 'cart-burst-spark'
+    const angle = (Math.PI * 2 * i) / 4 + Math.random() * 0.6
+    const dist = 18 + Math.random() * 8
+    spark.style.setProperty('--start-x', `${x}px`)
+    spark.style.setProperty('--start-y', `${y}px`)
+    spark.style.setProperty('--dx', `${Math.cos(angle) * dist}px`)
+    spark.style.setProperty('--dy', `${Math.sin(angle) * dist}px`)
+    document.body.appendChild(spark)
+    spark.addEventListener('animationend', () => spark.remove(), { once: true })
+  }
 }

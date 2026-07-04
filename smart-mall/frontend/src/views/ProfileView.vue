@@ -60,7 +60,7 @@
             class="compact-item profile-product-row"
             :to="`/products/${item.product.id}`"
           >
-            <img :src="item.product.imageUrl" :alt="item.product.name" />
+            <img :src="item.product.imageUrl" :alt="item.product.name" width="58" height="58" loading="lazy" decoding="async" />
             <div>
               <strong>{{ item.product.name }}</strong>
               <small>浏览 {{ item.viewCount }} 次 · {{ formatTime(item.lastViewedAt) }}</small>
@@ -87,7 +87,7 @@
           class="compact-item profile-product-row"
           :to="`/products/${item.product.id}`"
         >
-          <img :src="item.product.imageUrl" :alt="item.product.name" />
+          <img :src="item.product.imageUrl" :alt="item.product.name" width="58" height="58" loading="lazy" decoding="async" />
           <div>
             <strong>{{ item.product.name }}</strong>
             <small>收藏于 {{ formatTime(item.createdAt) }} · 已售 {{ item.product.salesCount }}</small>

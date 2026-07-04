@@ -52,7 +52,7 @@
             </label>
 
             <div class="cart-thumb">
-              <img :src="item.imageUrl" :alt="item.productName" />
+              <img :src="item.imageUrl" :alt="item.productName" width="96" height="96" loading="lazy" decoding="async" />
             </div>
 
             <div class="cart-info">
@@ -136,6 +136,8 @@ const total = computed(() => items.value
   .toFixed(2))
 
 watch(total, () => {
+  // Diagnostic-only switch, populated by dev/fxDiagnostics.js for isolated perf runs.
+  if (document.documentElement.classList.contains('fx-off-amount-pulse')) return
   totalPulse.value = true
   window.setTimeout(() => { totalPulse.value = false }, 360)
 })
@@ -163,7 +165,8 @@ function unmark(listRef, id) {
 async function update(item, quantity) {
   if (quantity < 1 || quantity > item.stock) return
   mark(updatingIds, item.id)
-  mark(bumpedIds, item.id)
+  const qtyBumpOff = document.documentElement.classList.contains('fx-off-qty-bump')
+  if (!qtyBumpOff) mark(bumpedIds, item.id)
   try {
     await api.put(`/cart/${item.id}`, { quantity })
     await load()
@@ -172,7 +175,7 @@ async function update(item, quantity) {
     await load()
   } finally {
     unmark(updatingIds, item.id)
-    window.setTimeout(() => unmark(bumpedIds, item.id), 260)
+    if (!qtyBumpOff) window.setTimeout(() => unmark(bumpedIds, item.id), 260)
   }
 }
 
