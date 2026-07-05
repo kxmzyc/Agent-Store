@@ -1,12 +1,55 @@
 <template>
   <section class="page product-page">
-    <div ref="heroRef" class="commerce-hero">
-      <p class="hero-kicker">SMART MALL</p>
-      <h1>把真实商品数据，摆进一个安静的展厅。</h1>
-      <p class="hero-copy">没有虚构的好评，没有摆拍的库存。这里的每一件，都是它本来的样子。</p>
-      <div class="hero-stats" aria-label="商品统计">
-        <span>{{ total }} 件商品</span>
-        <span>{{ categories.length }} 个一级分类</span>
+    <div ref="heroRef" class="commerce-hero product-carousel" aria-roledescription="carousel" aria-label="主推商品轮播">
+      <span class="sr-only" aria-live="polite">{{ carouselStatusText }}</span>
+      <div class="carousel-copy">
+        <p class="hero-kicker">SMART MALL PICKS</p>
+        <h1>{{ activeHeroProduct?.name || '把真实商品数据，摆进一个安静的展厅。' }}</h1>
+        <p class="hero-copy">
+          {{ activeHeroProduct?.description || '没有虚构的好评，没有摆拍的库存。这里的每一件，都是它本来的样子。' }}
+        </p>
+        <div class="hero-stats" aria-label="商品统计">
+          <span>{{ total }} 件商品</span>
+          <span>{{ visibleCategories.length }} 个一级分类</span>
+          <span v-if="activeHeroProduct">¥{{ activeHeroProduct.price }} · 库存 {{ activeHeroProduct.stock }}</span>
+        </div>
+        <div class="carousel-actions" v-if="activeHeroProduct">
+          <router-link class="btn primary" :to="`/products/${activeHeroProduct.id}`">查看商品</router-link>
+          <button class="btn ghost carousel-toggle" type="button" :aria-label="isCarouselPaused ? '继续轮播' : '暂停轮播'" @click="toggleCarousel">
+            <Play v-if="isCarouselPaused" size="16" />
+            <Pause v-else size="16" />
+          </button>
+        </div>
+      </div>
+
+      <router-link
+        v-if="activeHeroProduct"
+        class="carousel-visual"
+        :to="`/products/${activeHeroProduct.id}`"
+        :aria-label="`查看 ${activeHeroProduct.name}`"
+      >
+        <img :src="activeHeroProduct.imageUrl" :alt="activeHeroProduct.name" />
+        <span class="carousel-badge">HOT PICK</span>
+      </router-link>
+
+      <div v-if="heroProducts.length > 1" class="carousel-controls" aria-label="轮播控制">
+        <button type="button" class="carousel-arrow" aria-label="上一件商品" @click="previousHeroProduct">
+          <ChevronLeft size="18" />
+        </button>
+        <div class="carousel-dots">
+          <button
+            v-for="(product, index) in heroProducts"
+            :key="product.id"
+            type="button"
+            :class="{ active: index === heroIndex }"
+            :aria-label="`切换到 ${product.name}`"
+            :aria-current="index === heroIndex"
+            @click="selectHeroProduct(index)"
+          />
+        </div>
+        <button type="button" class="carousel-arrow" aria-label="下一件商品" @click="nextHeroProduct">
+          <ChevronRight size="18" />
+        </button>
       </div>
     </div>
 
@@ -27,11 +70,8 @@
     <div class="category-scroll" aria-label="商品分类">
       <div class="category-strip">
         <button class="chip" :class="{ active: !categoryId }" @click="selectCategory(null)">全部</button>
-        <template v-for="c in categories" :key="c.id">
+        <template v-for="c in visibleCategories" :key="c.id">
           <button class="chip" :class="{ active: categoryId === c.id }" @click="selectCategory(c.id)">{{ c.name }}</button>
-          <button v-for="child in c.children" :key="child.id" class="chip" :class="{ active: categoryId === child.id }" @click="selectCategory(child.id)">
-            {{ child.name }}
-          </button>
         </template>
       </div>
     </div>
@@ -65,7 +105,7 @@
 </template>
 
 <script setup>
-import { onMounted, ref } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { api, errorMessage } from '../api/http'
 import { router } from '../router'
 import { store } from '../store'
@@ -89,7 +129,17 @@ const isLoading = ref(false)
 const loadError = ref('')
 const categoryTransition = ref(false)
 const toast = useToast()
+const visibleCategories = computed(() => categories.value.filter((category) => category.parentId == null))
+const heroIndex = ref(0)
+const isCarouselPaused = ref(false)
+const heroProducts = computed(() => products.value.slice(0, Math.min(products.value.length, 5)))
+const activeHeroProduct = computed(() => heroProducts.value[heroIndex.value] || null)
+const carouselStatusText = computed(() => {
+  if (!activeHeroProduct.value) return '当前没有可展示的主推商品'
+  return `正在展示第 ${heroIndex.value + 1} 件商品：${activeHeroProduct.value.name}`
+})
 let categoryTransitionTimer = null
+let carouselTimer = null
 
 useScrollInertia(heroRef, dockRef)
 
@@ -101,6 +151,16 @@ onMounted(async () => {
     toast.show(errorMessage(e))
   }
   await loadProducts(1)
+  startCarousel()
+})
+
+onBeforeUnmount(() => {
+  stopCarousel()
+})
+
+watch(heroProducts, (items) => {
+  if (heroIndex.value >= items.length) heroIndex.value = 0
+  startCarousel()
 })
 
 function selectCategory(id) {
@@ -114,6 +174,43 @@ function selectCategory(id) {
 function search() {
   searchMode.value = !!keyword.value.trim()
   loadProducts(1)
+}
+
+function startCarousel() {
+  stopCarousel()
+  if (isCarouselPaused.value || heroProducts.value.length < 2) return
+  carouselTimer = window.setInterval(() => {
+    heroIndex.value = (heroIndex.value + 1) % heroProducts.value.length
+  }, 5200)
+}
+
+function stopCarousel() {
+  if (carouselTimer) {
+    window.clearInterval(carouselTimer)
+    carouselTimer = null
+  }
+}
+
+function nextHeroProduct() {
+  if (!heroProducts.value.length) return
+  heroIndex.value = (heroIndex.value + 1) % heroProducts.value.length
+  startCarousel()
+}
+
+function previousHeroProduct() {
+  if (!heroProducts.value.length) return
+  heroIndex.value = (heroIndex.value - 1 + heroProducts.value.length) % heroProducts.value.length
+  startCarousel()
+}
+
+function selectHeroProduct(index) {
+  heroIndex.value = index
+  startCarousel()
+}
+
+function toggleCarousel() {
+  isCarouselPaused.value = !isCarouselPaused.value
+  startCarousel()
 }
 
 async function loadProducts(nextPage) {

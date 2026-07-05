@@ -6,4 +6,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface CategoryRepository extends JpaRepository<Category, Long> {
   List<Category> findAllByOrderBySortOrderAscIdAsc();
+  List<Category> findByParentIdOrderBySortOrderAscIdAsc(Long parentId);
 }

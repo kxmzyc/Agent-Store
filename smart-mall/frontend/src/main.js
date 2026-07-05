@@ -2,14 +2,14 @@ import { createApp } from 'vue'
 import {
   LogOut, Search, ShoppingCart, UserRound, PackageSearch, Bot, Send,
   Plus, Minus, Trash2, CreditCard, ClipboardList, Settings, Home, ArrowLeft,
-  Heart, RotateCcw, Eye
+  Heart, RotateCcw, Eye, ChevronLeft, ChevronRight, Pause, Play
 } from 'lucide-vue-next'
 import App from './App.vue'
 import './styles/tokens.css'
 import './style.css'
 import { router } from './router'
 
-if (import.meta.env.DEV || import.meta.env.VITE_PERF_HUD === '1') {
+if (import.meta.env.VITE_PERF_HUD === '1') {
   import('./dev/fxDiagnostics').then((module) => module.mountFxDiagnostics())
   import('./dev/perfHud').then((module) => module.mountPerfHud())
 }
@@ -34,4 +34,8 @@ app.component('ArrowLeft', ArrowLeft)
 app.component('Heart', Heart)
 app.component('RotateCcw', RotateCcw)
 app.component('Eye', Eye)
+app.component('ChevronLeft', ChevronLeft)
+app.component('ChevronRight', ChevronRight)
+app.component('Pause', Pause)
+app.component('Play', Play)
 app.mount('#app')

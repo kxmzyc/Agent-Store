@@ -53,7 +53,7 @@ public class ProductController {
     Pageable pageable = PageRequest.of(Math.max(page, 1) - 1, Math.min(Math.max(size, 1), 100), toSort(sort));
     Page<Product> result = categoryId == null
         ? products.findByStatus(1, pageable)
-        : products.findByStatusAndCategoryId(1, categoryId, pageable);
+        : products.findByStatusAndCategoryIdIn(1, categoryIdsWithChildren(categoryId), pageable);
     return new PageResponse<>(result.getTotalElements(), result.getContent().stream().map(ProductResponse::from).toList());
   }
 
@@ -181,6 +181,16 @@ public class ProductController {
       case "new_desc" -> Sort.by(Sort.Direction.DESC, "createdAt");
       default -> Sort.by(Sort.Direction.DESC, "salesCount").and(Sort.by(Sort.Direction.DESC, "id"));
     };
+  }
+
+  private List<Long> categoryIdsWithChildren(Long categoryId) {
+    List<Long> ids = new ArrayList<>();
+    ids.add(categoryId);
+    List<Category> children = categories.findByParentIdOrderBySortOrderAscIdAsc(categoryId);
+    for (Category child : children) {
+      ids.addAll(categoryIdsWithChildren(child.id));
+    }
+    return ids;
   }
 
   private Integer parseStatus(String status) {

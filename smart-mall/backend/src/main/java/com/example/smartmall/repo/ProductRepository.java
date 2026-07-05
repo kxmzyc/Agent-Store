@@ -11,6 +11,7 @@ import org.springframework.data.repository.query.Param;
 public interface ProductRepository extends JpaRepository<Product, Long> {
   Page<Product> findByStatus(Integer status, Pageable pageable);
   Page<Product> findByStatusAndCategoryId(Integer status, Long categoryId, Pageable pageable);
+  Page<Product> findByStatusAndCategoryIdIn(Integer status, List<Long> categoryIds, Pageable pageable);
   Page<Product> findByCategoryId(Long categoryId, Pageable pageable);
   long countByStatus(Integer status);
   long countByStatusAndStock(Integer status, Integer stock);
