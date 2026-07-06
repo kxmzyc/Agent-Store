@@ -40,6 +40,7 @@ public class AuthController {
     user.phone = request.phone();
     user.role = "USER";
     user.status = 1;
+    user.points = 0;
     user.createdAt = LocalDateTime.now();
     user.updatedAt = user.createdAt;
     users.save(user);

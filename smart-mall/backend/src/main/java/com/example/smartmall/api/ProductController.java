@@ -23,14 +23,23 @@ public class ProductController {
   private final ProductRepository products;
   private final ProductFavoriteRepository favorites;
   private final ProductViewHistoryRepository viewHistory;
+  private final ProductReviewRepository reviews;
+  private final OrderItemRepository orderItems;
+  private final UserRepository users;
 
   public ProductController(CategoryRepository categories, ProductRepository products,
                            ProductFavoriteRepository favorites,
-                           ProductViewHistoryRepository viewHistory) {
+                           ProductViewHistoryRepository viewHistory,
+                           ProductReviewRepository reviews,
+                           OrderItemRepository orderItems,
+                           UserRepository users) {
     this.categories = categories;
     this.products = products;
     this.favorites = favorites;
     this.viewHistory = viewHistory;
+    this.reviews = reviews;
+    this.orderItems = orderItems;
+    this.users = users;
   }
 
   @GetMapping("/categories")
@@ -88,7 +97,42 @@ public class ProductController {
     if (user != null) {
       recordView(user.id(), product.id);
     }
-    return ProductResponse.from(product);
+    return productResponse(product);
+  }
+
+  @GetMapping("/products/{id}/reviews")
+  PageResponse<ReviewResponse> productReviews(@PathVariable Long id,
+                                              @RequestParam(defaultValue = "1") int page,
+                                              @RequestParam(defaultValue = "10") int size) {
+    products.findById(id).filter(p -> p.status == 1).orElseThrow(() -> BizException.notFound("商品不存在"));
+    Pageable pageable = PageRequest.of(Math.max(page, 1) - 1, Math.min(Math.max(size, 1), 50));
+    Page<ProductReview> result = reviews.findByProductIdOrderByCreatedAtDesc(id, pageable);
+    List<ReviewResponse> list = result.getContent().stream()
+        .map(review -> ReviewResponse.from(review, users.findById(review.userId).map(u -> u.username).orElse("用户")))
+        .toList();
+    return new PageResponse<>(result.getTotalElements(), list);
+  }
+
+  @PostMapping("/products/{id}/reviews")
+  ResponseEntity<ReviewResponse> createReview(@AuthenticationPrincipal CurrentUser user,
+                                              @PathVariable Long id,
+                                              @Valid @RequestBody ReviewRequest request) {
+    products.findById(id).filter(p -> p.status == 1).orElseThrow(() -> BizException.notFound("商品不存在"));
+    Long orderId = orderItems.findCompletedOrderIdsForProduct(user.id(), id, PageRequest.of(0, 10))
+        .stream()
+        .filter(candidate -> !reviews.existsByUserIdAndProductIdAndOrderId(user.id(), id, candidate))
+        .findFirst()
+        .orElseThrow(() -> BizException.badRequest("完成购买后才能评价，或该商品已评价"));
+    ProductReview review = new ProductReview();
+    review.productId = id;
+    review.userId = user.id();
+    review.orderId = orderId;
+    review.rating = request.rating();
+    review.content = request.content();
+    review.createdAt = LocalDateTime.now();
+    ProductReview saved = reviews.save(review);
+    String username = users.findById(user.id()).map(u -> u.username).orElse("用户");
+    return ResponseEntity.status(HttpStatus.CREATED).body(ReviewResponse.from(saved, username));
   }
 
   @GetMapping("/user/favorites")
@@ -220,5 +264,13 @@ public class ProductController {
     history.createdAt = history.createdAt == null ? now : history.createdAt;
     history.lastViewedAt = now;
     viewHistory.save(history);
+  }
+
+  private ProductResponse productResponse(Product product) {
+    Double avgRating = reviews.avgRatingByProductId(product.id);
+    Long reviewCount = reviews.countByProductId(product.id);
+    return new ProductResponse(product.id, product.categoryId, product.name, product.description, product.price,
+        product.stock, product.salesCount, product.imageUrl, product.status, product.version,
+        Math.round((avgRating == null ? 0.0 : avgRating) * 10.0) / 10.0, reviewCount);
   }
 }

@@ -33,16 +33,23 @@
           <div class="panel-head">
             <div>
               <h2>低库存预警</h2>
-              <p>库存小于等于 5 的在售商品。</p>
+              <p>库存小于等于 10 的在售商品。</p>
             </div>
             <span class="count-pill">{{ dashboard.lowStockProducts.length }}</span>
           </div>
           <div v-if="!dashboard.lowStockProducts.length" class="empty-state">暂无库存风险</div>
           <div v-else class="compact-list">
-            <article v-for="p in dashboard.lowStockProducts" :key="p.id" class="compact-item danger-line">
+            <article
+              v-for="p in dashboard.lowStockProducts"
+              :key="p.id"
+              class="compact-item danger-line clickable-row"
+              tabindex="0"
+              @click="openLowStockProduct(p)"
+              @keydown.enter="openLowStockProduct(p)"
+            >
               <div>
                 <strong>{{ p.name }}</strong>
-                <small>已售 {{ p.salesCount }} · ¥{{ p.price }}</small>
+                <small>{{ p.category || '未分类' }} · 已售 {{ p.salesCount }} · ¥{{ p.price }}</small>
               </div>
               <span class="stock-badge" :class="{ danger: p.stock === 0 }">库存 {{ p.stock }}</span>
             </article>
@@ -86,6 +93,26 @@
               <b>¥{{ order.totalAmount }}</b>
             </article>
           </div>
+        </section>
+
+        <section class="panel dashboard-panel chart-panel">
+          <div class="panel-head">
+            <div>
+              <h2>近 7 天订单趋势</h2>
+              <p>用于现场展示运营监控能力。</p>
+            </div>
+          </div>
+          <div ref="orderChartRef" class="chart-box"></div>
+        </section>
+
+        <section class="panel dashboard-panel chart-panel">
+          <div class="panel-head">
+            <div>
+              <h2>分类销量 TOP 5</h2>
+              <p>按订单明细数量聚合。</p>
+            </div>
+          </div>
+          <div ref="categoryChartRef" class="chart-box"></div>
         </section>
       </div>
     </template>
@@ -178,6 +205,9 @@
             {{ tab.label }}
           </button>
         </div>
+        <button class="primary" type="button" @click="exportOrders">
+          <Download size="18" /> 导出 Excel
+        </button>
       </div>
 
       <div class="admin-order-grid">
@@ -209,18 +239,43 @@
         <button :disabled="orderPage * orderSize >= orderTotal" @click="loadOrders(orderPage + 1)">下一页</button>
       </div>
     </template>
+
+    <template v-if="activeTab === 'feedback'">
+      <div class="section-title">
+        <h2>反馈管理</h2>
+        <span class="muted">共 {{ feedbackItems.length }} 条反馈</span>
+      </div>
+      <div class="feedback-grid">
+        <article v-for="item in feedbackItems" :key="item.id" class="panel feedback-card">
+          <div class="panel-head">
+            <div>
+              <h2>{{ feedbackType(item.type) }} · {{ item.username }}</h2>
+              <p>{{ formatTime(item.createdAt) }}</p>
+            </div>
+            <span class="status-pill">{{ item.status === 1 ? '已处理' : '待处理' }}</span>
+          </div>
+          <p>{{ item.content }}</p>
+          <div v-if="item.reply" class="feedback-reply">回复：{{ item.reply }}</div>
+          <form class="feedback-reply-form" @submit.prevent="replyFeedback(item)">
+            <textarea v-model="feedbackReplies[item.id]" placeholder="填写处理回复" />
+            <button class="primary">回复</button>
+          </form>
+        </article>
+      </div>
+    </template>
   </section>
 </template>
 
 <script setup>
-import { computed, onMounted, reactive, ref, watch } from 'vue'
+import { computed, nextTick, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue'
 import { api, errorMessage } from '../api/http'
 import { useToast } from '../composables/useToast'
 
 const tabs = [
   { value: 'overview', label: '概览' },
   { value: 'products', label: '商品' },
-  { value: 'orders', label: '订单' }
+  { value: 'orders', label: '订单' },
+  { value: 'feedback', label: '反馈' }
 ]
 const orderTabs = [
   { value: 'all', label: '全部' },
@@ -243,12 +298,19 @@ const orderTotal = ref(0)
 const orderPage = ref(1)
 const orderSize = 8
 const orderStatus = ref('all')
+const feedbackItems = ref([])
 const dashboard = ref(null)
+const orderChartRef = ref(null)
+const categoryChartRef = ref(null)
 const dashboardError = ref('')
 const editing = ref(false)
 const form = reactive(blank())
 const toast = useToast()
 const productFilters = reactive({ keyword: '', categoryId: null, status: 'all' })
+const feedbackReplies = reactive({})
+let echartsModule = null
+let orderChart = null
+let categoryChart = null
 
 const flatCategories = computed(() => categories.value.flatMap(c => [c, ...(c.children || [])]))
 
@@ -256,10 +318,12 @@ const metrics = computed(() => {
   const data = dashboard.value?.metrics
   if (!data) return []
   return [
-    { label: '用户数', value: data.users, hint: '注册用户总量' },
-    { label: '在售商品', value: data.products, hint: `${data.soldOutProducts} 个商品售罄` },
-    { label: '订单总数', value: data.orders, hint: `${data.pendingPaymentOrders} 个待付款` },
-    { label: '有效成交额', value: `¥${data.effectiveRevenue}`, hint: '不含已取消订单' },
+    { label: '今日订单', value: dashboard.value.todayOrders, hint: `${data.pendingPaymentOrders} 个待付款` },
+    { label: '本月销售额', value: `¥${dashboard.value.monthRevenue}`, hint: '不含已取消订单' },
+    { label: '在售商品', value: dashboard.value.productCount, hint: `${data.soldOutProducts} 个商品售罄` },
+    { label: '注册用户', value: dashboard.value.userCount, hint: '当前账户总量' },
+    { label: '订单总数', value: data.orders, hint: '全量订单记录' },
+    { label: '有效成交额', value: `¥${data.effectiveRevenue}`, hint: '历史有效成交' },
     { label: '待发货', value: data.paidOrders, hint: '需要管理员处理' },
     { label: '配送中', value: data.shippedOrders, hint: `${data.completedOrders} 个已完成` }
   ]
@@ -270,8 +334,19 @@ onMounted(async () => {
   await refreshAll()
 })
 
+onBeforeUnmount(() => {
+  orderChart?.dispose()
+  categoryChart?.dispose()
+})
+
 watch(activeTab, async (tab) => {
   if (tab === 'orders' && !orders.value.length) await loadOrders(1)
+  if (tab === 'feedback' && !feedbackItems.value.length) await loadFeedback()
+  if (tab === 'overview') await renderCharts()
+})
+
+watch(dashboard, async () => {
+  if (activeTab.value === 'overview') await renderCharts()
 })
 
 function blank() {
@@ -302,6 +377,41 @@ async function loadDashboard() {
   }
 }
 
+async function renderCharts() {
+  if (!dashboard.value) return
+  await nextTick()
+  if (!orderChartRef.value || !categoryChartRef.value) return
+  if (!echartsModule) echartsModule = await import('echarts')
+  if (!orderChart || orderChart.getDom() !== orderChartRef.value) {
+    orderChart?.dispose()
+    orderChart = echartsModule.init(orderChartRef.value)
+  }
+  if (!categoryChart || categoryChart.getDom() !== categoryChartRef.value) {
+    categoryChart?.dispose()
+    categoryChart = echartsModule.init(categoryChartRef.value)
+  }
+  const dates = dashboard.value.last7DaysOrders?.map(item => item.date.slice(5)) || []
+  const counts = dashboard.value.last7DaysOrders?.map(item => item.count) || []
+  orderChart.setOption({
+    color: ['#2B45D8'],
+    grid: { left: 36, right: 16, top: 20, bottom: 28 },
+    tooltip: { trigger: 'axis' },
+    xAxis: { type: 'category', data: dates },
+    yAxis: { type: 'value', minInterval: 1 },
+    series: [{ type: 'line', smooth: true, data: counts, areaStyle: { opacity: 0.08 } }]
+  })
+  const categories = dashboard.value.categoryTopSales?.map(item => item.category) || []
+  const sales = dashboard.value.categoryTopSales?.map(item => item.sales) || []
+  categoryChart.setOption({
+    color: ['#2B45D8'],
+    grid: { left: 42, right: 16, top: 20, bottom: 40 },
+    tooltip: { trigger: 'axis' },
+    xAxis: { type: 'category', data: categories, axisLabel: { interval: 0, rotate: 24 } },
+    yAxis: { type: 'value', minInterval: 1 },
+    series: [{ type: 'bar', data: sales, barMaxWidth: 28 }]
+  })
+}
+
 async function loadProducts(nextPage = 1) {
   productPage.value = nextPage
   const params = {
@@ -323,6 +433,14 @@ async function loadOrders(nextPage = 1) {
   })
   orders.value = data.list
   orderTotal.value = data.total
+}
+
+async function loadFeedback() {
+  const { data } = await api.get('/admin/feedback')
+  feedbackItems.value = data
+  for (const item of data) {
+    feedbackReplies[item.id] = item.reply || ''
+  }
 }
 
 function newProduct() {
@@ -371,6 +489,16 @@ async function quickStock(product, delta) {
   }
 }
 
+async function openLowStockProduct(product) {
+  activeTab.value = 'products'
+  try {
+    const { data } = await api.get(`/products/${product.id}`)
+    edit(data)
+  } catch (e) {
+    toast.show(errorMessage(e))
+  }
+}
+
 async function remove(product) {
   if (!confirm(`确认下架 ${product.name}？`)) return
   try {
@@ -413,6 +541,41 @@ async function ship(order) {
   } catch (e) {
     toast.show(errorMessage(e))
   }
+}
+
+async function exportOrders() {
+  try {
+    const res = await api.get('/admin/orders/export', { responseType: 'blob' })
+    const url = URL.createObjectURL(res.data)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = `orders_${new Date().toISOString().slice(0, 10)}.xlsx`
+    a.click()
+    URL.revokeObjectURL(url)
+  } catch (e) {
+    toast.show(errorMessage(e))
+  }
+}
+
+async function replyFeedback(item) {
+  const reply = (feedbackReplies[item.id] || '').trim()
+  if (!reply) {
+    toast.show('请填写回复内容')
+    return
+  }
+  try {
+    await api.put(`/admin/feedback/${item.id}/reply`, { reply })
+    toast.show('反馈已回复')
+    await loadFeedback()
+  } catch (e) {
+    toast.show(errorMessage(e))
+  }
+}
+
+function feedbackType(type) {
+  if (type === 2) return '投诉'
+  if (type === 3) return 'BUG'
+  return '建议'
 }
 
 function orderLabel(status) {

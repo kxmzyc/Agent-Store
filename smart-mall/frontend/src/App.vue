@@ -9,6 +9,7 @@
         <router-link to="/"><Home size="15" /> 商品</router-link>
         <router-link to="/cart" data-cart-target><ShoppingCart class="cart-icon" size="15" /> 购物车</router-link>
         <router-link to="/favorites"><Heart size="15" /> 收藏</router-link>
+        <router-link to="/coupons"><Ticket size="15" /> 优惠券</router-link>
         <router-link to="/orders"><ClipboardList size="15" /> 订单</router-link>
         <router-link to="/profile"><UserRound size="15" /> 我的</router-link>
         <router-link v-if="store.user?.role === 'ADMIN'" to="/admin"><Settings size="15" /> 管理</router-link>
@@ -18,7 +19,7 @@
           <div class="avatar">{{ store.user.username.slice(0, 1).toUpperCase() }}</div>
           <div class="account-meta">
             <strong>{{ store.user.username }}</strong>
-            <small>{{ store.user.role }}</small>
+            <small>{{ store.user.role }} · 积分 {{ store.user.points || 0 }}</small>
           </div>
           <button class="icon-btn" title="退出登录" @click="store.logout"><LogOut size="18" /></button>
         </template>

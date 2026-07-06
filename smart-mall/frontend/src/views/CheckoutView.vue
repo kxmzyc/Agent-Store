@@ -40,9 +40,44 @@
         <div class="checkout-head">
           <div>
             <span class="muted">应付金额</span>
-            <strong>¥{{ total }}</strong>
+            <strong>¥{{ payableTotal }}</strong>
           </div>
-          <small>{{ isDirect ? '立即购买' : '购物车结算' }}</small>
+          <small>原价 ¥{{ subtotal }}</small>
+        </div>
+
+        <div class="checkout-benefits">
+          <div class="benefit-head">
+            <strong>优惠抵扣</strong>
+            <router-link to="/coupons">去领券</router-link>
+          </div>
+
+          <div class="coupon-picker">
+            <button
+              v-for="coupon in usableCoupons"
+              :key="coupon.id"
+              type="button"
+              class="benefit-option"
+              :class="{ active: selectedCouponId === coupon.id }"
+              :disabled="!canUseCoupon(coupon)"
+              @click="selectedCouponId = selectedCouponId === coupon.id ? null : coupon.id"
+            >
+              <span>{{ coupon.name }}</span>
+              <small>{{ couponRule(coupon) }} · {{ couponValue(coupon) }}</small>
+            </button>
+            <p v-if="!usableCoupons.length && !benefitsLoading" class="muted">暂无可用优惠券。</p>
+            <p v-if="benefitsLoading" class="muted">优惠信息加载中...</p>
+          </div>
+
+          <label class="point-toggle">
+            <input v-model="usePoints" type="checkbox" :disabled="!pointsInfo.points" />
+            <span>使用积分抵扣</span>
+            <small>余额 {{ pointsInfo.points || 0 }}，本单最多抵 ¥{{ maxPointDiscount }}</small>
+          </label>
+
+          <div class="checkout-discount-lines">
+            <div><span>优惠券</span><b>-¥{{ couponDiscount }}</b></div>
+            <div><span>积分</span><b>-¥{{ pointDiscount }}</b></div>
+          </div>
         </div>
 
         <form class="form checkout-form" @submit.prevent="submit">
@@ -65,6 +100,7 @@ import { computed, onMounted, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { api, errorMessage } from '../api/http'
 import { router } from '../router'
+import { store } from '../store'
 import { useToast } from '../composables/useToast'
 
 const route = useRoute()
@@ -74,6 +110,11 @@ const submitting = ref(false)
 const loadError = ref('')
 const error = ref('')
 const lines = ref([])
+const usableCoupons = ref([])
+const selectedCouponId = ref(null)
+const pointsInfo = ref({ points: 0, records: [] })
+const usePoints = ref(false)
+const benefitsLoading = ref(false)
 const shippingAddress = ref('北京市海淀区实训中心 1 号楼')
 const isDirect = computed(() => route.query.mode === 'direct')
 const directProductId = computed(() => Number(route.query.productId || 0))
@@ -82,9 +123,19 @@ const cartItemIds = computed(() => String(route.query.cartItemIds || '')
   .split(',')
   .map((value) => Number(value))
   .filter(Boolean))
-const total = computed(() => lines.value
+const subtotal = computed(() => lines.value
   .reduce((sum, line) => sum + Number(line.subtotal), 0)
   .toFixed(2))
+const selectedCoupon = computed(() => usableCoupons.value.find(coupon => coupon.id === selectedCouponId.value) || null)
+const couponDiscount = computed(() => money(calculateCouponDiscount(selectedCoupon.value, Number(subtotal.value))))
+const amountAfterCoupon = computed(() => Math.max(0.01, Number(subtotal.value) - Number(couponDiscount.value)))
+const maxPointDiscount = computed(() => {
+  const yuan = Math.floor((pointsInfo.value.points || 0) / 100)
+  const maxYuan = Math.floor(Math.max(0, amountAfterCoupon.value - 0.01))
+  return money(Math.min(yuan, maxYuan))
+})
+const pointDiscount = computed(() => usePoints.value ? maxPointDiscount.value : '0.00')
+const payableTotal = computed(() => money(Math.max(0.01, Number(subtotal.value) - Number(couponDiscount.value) - Number(pointDiscount.value))))
 
 onMounted(load)
 watch(() => route.fullPath, load)
@@ -125,6 +176,7 @@ async function load() {
         subtotal: item.subtotal
       }))
     }
+    await loadBenefits()
   } catch (e) {
     lines.value = []
     loadError.value = e.response ? errorMessage(e) : e.message || errorMessage(e)
@@ -133,14 +185,42 @@ async function load() {
   }
 }
 
+async function loadBenefits() {
+  benefitsLoading.value = true
+  try {
+    const [coupons, points] = await Promise.all([
+      api.get('/coupons/my', { params: { status: 0 } }),
+      api.get('/points/my')
+    ])
+    usableCoupons.value = coupons.data.filter((coupon) => coupon.status === 0)
+    pointsInfo.value = points.data
+    if (store.user) {
+      store.user.points = points.data.points || 0
+      localStorage.setItem('userInfo', JSON.stringify(store.user))
+    }
+    if (selectedCoupon.value && !canUseCoupon(selectedCoupon.value)) selectedCouponId.value = null
+  } catch {
+    usableCoupons.value = []
+    pointsInfo.value = { points: 0, records: [] }
+  } finally {
+    benefitsLoading.value = false
+  }
+}
+
 async function submit() {
   error.value = ''
   submitting.value = true
   try {
     const payload = { shippingAddress: shippingAddress.value }
+    if (selectedCoupon.value && canUseCoupon(selectedCoupon.value)) payload.userCouponId = selectedCoupon.value.id
+    payload.usePoints = usePoints.value
     const { data } = isDirect.value
       ? await api.post('/orders/direct', { ...payload, productId: directProductId.value, quantity: directQuantity.value })
       : await api.post('/orders', { ...payload, cartItemIds: lines.value.map((line) => line.cartItemId) })
+    if (store.user && data.pointsUsed) {
+      store.user.points = Math.max(0, (store.user.points || 0) - data.pointsUsed)
+      localStorage.setItem('userInfo', JSON.stringify(store.user))
+    }
     toast.show('订单已提交')
     router.push(`/orders/${data.orderId}`)
   } catch (e) {
@@ -149,5 +229,29 @@ async function submit() {
   } finally {
     submitting.value = false
   }
+}
+
+function canUseCoupon(coupon) {
+  return coupon && Number(subtotal.value) >= Number(coupon.threshold || 0)
+}
+
+function calculateCouponDiscount(coupon, amount) {
+  if (!coupon || !canUseCoupon(coupon)) return 0
+  const raw = coupon.type === 2
+    ? amount - amount * Number(coupon.discount)
+    : Number(coupon.discount)
+  return Math.min(Math.max(raw, 0), Math.max(0, amount - 0.01))
+}
+
+function couponValue(coupon) {
+  return coupon.type === 2 ? `${Number(coupon.discount) * 10}折` : `¥${coupon.discount}`
+}
+
+function couponRule(coupon) {
+  return Number(coupon.threshold) > 0 ? `满 ¥${coupon.threshold} 可用` : '无门槛'
+}
+
+function money(value) {
+  return Number(value || 0).toFixed(2)
 }
 </script>

@@ -5,6 +5,8 @@ import jakarta.validation.constraints.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.http.*;
 import org.springframework.security.access.AccessDeniedException;
@@ -23,9 +25,10 @@ public class ApiSupport {
   public record LoginRequest(@NotBlank String username, @NotBlank String password) {}
   public record RefreshRequest(@NotBlank String refreshToken) {}
   public record ProfileUpdateRequest(String phone, String avatarUrl) {}
-  public record UserResponse(Long id, String username, String phone, String avatarUrl, String role, LocalDateTime createdAt) {
+  public record UserResponse(Long id, String username, String phone, String avatarUrl, String role,
+                             LocalDateTime createdAt, Integer points) {
     public static UserResponse from(User u) {
-      return new UserResponse(u.id, u.username, u.phone, u.avatarUrl, u.role, u.createdAt);
+      return new UserResponse(u.id, u.username, u.phone, u.avatarUrl, u.role, u.createdAt, u.points == null ? 0 : u.points);
     }
   }
   public record RegisterResponse(Long userId, String username) {}
@@ -36,10 +39,19 @@ public class ApiSupport {
   public record ProductRequest(@NotNull Long categoryId, @NotBlank String name, String description,
                                @NotNull BigDecimal price, @NotNull Integer stock, String imageUrl, Integer status) {}
   public record ProductResponse(Long id, Long categoryId, String name, String description, BigDecimal price,
-                                Integer stock, Integer salesCount, String imageUrl, Integer status, Integer version) {
+                                Integer stock, Integer salesCount, String imageUrl, Integer status, Integer version,
+                                Double avgRating, Long reviewCount) {
     public static ProductResponse from(Product p) {
       return new ProductResponse(p.id, p.categoryId, p.name, p.description, p.price, p.stock,
-          p.salesCount, p.imageUrl, p.status, p.version);
+          p.salesCount, p.imageUrl, p.status, p.version, 0.0, 0L);
+    }
+  }
+  public record ReviewRequest(@Min(1) @Max(5) Integer rating, String content) {}
+  public record ReviewResponse(Long id, Long productId, Long userId, String username, Integer rating,
+                               String content, LocalDateTime createdAt) {
+    public static ReviewResponse from(ProductReview review, String username) {
+      return new ReviewResponse(review.id, review.productId, review.userId, username,
+          review.rating, review.content, review.createdAt);
     }
   }
   public record FavoriteStatusResponse(boolean favorited) {}
@@ -78,9 +90,51 @@ public class ApiSupport {
     }
   }
 
-  public record CreateOrderRequest(@NotEmpty List<Long> cartItemIds, @NotBlank String shippingAddress) {}
-  public record DirectOrderRequest(@NotNull Long productId, @Min(1) Integer quantity, @NotBlank String shippingAddress) {}
-  public record CreateOrderResponse(Long orderId, String orderNo, BigDecimal totalAmount) {}
+  public record CouponResponse(Long id, String name, Integer type, BigDecimal threshold, BigDecimal discount,
+                               Integer totalCount, Integer remainCount, Integer validDays, boolean claimed) {
+    public static CouponResponse from(Coupon c, boolean claimed) {
+      return new CouponResponse(c.id, c.name, c.type, c.threshold, c.discount, c.totalCount,
+          c.remainCount, c.validDays, claimed);
+    }
+  }
+  public record UserCouponResponse(Long id, Long couponId, String name, Integer type, BigDecimal threshold,
+                                   BigDecimal discount, Integer status, java.time.LocalDate expireAt) {
+    public static UserCouponResponse from(UserCoupon uc) {
+      return from(uc, uc.coupon);
+    }
+    public static UserCouponResponse from(UserCoupon uc, Coupon c) {
+      return new UserCouponResponse(uc.id, uc.couponId, c == null || c.name == null ? "" : c.name,
+          c == null || c.type == null ? 1 : c.type,
+          c == null || c.threshold == null ? BigDecimal.ZERO : c.threshold,
+          c == null || c.discount == null ? BigDecimal.ZERO : c.discount,
+          uc.status, uc.expireAt);
+    }
+  }
+  public record CouponCalculateRequest(@NotNull Long userCouponId, @NotNull BigDecimal orderAmount) {}
+  public record CouponCalculateResponse(Long userCouponId, BigDecimal orderAmount, BigDecimal discountAmount,
+                                        BigDecimal payableAmount) {}
+  public record PointRecordResponse(Integer delta, String reason, LocalDateTime createdAt) {
+    public static PointRecordResponse from(PointRecord record) {
+      return new PointRecordResponse(record.delta, record.reason, record.createdAt);
+    }
+  }
+  public record PointsResponse(Integer points, List<PointRecordResponse> records) {}
+  public record FeedbackRequest(@NotNull Integer type, @NotBlank String content) {}
+  public record FeedbackReplyRequest(@NotBlank String reply) {}
+  public record FeedbackResponse(Long id, Long userId, String username, Integer type, String content,
+                                 Integer status, String reply, LocalDateTime createdAt) {
+    public static FeedbackResponse from(UserFeedback feedback, String username) {
+      return new FeedbackResponse(feedback.id, feedback.userId, username, feedback.type, feedback.content,
+          feedback.status, feedback.reply, feedback.createdAt);
+    }
+  }
+
+  public record CreateOrderRequest(@NotEmpty List<Long> cartItemIds, @NotBlank String shippingAddress,
+                                   Long userCouponId, Boolean usePoints) {}
+  public record DirectOrderRequest(@NotNull Long productId, @Min(1) Integer quantity, @NotBlank String shippingAddress,
+                                   Long userCouponId, Boolean usePoints) {}
+  public record CreateOrderResponse(Long orderId, String orderNo, BigDecimal totalAmount,
+                                    BigDecimal discountAmount, Integer pointsUsed) {}
   public record OrderItemResponse(Long productId, String productName, BigDecimal price, Integer quantity) {
     public static OrderItemResponse from(OrderItem i) {
       return new OrderItemResponse(i.productId, i.productNameSnapshot, i.priceSnapshot, i.quantity);
@@ -88,7 +142,7 @@ public class ApiSupport {
   }
   public record OrderResponse(Long id, String orderNo, BigDecimal totalAmount, String status,
                               String shippingAddress, LocalDateTime createdAt, LocalDateTime paidAt,
-                              List<OrderItemResponse> items) {}
+                              List<OrderItemResponse> items, BigDecimal discountAmount, Integer pointsUsed) {}
   public record RebuyResponse(int addedCount, List<CartResponse> cartItems) {}
   public record InternalOrderResponse(Long id, String orderNo, String status, BigDecimal totalAmount, LocalDateTime createdAt) {
     public static InternalOrderResponse from(Order o) {
@@ -99,9 +153,12 @@ public class ApiSupport {
                                     long pendingPaymentOrders, long paidOrders, long shippedOrders,
                                     long completedOrders, BigDecimal effectiveRevenue) {}
   public record AdminProductBrief(Long id, String name, BigDecimal price, Integer stock,
-                                  Integer salesCount, Integer status, String imageUrl) {
+                                  Integer salesCount, Integer status, String imageUrl, Long categoryId, String category) {
     public static AdminProductBrief from(Product p) {
-      return new AdminProductBrief(p.id, p.name, p.price, p.stock, p.salesCount, p.status, p.imageUrl);
+      return new AdminProductBrief(p.id, p.name, p.price, p.stock, p.salesCount, p.status, p.imageUrl, p.categoryId, null);
+    }
+    public static AdminProductBrief from(Product p, String category) {
+      return new AdminProductBrief(p.id, p.name, p.price, p.stock, p.salesCount, p.status, p.imageUrl, p.categoryId, category);
     }
   }
   public record AdminOrderBrief(Long id, String orderNo, String status, BigDecimal totalAmount, LocalDateTime createdAt) {
@@ -109,12 +166,18 @@ public class ApiSupport {
       return new AdminOrderBrief(o.id, o.orderNo, o.status, o.totalAmount, o.createdAt);
     }
   }
+  public record DailyOrderCount(String date, long count) {}
+  public record CategorySales(String category, long sales) {}
   public record AdminDashboardResponse(AdminMetricResponse metrics, List<AdminProductBrief> lowStockProducts,
-                                       List<AdminProductBrief> topProducts, List<AdminOrderBrief> recentOrders) {}
+                                       List<AdminProductBrief> topProducts, List<AdminOrderBrief> recentOrders,
+                                       long todayOrders, BigDecimal monthRevenue, long productCount, long userCount,
+                                       List<DailyOrderCount> last7DaysOrders, List<CategorySales> categoryTopSales) {}
 }
 
 @RestControllerAdvice
 class GlobalExceptionHandler {
+  private static final Logger log = LoggerFactory.getLogger(GlobalExceptionHandler.class);
+
   @ExceptionHandler(BizException.class)
   ResponseEntity<ApiSupport.ErrorResponse> biz(BizException ex) {
     return ResponseEntity.status(ex.status).body(new ApiSupport.ErrorResponse(ex.getMessage()));
@@ -132,6 +195,7 @@ class GlobalExceptionHandler {
 
   @ExceptionHandler(Exception.class)
   ResponseEntity<ApiSupport.ErrorResponse> other(Exception ex) {
+    log.error("Unhandled API exception", ex);
     return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ApiSupport.ErrorResponse("系统繁忙，请稍后再试"));
   }
 }

@@ -5,7 +5,11 @@
         <h1>个人中心</h1>
         <p>集中查看账户资料、订单待办、收藏商品、浏览足迹和 AI 偏好记忆。</p>
       </div>
-      <router-link class="btn" to="/favorites"><Heart size="18" /> 我的收藏</router-link>
+      <div class="toolbar">
+        <button type="button" @click="feedbackOpen = true"><MessageSquare size="18" /> 意见反馈</button>
+        <router-link class="btn" to="/coupons"><Ticket size="18" /> 我的优惠券</router-link>
+        <router-link class="btn" to="/favorites"><Heart size="18" /> 我的收藏</router-link>
+      </div>
     </div>
 
     <div v-if="overview" class="profile-overview-grid">
@@ -115,6 +119,31 @@
       </div>
       <p v-else class="muted">暂无偏好标签。可以在 AI 聊天窗里告诉助手你的购物偏好。</p>
     </section>
+
+    <div v-if="feedbackOpen" class="modal-backdrop" @click.self="feedbackOpen = false">
+      <section class="panel feedback-modal">
+        <div class="panel-head">
+          <div>
+            <h2>意见反馈</h2>
+            <p>提交后管理员可在运营工作台里处理并回复。</p>
+          </div>
+          <button class="ghost" type="button" @click="feedbackOpen = false">关闭</button>
+        </div>
+        <form class="form" @submit.prevent="submitFeedback">
+          <label>类型
+            <select v-model.number="feedbackForm.type">
+              <option :value="1">建议</option>
+              <option :value="2">投诉</option>
+              <option :value="3">BUG</option>
+            </select>
+          </label>
+          <label>内容
+            <textarea v-model="feedbackForm.content" required maxlength="1000" placeholder="请描述你的建议、问题或复现步骤" />
+          </label>
+          <button class="primary" :disabled="feedbackSubmitting">{{ feedbackSubmitting ? '提交中...' : '提交反馈' }}</button>
+        </form>
+      </section>
+    </div>
   </section>
 </template>
 
@@ -129,12 +158,16 @@ const message = ref('')
 const messageType = ref('muted')
 const preferences = ref([])
 const overview = ref(null)
+const feedbackOpen = ref(false)
+const feedbackSubmitting = ref(false)
+const feedbackForm = reactive({ type: 1, content: '' })
 const toast = useToast()
 
 const overviewCards = computed(() => {
   const data = overview.value
   if (!data) return []
   return [
+    { label: '积分', value: profile.points || 0, hint: '100 积分抵 1 元' },
     { label: '购物车', value: data.cartItems, hint: '当前待结算商品' },
     { label: '收藏', value: data.favorites, hint: '心愿单商品' },
     { label: '浏览足迹', value: data.viewedProducts, hint: '已记录商品' },
@@ -192,6 +225,21 @@ async function removePreference(tag) {
     toast.show('偏好标签已删除')
   } catch (e) {
     toast.show(errorMessage(e))
+  }
+}
+
+async function submitFeedback() {
+  feedbackSubmitting.value = true
+  try {
+    await api.post('/feedback', feedbackForm)
+    feedbackForm.type = 1
+    feedbackForm.content = ''
+    feedbackOpen.value = false
+    toast.show('反馈已提交')
+  } catch (e) {
+    toast.show(errorMessage(e))
+  } finally {
+    feedbackSubmitting.value = false
   }
 }
 

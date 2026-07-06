@@ -18,8 +18,8 @@
       <span class="product-badge">{{ badgeText }}</span>
     </router-link>
     <div class="body">
-      <router-link :to="`/products/${product.id}`"><h3>{{ product.name }}</h3></router-link>
-      <p class="desc">{{ product.description }}</p>
+      <router-link :to="`/products/${product.id}`"><h3 v-html="highlightedName"></h3></router-link>
+      <p class="desc" v-html="highlightedDescription"></p>
       <div class="product-card-foot">
         <div class="price-row">
           <span class="price">¥{{ product.price }}</span>
@@ -36,11 +36,16 @@
 
 <script setup>
 import { computed, ref, watch } from 'vue'
+import { highlightKeyword } from '../utils/highlight'
 
 const props = defineProps({
   product: {
     type: Object,
     required: true
+  },
+  keyword: {
+    type: String,
+    default: ''
   }
 })
 
@@ -58,6 +63,9 @@ const badgeText = computed(() => {
   if (props.product.stock <= 0) return 'SOLD'
   return props.product.salesCount > 300 ? 'HOT' : 'NEW'
 })
+
+const highlightedName = computed(() => highlightKeyword(props.product.name, props.keyword))
+const highlightedDescription = computed(() => highlightKeyword(props.product.description, props.keyword))
 
 function onPointerEnter(event) {
   event.currentTarget.style.willChange = 'transform'

@@ -316,3 +316,197 @@ VALUES
 ON DUPLICATE KEY UPDATE
   weight = GREATEST(weight, VALUES(weight)),
   updated_at = CURRENT_TIMESTAMP;
+
+-- Batch 2: coupons and points
+SET @user_points_exists := (
+  SELECT COUNT(1)
+  FROM information_schema.columns
+  WHERE table_schema = DATABASE()
+    AND table_name = 'user'
+    AND column_name = 'points'
+);
+SET @user_points_sql := IF(
+  @user_points_exists = 0,
+  'ALTER TABLE `user` ADD COLUMN points INT NOT NULL DEFAULT 0',
+  'SELECT 1'
+);
+PREPARE stmt FROM @user_points_sql;
+EXECUTE stmt;
+DEALLOCATE PREPARE stmt;
+
+SET @order_discount_exists := (
+  SELECT COUNT(1)
+  FROM information_schema.columns
+  WHERE table_schema = DATABASE()
+    AND table_name = 'order'
+    AND column_name = 'discount_amount'
+);
+SET @order_discount_sql := IF(
+  @order_discount_exists = 0,
+  'ALTER TABLE `order` ADD COLUMN discount_amount DECIMAL(10,2) NOT NULL DEFAULT 0.00',
+  'SELECT 1'
+);
+PREPARE stmt FROM @order_discount_sql;
+EXECUTE stmt;
+DEALLOCATE PREPARE stmt;
+
+SET @order_points_exists := (
+  SELECT COUNT(1)
+  FROM information_schema.columns
+  WHERE table_schema = DATABASE()
+    AND table_name = 'order'
+    AND column_name = 'points_used'
+);
+SET @order_points_sql := IF(
+  @order_points_exists = 0,
+  'ALTER TABLE `order` ADD COLUMN points_used INT NOT NULL DEFAULT 0',
+  'SELECT 1'
+);
+PREPARE stmt FROM @order_points_sql;
+EXECUTE stmt;
+DEALLOCATE PREPARE stmt;
+
+CREATE TABLE IF NOT EXISTS coupon (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  name VARCHAR(64) NOT NULL COMMENT '优惠券名称',
+  type TINYINT NOT NULL COMMENT '1=满减 2=折扣',
+  threshold DECIMAL(10,2) NOT NULL DEFAULT 0 COMMENT '使用门槛（满X元）',
+  discount DECIMAL(10,2) NOT NULL COMMENT '满减金额 或 折扣率(0.8=8折)',
+  total_count INT NOT NULL COMMENT '发行总量',
+  remain_count INT NOT NULL COMMENT '剩余数量',
+  valid_days INT NOT NULL DEFAULT 30 COMMENT '领取后有效天数',
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS user_coupon (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  user_id BIGINT NOT NULL,
+  coupon_id BIGINT NOT NULL,
+  status TINYINT NOT NULL DEFAULT 0 COMMENT '0=未使用 1=已使用 2=已过期',
+  expire_at DATE NOT NULL,
+  used_order_id BIGINT,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  UNIQUE KEY uk_user_coupon (user_id, coupon_id),
+  INDEX idx_user(user_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS point_record (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  user_id BIGINT NOT NULL,
+  delta INT NOT NULL COMMENT '正=增加 负=扣减',
+  reason VARCHAR(128) NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  INDEX idx_user(user_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+INSERT INTO coupon (id, name, type, threshold, discount, total_count, remain_count, valid_days)
+VALUES
+  (1, '新人专享券', 1, 50.00, 10.00, 1000, 999, 30),
+  (2, '满100减20', 1, 100.00, 20.00, 500, 500, 15),
+  (3, '九折优惠', 2, 0.00, 0.90, 200, 200, 7)
+ON DUPLICATE KEY UPDATE
+  name = VALUES(name),
+  type = VALUES(type),
+  threshold = VALUES(threshold),
+  discount = VALUES(discount),
+  total_count = VALUES(total_count),
+  remain_count = VALUES(remain_count),
+  valid_days = VALUES(valid_days);
+
+UPDATE `user` SET points = 300 WHERE id = 2;
+
+INSERT INTO user_coupon (id, user_id, coupon_id, status, expire_at, used_order_id)
+VALUES
+  (1, 2, 1, 0, DATE_ADD(CURRENT_DATE, INTERVAL 30 DAY), NULL)
+ON DUPLICATE KEY UPDATE
+  status = VALUES(status),
+  expire_at = VALUES(expire_at),
+  used_order_id = VALUES(used_order_id);
+
+INSERT INTO point_record (id, user_id, delta, reason)
+VALUES
+  (1, 2, 300, '演示初始积分')
+ON DUPLICATE KEY UPDATE
+  delta = VALUES(delta),
+  reason = VALUES(reason);
+
+-- Batch 3: product reviews and dashboard/export demo data
+CREATE TABLE IF NOT EXISTS product_review (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  product_id BIGINT NOT NULL,
+  user_id BIGINT NOT NULL,
+  order_id BIGINT NOT NULL,
+  rating TINYINT NOT NULL CHECK (rating BETWEEN 1 AND 5),
+  content VARCHAR(500),
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  INDEX idx_product(product_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+INSERT INTO `order` (id, order_no, user_id, total_amount, discount_amount, points_used, status, shipping_address, created_at, paid_at)
+VALUES
+  (2, 'SM202607020001', 2, 599.00, 0.00, 0, 'COMPLETED', '上海市浦东新区软件园 1 号楼', '2026-07-02 11:00:00', '2026-07-02 11:05:00'),
+  (3, 'SM202607020002', 2, 29.00, 0.00, 0, 'COMPLETED', '上海市浦东新区软件园 1 号楼', '2026-07-02 13:20:00', '2026-07-02 13:25:00'),
+  (4, 'SM202607020003', 3, 39.00, 0.00, 0, 'COMPLETED', '杭州市西湖区文三路 88 号', '2026-07-02 15:10:00', '2026-07-02 15:15:00'),
+  (5, 'SM202607020004', 3, 399.00, 20.00, 0, 'COMPLETED', '杭州市西湖区文三路 88 号', '2026-07-02 16:40:00', '2026-07-02 16:45:00'),
+  (6, 'SM202607020005', 2, 69.00, 0.00, 0, 'COMPLETED', '上海市浦东新区软件园 1 号楼', '2026-07-03 10:30:00', '2026-07-03 10:34:00')
+ON DUPLICATE KEY UPDATE
+  order_no = VALUES(order_no),
+  user_id = VALUES(user_id),
+  total_amount = VALUES(total_amount),
+  discount_amount = VALUES(discount_amount),
+  points_used = VALUES(points_used),
+  status = VALUES(status),
+  shipping_address = VALUES(shipping_address),
+  created_at = VALUES(created_at),
+  paid_at = VALUES(paid_at);
+
+INSERT INTO order_item (id, order_id, product_id, product_name_snapshot, price_snapshot, quantity)
+VALUES
+  (2, 2, 14, '热插拔客制化键盘', 599.00, 1),
+  (3, 3, 44, '低重心中性笔 6 支装', 29.00, 1),
+  (4, 4, 9, '编织数据线套装', 39.00, 1),
+  (5, 5, 1, '极客机械键盘 K87', 399.00, 1),
+  (6, 6, 15, '入门薄膜键盘', 69.00, 1)
+ON DUPLICATE KEY UPDATE
+  order_id = VALUES(order_id),
+  product_id = VALUES(product_id),
+  product_name_snapshot = VALUES(product_name_snapshot),
+  price_snapshot = VALUES(price_snapshot),
+  quantity = VALUES(quantity);
+
+INSERT INTO product_review (id, product_id, user_id, order_id, rating, content, created_at)
+VALUES
+  (1, 14, 2, 2, 5, 'Gasket 手感扎实，热插拔换轴很方便，适合键盘爱好者。', '2026-07-03 09:30:00'),
+  (2, 44, 2, 3, 5, '笔身重心稳定，长时间记笔记不累，黑色外观也比较耐看。', '2026-07-03 11:15:00'),
+  (3, 9, 3, 4, 4, '线材比普通数据线厚实，充电和传输都稳定，放包里也不容易打结。', '2026-07-03 13:40:00'),
+  (4, 1, 3, 5, 5, '三模连接切换很顺，PBT 键帽手感干爽，敲代码很舒服。', '2026-07-03 16:05:00'),
+  (5, 15, 2, 6, 4, '预算有限时很合适，声音比机械键盘轻，宿舍晚上用不会太吵。', '2026-07-04 10:20:00')
+ON DUPLICATE KEY UPDATE
+  product_id = VALUES(product_id),
+  user_id = VALUES(user_id),
+  order_id = VALUES(order_id),
+  rating = VALUES(rating),
+  content = VALUES(content),
+  created_at = VALUES(created_at);
+
+-- Batch 4: user feedback
+CREATE TABLE IF NOT EXISTS user_feedback (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  user_id BIGINT NOT NULL,
+  type TINYINT NOT NULL COMMENT '1=建议 2=投诉 3=BUG',
+  content VARCHAR(1000) NOT NULL,
+  status TINYINT NOT NULL DEFAULT 0 COMMENT '0=待处理 1=已处理',
+  reply VARCHAR(500),
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+INSERT INTO user_feedback (id, user_id, type, content, status, reply, created_at)
+VALUES
+  (1, 2, 1, '希望结算页能直接看到优惠券和积分抵扣明细。', 1, '已上线优惠券与积分抵扣展示。', '2026-07-04 14:20:00'),
+  (2, 3, 3, '移动端商品卡片描述偶尔换行过长。', 0, NULL, '2026-07-05 16:10:00')
+ON DUPLICATE KEY UPDATE
+  type = VALUES(type),
+  content = VALUES(content),
+  status = VALUES(status),
+  reply = VALUES(reply),
+  created_at = VALUES(created_at);

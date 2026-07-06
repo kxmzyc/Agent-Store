@@ -16,6 +16,7 @@ public class User {
   public String avatarUrl;
   public String role;
   public Integer status;
+  public Integer points;
   @Column(name = "created_at")
   public LocalDateTime createdAt;
   @Column(name = "updated_at")

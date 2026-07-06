@@ -10,6 +10,7 @@ import OrdersView from './views/OrdersView.vue'
 import OrderDetailView from './views/OrderDetailView.vue'
 import FavoritesView from './views/FavoritesView.vue'
 import ProfileView from './views/ProfileView.vue'
+import CouponView from './views/CouponView.vue'
 import AdminView from './views/AdminView.vue'
 
 const routes = [
@@ -22,6 +23,7 @@ const routes = [
   { path: '/orders', component: OrdersView, meta: { auth: true } },
   { path: '/orders/:id', component: OrderDetailView, meta: { auth: true } },
   { path: '/favorites', component: FavoritesView, meta: { auth: true } },
+  { path: '/coupons', component: CouponView, meta: { auth: true } },
   { path: '/profile', component: ProfileView, meta: { auth: true } },
   { path: '/admin', component: AdminView, meta: { auth: true, admin: true } }
 ]

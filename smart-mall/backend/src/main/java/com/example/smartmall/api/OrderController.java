@@ -109,7 +109,8 @@ public class OrderController {
   ResponseEntity<CreateOrderResponse> createDirectOrder(@AuthenticationPrincipal CurrentUser user,
                                                         @Valid @RequestBody DirectOrderRequest request) {
     return ResponseEntity.status(HttpStatus.CREATED)
-        .body(orderService.createDirect(user.id(), request.productId(), request.quantity(), request.shippingAddress()));
+        .body(orderService.createDirect(user.id(), request.productId(), request.quantity(), request.shippingAddress(),
+            request.userCouponId(), request.usePoints()));
   }
 
   @GetMapping("/orders")

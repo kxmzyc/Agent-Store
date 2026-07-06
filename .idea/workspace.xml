@@ -6,15 +6,32 @@
   <component name="ChangeListManager">
     <list default="true" id="26d1c8ba-898e-402c-ac3a-d8907526f195" name="更改" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/smart-mall/backend/.dockerignore" beforeDir="false" afterPath="$PROJECT_DIR$/smart-mall/backend/.dockerignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/smart-mall/backend/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/smart-mall/backend/Dockerfile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/smart-mall/backend/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/smart-mall/backend/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/smart-mall/backend/src/main/java/com/example/smartmall/api/AdminController.java" beforeDir="false" afterPath="$PROJECT_DIR$/smart-mall/backend/src/main/java/com/example/smartmall/api/AdminController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/smart-mall/backend/src/main/java/com/example/smartmall/api/ApiSupport.java" beforeDir="false" afterPath="$PROJECT_DIR$/smart-mall/backend/src/main/java/com/example/smartmall/api/ApiSupport.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/smart-mall/backend/src/main/java/com/example/smartmall/api/AuthController.java" beforeDir="false" afterPath="$PROJECT_DIR$/smart-mall/backend/src/main/java/com/example/smartmall/api/AuthController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/smart-mall/backend/src/main/java/com/example/smartmall/api/OrderController.java" beforeDir="false" afterPath="$PROJECT_DIR$/smart-mall/backend/src/main/java/com/example/smartmall/api/OrderController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/smart-mall/backend/src/main/java/com/example/smartmall/api/ProductController.java" beforeDir="false" afterPath="$PROJECT_DIR$/smart-mall/backend/src/main/java/com/example/smartmall/api/ProductController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/smart-mall/backend/src/main/java/com/example/smartmall/repo/CategoryRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/smart-mall/backend/src/main/java/com/example/smartmall/repo/CategoryRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/smart-mall/backend/src/main/java/com/example/smartmall/repo/ProductRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/smart-mall/backend/src/main/java/com/example/smartmall/repo/ProductRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/smart-mall/backend/src/main/java/com/example/smartmall/domain/Order.java" beforeDir="false" afterPath="$PROJECT_DIR$/smart-mall/backend/src/main/java/com/example/smartmall/domain/Order.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/smart-mall/backend/src/main/java/com/example/smartmall/domain/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/smart-mall/backend/src/main/java/com/example/smartmall/domain/User.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/smart-mall/backend/src/main/java/com/example/smartmall/repo/OrderItemRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/smart-mall/backend/src/main/java/com/example/smartmall/repo/OrderItemRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/smart-mall/backend/src/main/java/com/example/smartmall/repo/OrderRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/smart-mall/backend/src/main/java/com/example/smartmall/repo/OrderRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/smart-mall/backend/src/main/java/com/example/smartmall/service/OrderService.java" beforeDir="false" afterPath="$PROJECT_DIR$/smart-mall/backend/src/main/java/com/example/smartmall/service/OrderService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/smart-mall/docs/seed.sql" beforeDir="false" afterPath="$PROJECT_DIR$/smart-mall/docs/seed.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/smart-mall/frontend/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/smart-mall/frontend/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/smart-mall/frontend/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/smart-mall/frontend/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/smart-mall/frontend/src/App.vue" beforeDir="false" afterPath="$PROJECT_DIR$/smart-mall/frontend/src/App.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/smart-mall/frontend/src/components/ProductCard.vue" beforeDir="false" afterPath="$PROJECT_DIR$/smart-mall/frontend/src/components/ProductCard.vue" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/smart-mall/frontend/src/main.js" beforeDir="false" afterPath="$PROJECT_DIR$/smart-mall/frontend/src/main.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/smart-mall/frontend/src/router.js" beforeDir="false" afterPath="$PROJECT_DIR$/smart-mall/frontend/src/router.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/smart-mall/frontend/src/style.css" beforeDir="false" afterPath="$PROJECT_DIR$/smart-mall/frontend/src/style.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/smart-mall/frontend/src/views/AdminView.vue" beforeDir="false" afterPath="$PROJECT_DIR$/smart-mall/frontend/src/views/AdminView.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/smart-mall/frontend/src/views/CheckoutView.vue" beforeDir="false" afterPath="$PROJECT_DIR$/smart-mall/frontend/src/views/CheckoutView.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/smart-mall/frontend/src/views/ProductDetailView.vue" beforeDir="false" afterPath="$PROJECT_DIR$/smart-mall/frontend/src/views/ProductDetailView.vue" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/smart-mall/frontend/src/views/ProductListView.vue" beforeDir="false" afterPath="$PROJECT_DIR$/smart-mall/frontend/src/views/ProductListView.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/smart_mall_stagger_fix_and_cart_upgrade_prompt.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/smart_mall_visual_layout_refinement_prompt.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/smart-mall/frontend/src/views/ProfileView.vue" beforeDir="false" afterPath="$PROJECT_DIR$/smart-mall/frontend/src/views/ProfileView.vue" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -95,7 +112,8 @@
       <workItem from="1783175117373" duration="475000" />
       <workItem from="1783177128381" duration="5827000" />
       <workItem from="1783222115198" duration="3100000" />
-      <workItem from="1783242968255" duration="6338000" />
+      <workItem from="1783242968255" duration="7300000" />
+      <workItem from="1783347691872" duration="6205000" />
     </task>
     <servers />
   </component>

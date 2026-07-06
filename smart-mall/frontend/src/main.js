@@ -2,7 +2,8 @@ import { createApp } from 'vue'
 import {
   LogOut, Search, ShoppingCart, UserRound, PackageSearch, Bot, Send,
   Plus, Minus, Trash2, CreditCard, ClipboardList, Settings, Home, ArrowLeft,
-  Heart, RotateCcw, Eye, ChevronLeft, ChevronRight, Pause, Play
+  Heart, RotateCcw, Eye, ChevronLeft, ChevronRight, Pause, Play, Ticket, Download,
+  MessageSquare
 } from 'lucide-vue-next'
 import App from './App.vue'
 import './styles/tokens.css'
@@ -38,4 +39,7 @@ app.component('ChevronLeft', ChevronLeft)
 app.component('ChevronRight', ChevronRight)
 app.component('Pause', Pause)
 app.component('Play', Play)
+app.component('Ticket', Ticket)
+app.component('Download', Download)
+app.component('MessageSquare', MessageSquare)
 app.mount('#app')

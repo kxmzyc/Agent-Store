@@ -17,6 +17,10 @@ public class Order {
   public Long userId;
   @Column(name = "total_amount")
   public BigDecimal totalAmount;
+  @Column(name = "discount_amount")
+  public BigDecimal discountAmount;
+  @Column(name = "points_used")
+  public Integer pointsUsed;
   public String status;
   @Column(name = "shipping_address")
   public String shippingAddress;

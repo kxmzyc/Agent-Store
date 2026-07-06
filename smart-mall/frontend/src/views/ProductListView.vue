@@ -53,6 +53,8 @@
       </div>
     </div>
 
+    <BannerCarousel v-if="hotProducts.length" :items="hotProducts" />
+
     <div ref="dockRef" class="search-dock">
       <form class="search-box catalog-search" @submit.prevent="search">
         <Search size="18" />
@@ -90,6 +92,7 @@
         v-for="(p, index) in products"
         :key="p.id"
         :product="p"
+        :keyword="searchMode ? keyword : ''"
         :class="{ 'product-card--featured': isFeaturedProduct(p, index) }"
         :style="{ '--card-index': index % 12 }"
         @add-cart="addCart"
@@ -113,11 +116,13 @@ import { useToast } from '../composables/useToast'
 import { flyToCart } from '../composables/useFlyToCart'
 import { useScrollInertia } from '../composables/useScrollInertia'
 import ProductCard from '../components/ProductCard.vue'
+import BannerCarousel from '../components/BannerCarousel.vue'
 
 const heroRef = ref(null)
 const dockRef = ref(null)
 const categories = ref([])
 const products = ref([])
+const hotProducts = ref([])
 const keyword = ref('')
 const categoryId = ref(null)
 const sort = ref('sales_desc')
@@ -150,6 +155,7 @@ onMounted(async () => {
   } catch (e) {
     toast.show(errorMessage(e))
   }
+  loadHotProducts()
   await loadProducts(1)
   startCarousel()
 })
@@ -242,6 +248,15 @@ async function loadProducts(nextPage) {
         categoryTransition.value = false
       }, 360)
     }
+  }
+}
+
+async function loadHotProducts() {
+  try {
+    const { data } = await api.get('/products', { params: { page: 1, size: 3, sort: 'sales' } })
+    hotProducts.value = data.list || []
+  } catch {
+    hotProducts.value = []
   }
 }
 

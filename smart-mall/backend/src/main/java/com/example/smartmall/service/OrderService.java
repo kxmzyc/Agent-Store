@@ -19,12 +19,17 @@ public class OrderService {
   private final ProductRepository products;
   private final OrderRepository orders;
   private final OrderItemRepository orderItems;
+  private final CouponService couponService;
+  private final PointService pointService;
 
-  public OrderService(CartRepository carts, ProductRepository products, OrderRepository orders, OrderItemRepository orderItems) {
+  public OrderService(CartRepository carts, ProductRepository products, OrderRepository orders, OrderItemRepository orderItems,
+                      CouponService couponService, PointService pointService) {
     this.carts = carts;
     this.products = products;
     this.orders = orders;
     this.orderItems = orderItems;
+    this.couponService = couponService;
+    this.pointService = pointService;
   }
 
   @Transactional
@@ -42,6 +47,8 @@ public class OrderService {
     order.shippingAddress = request.shippingAddress();
     order.createdAt = LocalDateTime.now();
     order.totalAmount = BigDecimal.ZERO;
+    order.discountAmount = BigDecimal.ZERO;
+    order.pointsUsed = 0;
     orders.save(order);
 
     BigDecimal total = BigDecimal.ZERO;
@@ -66,15 +73,19 @@ public class OrderService {
       total = total.add(product.price.multiply(BigDecimal.valueOf(cart.quantity)));
     }
 
-    order.totalAmount = total;
+    OrderDiscount discount = applyDiscounts(userId, order.id, total, request.userCouponId(), request.usePoints());
+    order.totalAmount = discount.payableAmount();
+    order.discountAmount = discount.discountAmount();
+    order.pointsUsed = discount.pointsUsed();
     orders.save(order);
     carts.deleteByUserIdAndIdIn(userId, request.cartItemIds());
-    log.info("create order success, userId={}, orderNo={}, total={}", userId, order.orderNo, total);
-    return new CreateOrderResponse(order.id, order.orderNo, order.totalAmount);
+    log.info("create order success, userId={}, orderNo={}, total={}, discount={}", userId, order.orderNo, order.totalAmount, order.discountAmount);
+    return new CreateOrderResponse(order.id, order.orderNo, order.totalAmount, order.discountAmount, order.pointsUsed);
   }
 
   @Transactional
-  public CreateOrderResponse createDirect(Long userId, Long productId, int quantity, String shippingAddress) {
+  public CreateOrderResponse createDirect(Long userId, Long productId, int quantity, String shippingAddress,
+                                          Long userCouponId, Boolean usePoints) {
     Product product = products.findById(productId).orElseThrow(() -> BizException.badRequest("商品不存在"));
     if (product.status == null || product.status != 1) {
       throw BizException.badRequest("商品「" + product.name + "」已下架");
@@ -92,7 +103,10 @@ public class OrderService {
     order.status = "PENDING_PAYMENT";
     order.shippingAddress = shippingAddress;
     order.createdAt = LocalDateTime.now();
-    order.totalAmount = product.price.multiply(BigDecimal.valueOf(quantity));
+    BigDecimal total = product.price.multiply(BigDecimal.valueOf(quantity));
+    order.totalAmount = BigDecimal.ZERO;
+    order.discountAmount = BigDecimal.ZERO;
+    order.pointsUsed = 0;
     orders.save(order);
 
     OrderItem item = new OrderItem();
@@ -102,14 +116,22 @@ public class OrderService {
     item.priceSnapshot = product.price;
     item.quantity = quantity;
     orderItems.save(item);
-    log.info("direct order success, userId={}, orderNo={}, productId={}", userId, order.orderNo, productId);
-    return new CreateOrderResponse(order.id, order.orderNo, order.totalAmount);
+    OrderDiscount discount = applyDiscounts(userId, order.id, total, userCouponId, usePoints);
+    order.totalAmount = discount.payableAmount();
+    order.discountAmount = discount.discountAmount();
+    order.pointsUsed = discount.pointsUsed();
+    orders.save(order);
+    log.info("direct order success, userId={}, orderNo={}, productId={}, total={}, discount={}",
+        userId, order.orderNo, productId, order.totalAmount, order.discountAmount);
+    return new CreateOrderResponse(order.id, order.orderNo, order.totalAmount, order.discountAmount, order.pointsUsed);
   }
 
   public OrderResponse toResponse(Order order) {
     List<OrderItemResponse> items = orderItems.findByOrderId(order.id).stream().map(OrderItemResponse::from).toList();
     return new OrderResponse(order.id, order.orderNo, order.totalAmount, order.status,
-        order.shippingAddress, order.createdAt, order.paidAt, items);
+        order.shippingAddress, order.createdAt, order.paidAt, items,
+        order.discountAmount == null ? BigDecimal.ZERO : order.discountAmount,
+        order.pointsUsed == null ? 0 : order.pointsUsed);
   }
 
   @Transactional
@@ -136,6 +158,7 @@ public class OrderService {
     Order order = getOwnOrder(userId, orderId);
     requireStatus(order, "SHIPPED");
     order.status = "COMPLETED";
+    pointService.awardForCompletedOrder(userId, order.totalAmount, order.orderNo);
     log.info("order completed, userId={}, orderId={}", userId, orderId);
     return toResponse(orders.save(order));
   }
@@ -161,4 +184,19 @@ public class OrderService {
       throw BizException.badRequest("订单状态不允许该操作");
     }
   }
+
+  private OrderDiscount applyDiscounts(Long userId, Long orderId, BigDecimal total, Long userCouponId, Boolean usePoints) {
+    var couponResult = couponService.useCoupon(userId, userCouponId, total, orderId);
+    BigDecimal afterCoupon = payable(total.subtract(couponResult.discountAmount()));
+    var pointResult = pointService.usePoints(userId, afterCoupon, Boolean.TRUE.equals(usePoints));
+    BigDecimal discount = couponResult.discountAmount().add(pointResult.discountAmount());
+    return new OrderDiscount(payable(total.subtract(discount)), discount, pointResult.pointsUsed());
+  }
+
+  private BigDecimal payable(BigDecimal amount) {
+    BigDecimal min = new BigDecimal("0.01");
+    return amount.compareTo(min) < 0 ? min : amount;
+  }
+
+  private record OrderDiscount(BigDecimal payableAmount, BigDecimal discountAmount, int pointsUsed) {}
 }
