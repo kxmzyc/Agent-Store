@@ -7,7 +7,11 @@
       </router-link>
       <nav class="topnav" aria-label="主导航">
         <router-link to="/"><Home size="15" /> 商品</router-link>
-        <router-link to="/cart" data-cart-target><ShoppingCart class="cart-icon" size="15" /> 购物车</router-link>
+        <router-link to="/cart" data-cart-target>
+          <ShoppingCart class="cart-icon" size="15" />
+          购物车
+          <span v-if="store.cartItemCount > 0" class="cart-badge" :class="{ pulse: badgePulse }">{{ store.cartItemCount }}</span>
+        </router-link>
         <router-link to="/favorites"><Heart size="15" /> 收藏</router-link>
         <router-link to="/coupons"><Ticket size="15" /> 优惠券</router-link>
         <router-link to="/orders"><ClipboardList size="15" /> 订单</router-link>
@@ -41,7 +45,25 @@
 </template>
 
 <script setup>
+import { onMounted, ref, watch } from 'vue'
 import { store } from './store'
+import { refreshCartCount } from './api/http'
 import ChatWidget from './components/ChatWidget.vue'
 import GlobalToast from './components/GlobalToast.vue'
+
+const badgePulse = ref(false)
+
+onMounted(() => {
+  refreshCartCount()
+})
+
+watch(() => store.token, () => {
+  refreshCartCount()
+})
+
+watch(() => store.cartItemCount, (next, previous) => {
+  if (next === previous || document.documentElement.classList.contains('fx-off-cart-pulse')) return
+  badgePulse.value = true
+  window.setTimeout(() => { badgePulse.value = false }, 300)
+})
 </script>

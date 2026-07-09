@@ -13,6 +13,7 @@ public interface UserCouponRepository extends JpaRepository<UserCoupon, Long> {
   List<UserCoupon> findByUserIdOrderByCreatedAtDesc(Long userId);
   List<UserCoupon> findByUserIdAndStatusOrderByCreatedAtDesc(Long userId, Integer status);
   Optional<UserCoupon> findByIdAndUserId(Long id, Long userId);
+  List<UserCoupon> findByUsedOrderId(Long usedOrderId);
   List<UserCoupon> findByUserIdAndStatusAndExpireAtGreaterThanEqualOrderByCreatedAtDesc(Long userId, Integer status, LocalDate date);
 
   @Query("select uc from UserCoupon uc left join fetch uc.coupon where uc.userId = :userId order by uc.createdAt desc")

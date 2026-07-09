@@ -21,12 +21,12 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
   Page<Order> findAllByOrderByCreatedAtDesc(Pageable pageable);
   List<Order> findByCreatedAtGreaterThanEqual(LocalDateTime start);
 
-  @Query("select coalesce(sum(o.totalAmount), 0) from Order o where o.status <> 'CANCELLED'")
+  @Query("select coalesce(sum(o.totalAmount), 0) from Order o where o.status not in ('CANCELLED', 'REFUNDED')")
   BigDecimal sumEffectiveAmount();
 
   @Query("""
       select coalesce(sum(o.totalAmount), 0) from Order o
-      where o.status <> 'CANCELLED' and o.createdAt >= :start and o.createdAt < :end
+      where o.status not in ('CANCELLED', 'REFUNDED') and o.createdAt >= :start and o.createdAt < :end
       """)
   BigDecimal sumEffectiveAmountBetween(@Param("start") LocalDateTime start, @Param("end") LocalDateTime end);
 
@@ -35,4 +35,23 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 
   @Query("select o from Order o order by o.createdAt desc")
   List<Order> findRecent(Pageable pageable);
+
+  @Query(value = """
+      select o as orderEntity, u.username as username, u.phone as phone
+      from Order o join User u on u.id = o.userId
+      where (:status = 'all' or o.status = :status)
+      order by o.createdAt desc
+      """,
+      countQuery = """
+      select count(o)
+      from Order o join User u on u.id = o.userId
+      where (:status = 'all' or o.status = :status)
+      """)
+  Page<AdminOrderView> findAdminOrders(@Param("status") String status, Pageable pageable);
+
+  interface AdminOrderView {
+    Order getOrderEntity();
+    String getUsername();
+    String getPhone();
+  }
 }

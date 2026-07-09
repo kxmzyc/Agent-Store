@@ -81,9 +81,28 @@
         </div>
 
         <form class="form checkout-form" @submit.prevent="submit">
-          <label>收货地址
-            <textarea v-model="shippingAddress" required placeholder="北京市海淀区实训中心 1 号楼" />
-          </label>
+          <div class="address-picker">
+            <strong>收货地址</strong>
+            <div v-if="addresses.length" class="address-option-list">
+              <label v-for="address in addresses" :key="address.id" class="address-option" :class="{ active: addressMode === 'saved' && selectedAddressId === address.id }">
+                <input v-model="selectedAddressId" type="radio" :value="address.id" @change="addressMode = 'saved'" />
+                <span>
+                  <b>{{ address.receiverName }} · {{ address.phone }}</b>
+                  <small>{{ formatAddress(address) }}</small>
+                </span>
+                <em v-if="address.isDefault">默认</em>
+              </label>
+            </div>
+            <button type="button" class="ghost" @click="addressMode = 'new'">使用新地址</button>
+            <div v-if="addressMode === 'new'" class="address-form-grid">
+              <input v-model="tempAddress.receiverName" required placeholder="收件人" />
+              <input v-model="tempAddress.phone" required placeholder="联系电话" />
+              <input v-model="tempAddress.province" required placeholder="省份" />
+              <input v-model="tempAddress.city" required placeholder="城市" />
+              <input v-model="tempAddress.district" required placeholder="区县" />
+              <input v-model="tempAddress.detailAddress" required placeholder="详细地址" />
+            </div>
+          </div>
           <p v-if="error" class="error">{{ error }}</p>
           <button class="primary checkout-submit" :disabled="submitting || !lines.length">
             <CreditCard size="18" />
@@ -98,7 +117,7 @@
 <script setup>
 import { computed, onMounted, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
-import { api, errorMessage } from '../api/http'
+import { api, errorMessage, refreshCartCount } from '../api/http'
 import { router } from '../router'
 import { store } from '../store'
 import { useToast } from '../composables/useToast'
@@ -111,11 +130,21 @@ const loadError = ref('')
 const error = ref('')
 const lines = ref([])
 const usableCoupons = ref([])
+const addresses = ref([])
+const selectedAddressId = ref(null)
+const addressMode = ref('new')
+const tempAddress = reactive({
+  receiverName: '',
+  phone: '',
+  province: '',
+  city: '',
+  district: '',
+  detailAddress: ''
+})
 const selectedCouponId = ref(null)
 const pointsInfo = ref({ points: 0, records: [] })
 const usePoints = ref(false)
 const benefitsLoading = ref(false)
-const shippingAddress = ref('北京市海淀区实训中心 1 号楼')
 const isDirect = computed(() => route.query.mode === 'direct')
 const directProductId = computed(() => Number(route.query.productId || 0))
 const directQuantity = computed(() => Math.max(1, Number(route.query.quantity || 1)))
@@ -136,6 +165,10 @@ const maxPointDiscount = computed(() => {
 })
 const pointDiscount = computed(() => usePoints.value ? maxPointDiscount.value : '0.00')
 const payableTotal = computed(() => money(Math.max(0.01, Number(subtotal.value) - Number(couponDiscount.value) - Number(pointDiscount.value))))
+const selectedAddress = computed(() => addresses.value.find(address => address.id === selectedAddressId.value) || null)
+const shippingAddressText = computed(() => addressMode.value === 'saved'
+  ? formatShippingAddress(selectedAddress.value)
+  : formatShippingAddress(tempAddress))
 
 onMounted(load)
 watch(() => route.fullPath, load)
@@ -176,12 +209,29 @@ async function load() {
         subtotal: item.subtotal
       }))
     }
-    await loadBenefits()
+    await Promise.all([loadBenefits(), loadAddresses()])
   } catch (e) {
     lines.value = []
     loadError.value = e.response ? errorMessage(e) : e.message || errorMessage(e)
   } finally {
     loading.value = false
+  }
+}
+
+async function loadAddresses() {
+  try {
+    const { data } = await api.get('/addresses')
+    addresses.value = data || []
+    const defaultAddress = addresses.value.find(address => address.isDefault) || addresses.value[0]
+    if (defaultAddress) {
+      selectedAddressId.value = defaultAddress.id
+      addressMode.value = 'saved'
+    } else {
+      addressMode.value = 'new'
+    }
+  } catch {
+    addresses.value = []
+    addressMode.value = 'new'
   }
 }
 
@@ -196,7 +246,7 @@ async function loadBenefits() {
     pointsInfo.value = points.data
     if (store.user) {
       store.user.points = points.data.points || 0
-      localStorage.setItem('userInfo', JSON.stringify(store.user))
+      store.persistUser()
     }
     if (selectedCoupon.value && !canUseCoupon(selectedCoupon.value)) selectedCouponId.value = null
   } catch {
@@ -209,9 +259,14 @@ async function loadBenefits() {
 
 async function submit() {
   error.value = ''
+  const address = shippingAddressText.value.trim()
+  if (!address) {
+    error.value = '请填写收货地址'
+    return
+  }
   submitting.value = true
   try {
-    const payload = { shippingAddress: shippingAddress.value }
+    const payload = { shippingAddress: address }
     if (selectedCoupon.value && canUseCoupon(selectedCoupon.value)) payload.userCouponId = selectedCoupon.value.id
     payload.usePoints = usePoints.value
     const { data } = isDirect.value
@@ -219,8 +274,9 @@ async function submit() {
       : await api.post('/orders', { ...payload, cartItemIds: lines.value.map((line) => line.cartItemId) })
     if (store.user && data.pointsUsed) {
       store.user.points = Math.max(0, (store.user.points || 0) - data.pointsUsed)
-      localStorage.setItem('userInfo', JSON.stringify(store.user))
+      store.persistUser()
     }
+    await refreshCartCount()
     toast.show('订单已提交')
     router.push(`/orders/${data.orderId}`)
   } catch (e) {
@@ -253,5 +309,19 @@ function couponRule(coupon) {
 
 function money(value) {
   return Number(value || 0).toFixed(2)
+}
+
+function formatAddress(address) {
+  if (!address) return ''
+  return [address.province, address.city, address.district, address.detailAddress]
+    .filter(Boolean)
+    .join(' ')
+}
+
+function formatShippingAddress(address) {
+  if (!address) return ''
+  return [address.receiverName, address.phone, formatAddress(address)]
+    .filter(Boolean)
+    .join(' ')
 }
 </script>

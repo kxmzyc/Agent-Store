@@ -49,7 +49,7 @@
 
 <script setup>
 import { onMounted, ref } from 'vue'
-import { api, errorMessage } from '../api/http'
+import { api, errorMessage, refreshCartCount } from '../api/http'
 import { useToast } from '../composables/useToast'
 import { flyToCart } from '../composables/useFlyToCart'
 
@@ -77,6 +77,7 @@ async function addCart(product, event) {
   flyToCart(event, { imageUrl: product.imageUrl })
   try {
     await api.post('/cart', { productId: product.id, quantity: 1 })
+    await refreshCartCount()
     toast.show('已加入购物车')
   } catch (e) {
     toast.show(errorMessage(e))

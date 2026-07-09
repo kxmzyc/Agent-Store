@@ -32,6 +32,6 @@ export const router = createRouter({ history: createWebHistory(), routes })
 store.router = router
 
 router.beforeEach((to) => {
-  if (to.meta.auth && !store.token) return '/login'
+  if (to.meta.auth && !store.token) return { path: '/login', query: { redirect: to.fullPath } }
   if (to.meta.admin && store.user?.role !== 'ADMIN') return '/'
 })

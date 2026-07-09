@@ -111,6 +111,7 @@
 import { computed, onMounted, ref, watch } from 'vue'
 import { api, errorMessage } from '../api/http'
 import { router } from '../router'
+import { store } from '../store'
 import { useToast } from '../composables/useToast'
 
 const items = ref([])
@@ -148,6 +149,7 @@ async function load() {
   const { data } = await api.get('/cart')
   items.value = data
   checked.value = data.filter(i => i.stock > 0).map(i => i.id)
+  syncCartCount()
 }
 
 function toggleAll(event) {
@@ -204,6 +206,7 @@ async function clearCart() {
       await api.delete('/cart')
       items.value = []
       checked.value = []
+      syncCartCount()
       toast.show('购物车已清空')
     } catch (e) {
       toast.show(errorMessage(e))
@@ -222,5 +225,9 @@ function createOrder() {
 function goCheckout() {
   if (!checked.value.length) return
   router.push({ path: '/checkout', query: { cartItemIds: checked.value.join(',') } })
+}
+
+function syncCartCount() {
+  store.setCartCount(items.value.reduce((sum, item) => sum + Number(item.quantity || 0), 0))
 }
 </script>

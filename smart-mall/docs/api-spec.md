@@ -57,10 +57,19 @@ Authorization: Bearer <accessToken>
 - `GET /api/products?categoryId=1&page=1&size=20&sort=sales_desc`
 - `GET /api/products/search?keyword=键盘&page=1&size=20`
 - `GET /api/products/{id}`
+- `POST /api/products/{id}/view`
+  - 游客和登录用户都可调用；前端商品详情页 5 分钟内同商品只上报一次。
+- `GET /api/products/recommendations?limit=8`
+  - 响应：`{ "source": "personalized", "list": [ { "id": 1, "name": "...", "tags": [{ "id": 3, "name": "爆款" }] } ] }`
+  - `source=personalized` 表示使用 Agent 长期偏好和浏览分类；`source=fallback` 表示冷启动销量兜底。
 - `GET /api/products/admin?keyword=键盘&categoryId=4&status=1&page=1&size=20`，管理员
 - `POST /api/products`，管理员
+  - 可选追加：`tagIds: [1, 3]`
 - `PUT /api/products/{id}`，管理员
+  - 可选追加：`tagIds: [1, 3]`
 - `DELETE /api/products/{id}`，管理员，逻辑下架
+
+商品列表和详情响应追加 `tags: [{ "id": 1, "name": "新品" }]`，不改变原字段。
 
 排序参数：
 
@@ -101,6 +110,38 @@ Authorization: Bearer <accessToken>
 
 该接口支撑前端 `/admin` 运营工作台，用于展示总览指标、低库存预警、热销商品和最近订单。
 
+## Batch 5 Experience APIs
+
+- `GET /api/addresses`
+- `POST /api/addresses`
+  - 请求：`{ "receiverName": "Alice", "phone": "13800000001", "province": "上海市", "city": "上海市", "district": "浦东新区", "detailAddress": "软件园 1 号楼", "isDefault": true }`
+- `PUT /api/addresses/{id}`
+- `DELETE /api/addresses/{id}`
+- `PUT /api/addresses/{id}/default`
+
+- `GET /api/banner-slots/active`
+  - 前台 Banner 调用，返回启用推荐位对应的商品列表。
+- `GET /api/admin/banner-slots`
+- `POST /api/admin/banner-slots`
+  - 请求：`{ "productId": 1, "sortOrder": 0, "active": true }`
+- `PUT /api/admin/banner-slots/{id}`
+- `DELETE /api/admin/banner-slots/{id}`
+
+- `GET /api/search/hot-keywords`
+  - 响应：`[{ "keyword": "机械键盘", "count": 2, "blocked": false, "lastSearchedAt": "2026-07-06T12:20:00" }]`
+- `GET /api/admin/search-keywords?page=1&size=20`
+- `PUT /api/admin/search-keywords/{keyword}/block`
+  - 请求：`{ "blocked": true }`
+
+- `GET /api/admin/tags`
+- `POST /api/admin/tags`
+  - 请求：`{ "name": "新品" }`
+- `PUT /api/admin/tags/{id}`
+- `DELETE /api/admin/tags/{id}`
+
+- `GET /api/admin/operation-logs?page=1&size=20&adminId=1&action=product`
+  - 响应：`{ "total": 1, "list": [{ "adminId": 1, "action": "product.update", "targetType": "product", "targetId": 1, "createdAt": "..." }] }`
+
 ## Cart And Orders
 
 - `GET /api/cart`
@@ -124,6 +165,19 @@ Authorization: Bearer <accessToken>
 - `POST /api/orders/{id}/rebuy`
   - 用途：把历史订单中的商品重新加入购物车，复用购物车库存校验，用户仍需进入结算页确认地址和金额。
 
+- `POST /api/orders/{id}/after-sale`
+  - 请求：`{ "type": 2, "reason": "商品不合适，申请退货退款" }`
+  - `type=1` 表示仅退款，`type=2` 表示退货退款；仅允许已发货或已完成订单申请。
+- `GET /api/user/after-sales`
+  - 响应：当前用户的售后申请列表，包含订单号、退款金额、审核状态和订单明细。
+- `GET /api/admin/after-sales?status=0&page=1&size=20`，管理员
+  - `status=0` 待审核，`2` 已拒绝，`3` 已完成，`all` 全部。
+- `PUT /api/admin/after-sales/{id}/approve`，管理员
+  - 请求：`{ "remark": "同意售后申请" }`
+  - 退货退款会回补库存，订单使用过的优惠券会恢复为可用，订单状态改为 `REFUNDED`。
+- `PUT /api/admin/after-sales/{id}/reject`，管理员
+  - 请求：`{ "remark": "不符合售后条件" }`
+
 订单状态：
 
 - `PENDING_PAYMENT`
@@ -131,6 +185,7 @@ Authorization: Bearer <accessToken>
 - `SHIPPED`
 - `COMPLETED`
 - `CANCELLED`
+- `REFUNDED`
 
 ## Internal Agent Endpoints
 

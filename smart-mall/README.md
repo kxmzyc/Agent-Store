@@ -72,6 +72,18 @@ smart-mall/
 - 已安装并启动 Docker Desktop。
 - 当前终端位于 `smart-mall/` 目录。
 
+当前原项目的 Docker Compose 项目名是 `smart-mall`，会创建 `smart-mall-*` 容器和
+`smart-mall_*` volumes。这个项目保留原始演示端口，适合作为答辩/主线版本运行。
+
+从项目根目录启动：
+
+```powershell
+cd "G:\claudeproject\Agent Store\smart-mall"
+if (-not (Test-Path .env)) { Copy-Item .env.example .env }
+docker compose up -d --build
+docker compose ps
+```
+
 Windows 最快方式（首次启动先生成 `.env`）：
 
 ```powershell
@@ -101,6 +113,9 @@ http://127.0.0.1/
 docker compose down
 ```
 
+注意：日常停止只用 `docker compose down`。不要随手加 `-v`，否则会删除本项目的
+`smart-mall_mysql_data` 数据库 volume。只有明确想清空数据库并重新导入 seed 时，才执行下面的重置命令。
+
 清空 MySQL volume 并重新导入 `docs/seed.sql`：
 
 ```bash
@@ -109,6 +124,20 @@ docker compose up -d --build
 ```
 
 注意：MySQL volume 已存在时，`docs/seed.sql` 不会自动重复导入。修改种子数据后，如需同步到已有数据库，需要清空 volume 或手动执行 SQL。
+
+## 与小程序副本并行运行
+
+如果同时运行 `G:\claudeproject\Agent Store - 副本\smart-mall`，副本已经使用独立的
+`COMPOSE_PROJECT_NAME=smart-mall-miniapp` 和独立端口，不会再覆盖本项目容器、镜像或 volume。
+
+| 项目 | Compose 项目名 | 前端 | 后端 | Agent | MySQL |
+|---|---|---|---|---|---|
+| 原项目 | `smart-mall` | http://127.0.0.1/ | http://127.0.0.1:8081 | http://127.0.0.1:8000 | `127.0.0.1:3307` |
+| 小程序副本 | `smart-mall-miniapp` | http://127.0.0.1:8088/ | http://127.0.0.1:8091 | http://127.0.0.1:8010 | `127.0.0.1:3317` |
+
+同时启动两套环境时，分别进入各自目录执行 `docker compose up -d --build` 即可。Docker 会根据
+Compose 项目名创建独立资源，例如本项目使用 `smart-mall_mysql_data`，副本使用
+`smart-mall-miniapp_mysql_data`。
 
 ## 访问地址
 

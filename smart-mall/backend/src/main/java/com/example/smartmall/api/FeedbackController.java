@@ -2,6 +2,7 @@ package com.example.smartmall.api;
 
 import com.example.smartmall.domain.UserFeedback;
 import com.example.smartmall.repo.*;
+import com.example.smartmall.audit.AdminOperation;
 import com.example.smartmall.security.CurrentUser;
 import jakarta.validation.Valid;
 import java.time.LocalDateTime;
@@ -48,6 +49,7 @@ public class FeedbackController {
 
   @PutMapping("/admin/feedback/{id}/reply")
   @PreAuthorize("hasRole('ADMIN')")
+  @AdminOperation(action = "feedback.reply", targetType = "feedback")
   FeedbackResponse reply(@PathVariable Long id, @Valid @RequestBody FeedbackReplyRequest request) {
     UserFeedback item = feedback.findById(id).orElseThrow(() -> BizException.notFound("反馈不存在"));
     item.reply = request.reply();

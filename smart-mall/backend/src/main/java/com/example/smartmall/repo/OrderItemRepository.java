@@ -26,9 +26,17 @@ public interface OrderItemRepository extends JpaRepository<OrderItem, Long> {
       join i.order o
       join Product p on p.id = i.productId
       join Category c on c.id = p.categoryId
-      where o.status <> 'CANCELLED'
+      where o.status not in ('CANCELLED', 'REFUNDED')
       group by c.name
       order by coalesce(sum(i.quantity), 0) desc
       """)
   List<Object[]> categoryTopSales(Pageable pageable);
+
+  @Query("""
+      select distinct i.productId
+      from OrderItem i
+      join i.order o
+      where o.userId = :userId and o.status not in ('CANCELLED', 'REFUNDED')
+      """)
+  List<Long> findPurchasedProductIds(@Param("userId") Long userId);
 }

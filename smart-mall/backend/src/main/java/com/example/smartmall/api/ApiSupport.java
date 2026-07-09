@@ -37,15 +37,25 @@ public class ApiSupport {
 
   public record CategoryResponse(Long id, String name, Long parentId, Integer sortOrder, List<CategoryResponse> children) {}
   public record ProductRequest(@NotNull Long categoryId, @NotBlank String name, String description,
-                               @NotNull BigDecimal price, @NotNull Integer stock, String imageUrl, Integer status) {}
-  public record ProductResponse(Long id, Long categoryId, String name, String description, BigDecimal price,
-                                Integer stock, Integer salesCount, String imageUrl, Integer status, Integer version,
-                                Double avgRating, Long reviewCount) {
-    public static ProductResponse from(Product p) {
-      return new ProductResponse(p.id, p.categoryId, p.name, p.description, p.price, p.stock,
-          p.salesCount, p.imageUrl, p.status, p.version, 0.0, 0L);
+                               @NotNull BigDecimal price, @NotNull Integer stock, String imageUrl, Integer status,
+                               List<Long> tagIds) {}
+  public record TagResponse(Long id, String name) {
+    public static TagResponse from(ProductTag tag) {
+      return new TagResponse(tag.id, tag.name);
     }
   }
+  public record ProductResponse(Long id, Long categoryId, String name, String description, BigDecimal price,
+                                Integer stock, Integer salesCount, String imageUrl, Integer status, Integer version,
+                                Double avgRating, Long reviewCount, List<TagResponse> tags) {
+    public static ProductResponse from(Product p) {
+      return from(p, List.of());
+    }
+    public static ProductResponse from(Product p, List<TagResponse> tags) {
+      return new ProductResponse(p.id, p.categoryId, p.name, p.description, p.price, p.stock,
+          p.salesCount, p.imageUrl, p.status, p.version, 0.0, 0L, tags);
+    }
+  }
+  public record RecommendationResponse(String source, List<ProductResponse> list) {}
   public record ReviewRequest(@Min(1) @Max(5) Integer rating, String content) {}
   public record ReviewResponse(Long id, Long productId, Long userId, String username, Integer rating,
                                String content, LocalDateTime createdAt) {
@@ -77,6 +87,20 @@ public class ApiSupport {
                                      long completedOrders, long cancelledOrders,
                                      List<ProductViewHistoryResponse> recentViews,
                                      List<FavoriteResponse> recentFavorites) {}
+
+  public record AddressRequest(@NotBlank String receiverName, @NotBlank String phone,
+                               @NotBlank String province, @NotBlank String city,
+                               @NotBlank String district, @NotBlank String detailAddress,
+                               Boolean isDefault) {}
+  public record AddressResponse(Long id, String receiverName, String phone, String province,
+                                String city, String district, String detailAddress,
+                                boolean isDefault, LocalDateTime createdAt) {
+    public static AddressResponse from(ShippingAddress address) {
+      return new AddressResponse(address.id, address.receiverName, address.phone, address.province,
+          address.city, address.district, address.detailAddress, address.isDefault != null && address.isDefault == 1,
+          address.createdAt);
+    }
+  }
 
   public record CartRequest(@NotNull Long productId, @Min(1) Integer quantity) {}
   public record CartUpdateRequest(@Min(1) Integer quantity) {}
@@ -129,6 +153,13 @@ public class ApiSupport {
     }
   }
 
+  public record AfterSaleApplyRequest(@NotNull @Min(1) @Max(2) Integer type, @NotBlank @Size(max = 200) String reason) {}
+  public record AfterSaleHandleRequest(@Size(max = 200) String remark) {}
+  public record AfterSaleResponse(Long id, Long orderId, String orderNo, Long userId, Integer type,
+                                  String typeLabel, String reason, Integer status, String statusLabel,
+                                  BigDecimal refundAmount, LocalDateTime createdAt, LocalDateTime handledAt,
+                                  String handleRemark, List<OrderItemResponse> items) {}
+
   public record CreateOrderRequest(@NotEmpty List<Long> cartItemIds, @NotBlank String shippingAddress,
                                    Long userCouponId, Boolean usePoints) {}
   public record DirectOrderRequest(@NotNull Long productId, @Min(1) Integer quantity, @NotBlank String shippingAddress,
@@ -143,6 +174,16 @@ public class ApiSupport {
   public record OrderResponse(Long id, String orderNo, BigDecimal totalAmount, String status,
                               String shippingAddress, LocalDateTime createdAt, LocalDateTime paidAt,
                               List<OrderItemResponse> items, BigDecimal discountAmount, Integer pointsUsed) {}
+  public record AdminOrderResponse(Long id, String orderNo, BigDecimal totalAmount, String status,
+                                   String shippingAddress, LocalDateTime createdAt, LocalDateTime paidAt,
+                                   List<OrderItemResponse> items, BigDecimal discountAmount, Integer pointsUsed,
+                                   Long userId, String username, String phone) {
+    public static AdminOrderResponse from(OrderResponse order, Long userId, String username, String phone) {
+      return new AdminOrderResponse(order.id(), order.orderNo(), order.totalAmount(), order.status(),
+          order.shippingAddress(), order.createdAt(), order.paidAt(), order.items(), order.discountAmount(),
+          order.pointsUsed(), userId, username, phone);
+    }
+  }
   public record RebuyResponse(int addedCount, List<CartResponse> cartItems) {}
   public record InternalOrderResponse(Long id, String orderNo, String status, BigDecimal totalAmount, LocalDateTime createdAt) {
     public static InternalOrderResponse from(Order o) {
@@ -172,6 +213,24 @@ public class ApiSupport {
                                        List<AdminProductBrief> topProducts, List<AdminOrderBrief> recentOrders,
                                        long todayOrders, BigDecimal monthRevenue, long productCount, long userCount,
                                        List<DailyOrderCount> last7DaysOrders, List<CategorySales> categoryTopSales) {}
+  public record BannerSlotRequest(@NotNull Long productId, Integer sortOrder, Boolean active) {}
+  public record BannerSlotResponse(Long id, ProductResponse product, Integer sortOrder, boolean active,
+                                   LocalDateTime createdAt) {
+    public static BannerSlotResponse from(BannerSlot slot) {
+      return new BannerSlotResponse(slot.id, slot.product == null ? null : ProductResponse.from(slot.product),
+          slot.sortOrder, slot.isActive != null && slot.isActive == 1, slot.createdAt);
+    }
+  }
+  public record TagRequest(@NotBlank String name) {}
+  public record HotKeywordResponse(String keyword, long count, boolean blocked, LocalDateTime lastSearchedAt) {}
+  public record KeywordBlockRequest(Boolean blocked) {}
+  public record AdminOperationLogResponse(Long id, Long adminId, String action, String targetType, Long targetId,
+                                          String detail, LocalDateTime createdAt) {
+    public static AdminOperationLogResponse from(AdminOperationLog log) {
+      return new AdminOperationLogResponse(log.id, log.adminId, log.action, log.targetType,
+          log.targetId, log.detail, log.createdAt);
+    }
+  }
 }
 
 @RestControllerAdvice

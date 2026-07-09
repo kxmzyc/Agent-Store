@@ -76,6 +76,31 @@
       </section>
     </div>
 
+    <section class="panel address-book-panel">
+      <div class="panel-head">
+        <div>
+          <h2>收货地址</h2>
+          <p>结算页会默认选中默认地址，也可以临时填写新地址。</p>
+        </div>
+        <button class="primary" type="button" @click="openAddressForm()">新增地址</button>
+      </div>
+      <div v-if="addresses.length" class="address-card-grid">
+        <article v-for="address in addresses" :key="address.id" class="address-card" :class="{ active: address.isDefault }">
+          <div>
+            <strong>{{ address.receiverName }} · {{ address.phone }}</strong>
+            <p>{{ formatAddress(address) }}</p>
+          </div>
+          <span v-if="address.isDefault" class="status-pill">默认</span>
+          <div class="row-actions">
+            <button type="button" @click="openAddressForm(address)">编辑</button>
+            <button type="button" :disabled="address.isDefault" @click="setDefaultAddress(address)">设为默认</button>
+            <button class="ghost danger-ghost" type="button" @click="deleteAddress(address)">删除</button>
+          </div>
+        </article>
+      </div>
+      <p v-else class="muted">暂无收货地址，新增后结算页会自动读取。</p>
+    </section>
+
     <section class="panel profile-list-panel">
       <div class="panel-head">
         <div>
@@ -144,6 +169,31 @@
         </form>
       </section>
     </div>
+
+    <div v-if="addressOpen" class="modal-backdrop" @click.self="addressOpen = false">
+      <section class="panel feedback-modal">
+        <div class="panel-head">
+          <div>
+            <h2>{{ addressForm.id ? '编辑地址' : '新增地址' }}</h2>
+            <p>这些字段会拼成订单收货地址快照。</p>
+          </div>
+          <button class="ghost" type="button" @click="addressOpen = false">关闭</button>
+        </div>
+        <form class="form address-modal-form" @submit.prevent="saveAddress">
+          <input v-model="addressForm.receiverName" required placeholder="收件人" />
+          <input v-model="addressForm.phone" required placeholder="联系电话" />
+          <input v-model="addressForm.province" required placeholder="省份" />
+          <input v-model="addressForm.city" required placeholder="城市" />
+          <input v-model="addressForm.district" required placeholder="区县" />
+          <input v-model="addressForm.detailAddress" required placeholder="详细地址" />
+          <label class="check-control">
+            <input v-model="addressForm.isDefault" type="checkbox" />
+            <span>设为默认地址</span>
+          </label>
+          <button class="primary" :disabled="addressSaving">{{ addressSaving ? '保存中...' : '保存地址' }}</button>
+        </form>
+      </section>
+    </div>
   </section>
 </template>
 
@@ -158,9 +208,13 @@ const message = ref('')
 const messageType = ref('muted')
 const preferences = ref([])
 const overview = ref(null)
+const addresses = ref([])
+const addressOpen = ref(false)
+const addressSaving = ref(false)
 const feedbackOpen = ref(false)
 const feedbackSubmitting = ref(false)
 const feedbackForm = reactive({ type: 1, content: '' })
+const addressForm = reactive(blankAddress())
 const toast = useToast()
 
 const overviewCards = computed(() => {
@@ -181,6 +235,7 @@ onMounted(() => {
   load()
   loadOverview()
   loadPreferences()
+  loadAddresses()
 })
 
 async function load() {
@@ -207,7 +262,7 @@ async function save() {
     const { data } = await api.put('/user/profile', { phone: profile.phone, avatarUrl: profile.avatarUrl })
     Object.assign(profile, data)
     store.user = data
-    localStorage.setItem('userInfo', JSON.stringify(data))
+    store.persistUser()
     messageType.value = 'muted'
     message.value = '已保存'
     toast.show('个人资料已保存')
@@ -223,6 +278,78 @@ async function removePreference(tag) {
     await agentApi.delete(`/preferences/${encodeURIComponent(tag)}`)
     preferences.value = preferences.value.filter((item) => item.tag !== tag)
     toast.show('偏好标签已删除')
+  } catch (e) {
+    toast.show(errorMessage(e))
+  }
+}
+
+async function loadAddresses() {
+  try {
+    const { data } = await api.get('/addresses')
+    addresses.value = data || []
+  } catch (e) {
+    toast.show(errorMessage(e))
+  }
+}
+
+function blankAddress() {
+  return {
+    id: null,
+    receiverName: '',
+    phone: '',
+    province: '',
+    city: '',
+    district: '',
+    detailAddress: '',
+    isDefault: false
+  }
+}
+
+function openAddressForm(address = null) {
+  Object.assign(addressForm, blankAddress(), address || {})
+  addressOpen.value = true
+}
+
+async function saveAddress() {
+  addressSaving.value = true
+  try {
+    const payload = {
+      receiverName: addressForm.receiverName,
+      phone: addressForm.phone,
+      province: addressForm.province,
+      city: addressForm.city,
+      district: addressForm.district,
+      detailAddress: addressForm.detailAddress,
+      isDefault: addressForm.isDefault
+    }
+    if (addressForm.id) await api.put(`/addresses/${addressForm.id}`, payload)
+    else await api.post('/addresses', payload)
+    addressOpen.value = false
+    toast.show('地址已保存')
+    await loadAddresses()
+  } catch (e) {
+    toast.show(errorMessage(e))
+  } finally {
+    addressSaving.value = false
+  }
+}
+
+async function setDefaultAddress(address) {
+  try {
+    await api.put(`/addresses/${address.id}/default`)
+    toast.show('默认地址已更新')
+    await loadAddresses()
+  } catch (e) {
+    toast.show(errorMessage(e))
+  }
+}
+
+async function deleteAddress(address) {
+  if (!window.confirm(`确认删除 ${address.receiverName} 的地址？`)) return
+  try {
+    await api.delete(`/addresses/${address.id}`)
+    toast.show('地址已删除')
+    await loadAddresses()
   } catch (e) {
     toast.show(errorMessage(e))
   }
@@ -246,5 +373,11 @@ async function submitFeedback() {
 function formatTime(value) {
   if (!value) return ''
   return value.replace('T', ' ').slice(0, 16)
+}
+
+function formatAddress(address) {
+  return [address.province, address.city, address.district, address.detailAddress]
+    .filter(Boolean)
+    .join(' ')
 }
 </script>

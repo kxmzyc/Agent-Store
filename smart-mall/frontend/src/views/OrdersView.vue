@@ -101,7 +101,8 @@ const tabs = [
   { value: 'PAID', label: '待发货' },
   { value: 'SHIPPED', label: '待收货' },
   { value: 'COMPLETED', label: '已完成' },
-  { value: 'CANCELLED', label: '已取消' }
+  { value: 'CANCELLED', label: '已取消' },
+  { value: 'REFUNDED', label: '已退款' }
 ]
 
 const status = ref('all')
@@ -124,7 +125,8 @@ function statusHint(value) {
     PAID: '支付已完成，等待管理员发货。',
     SHIPPED: '商品已发货，等待确认收货。',
     COMPLETED: '订单已完成。',
-    CANCELLED: '订单已取消，库存已回补。'
+    CANCELLED: '订单已取消，库存已回补。',
+    REFUNDED: '售后已完成，订单已退款。'
   }
   return hints[value] || value
 }

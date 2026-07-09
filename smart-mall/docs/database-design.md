@@ -10,7 +10,7 @@
 
 | 边界 | 表 | 写入方 | 说明 |
 |---|---|---|---|
-| 主业务数据 | `user`、`category`、`product`、`cart`、`order`、`order_item`、`product_favorite`、`product_view_history` | Spring Boot 后端 | 用户、商品、购物车、订单、收藏和浏览足迹等电商核心数据，Agent 不直接写这些表 |
+| 主业务数据 | `user`、`category`、`product`、`cart`、`order`、`order_item`、`after_sale_request`、`product_favorite`、`product_view_history`、`product_view_log`、`shipping_address`、`banner_slot`、`search_keyword_log`、`product_tag`、`product_tag_relation`、`admin_operation_log` | Spring Boot 后端 | 用户、商品、购物车、订单、售后、收藏、浏览行为、地址簿和运营配置等电商核心数据，Agent 不直接写这些表 |
 | Agent 记忆数据 | `agent_conversation`、`user_preference` | FastAPI Agent 服务 | 存储对话历史和用户长期偏好，是 Agent 专属数据 |
 
 Agent 查询商品和订单时通过后端 REST API 调用，不能直接读写订单、商品、用户业务表。这样可以保证权限边界清晰，避免 Agent 绕过主系统鉴权和业务校验。
@@ -29,8 +29,16 @@ Agent 查询商品和订单时通过后端 REST API 调用，不能直接读写�
 | `cart` | 购物车表 | 订单模块 | 存储用户待结算商品 |
 | `order` | 订单主表 | 订单模块 | 存储订单号、用户、总金额、状态、地址、支付时间 |
 | `order_item` | 订单明细表 | 订单模块 | 存储订单商品行和下单时的商品名、价格快照 |
+| `after_sale_request` | 售后申请表 | 订单模块 | 存储用户退款/退货退款申请、审核状态和处理说明 |
 | `product_favorite` | 商品收藏表 | 用户体验增强 | 存储用户收藏商品，支撑心愿单和个人中心 |
 | `product_view_history` | 商品浏览足迹表 | 用户体验增强 | 存储用户最近浏览商品、浏览次数和最近浏览时间 |
+| `product_view_log` | 商品浏览日志表 | 推荐模块 | 存储登录/匿名浏览事件，为“猜你喜欢”提供近期行为信号 |
+| `shipping_address` | 收货地址表 | 订单模块、用户模块 | 存储用户地址簿和默认地址 |
+| `banner_slot` | 推荐位表 | 管理端增强 | 存储首页 Banner 推荐位配置 |
+| `search_keyword_log` | 搜索热词日志表 | 搜索模块、管理端增强 | 记录搜索关键词并支持屏蔽 |
+| `product_tag` | 商品标签表 | 商品模块、管理端增强 | 存储可复用商品标签 |
+| `product_tag_relation` | 商品标签关系表 | 商品模块、管理端增强 | 存储商品与标签多对多关系 |
+| `admin_operation_log` | 管理员操作日志表 | DevOps/管理端增强 | AOP 自动记录管理员写操作 |
 | `agent_conversation` | Agent 对话表 | AI 助手模块 | 持久化保存会话消息，作为短期记忆恢复兜底 |
 | `user_preference` | 用户偏好表 | AI 助手模块 | 存储长期偏好标签和权重 |
 
@@ -200,6 +208,28 @@ PENDING_PAYMENT --取消--> CANCELLED
 - `product_name_snapshot` 和 `price_snapshot` 是有意保存的历史事实，不是设计失误。商品后续改名或改价后，历史订单展示仍必须反映下单时的名称和价格。
 - 不把商品图片、分类等展示字段复制到订单明细，避免不必要冗余。
 
+### 5.6.1 `after_sale_request` 售后申请表
+
+用途：记录用户对已发货/已完成订单提交的退款或退货退款申请，并支撑管理员审核。
+
+| 字段 | 类型 | 约束 | 说明 |
+|---|---|---|---|
+| `id` | `BIGINT` | PK，自增 | 售后申请主键 |
+| `order_id` | `BIGINT` | NOT NULL，FK | 关联订单 |
+| `user_id` | `BIGINT` | NOT NULL，FK | 申请用户 |
+| `type` | `TINYINT` | NOT NULL | `1=仅退款`，`2=退货退款` |
+| `reason` | `VARCHAR(200)` | NOT NULL | 用户申请原因 |
+| `status` | `TINYINT` | NOT NULL，默认 `0` | `0=待审核`，`1=已同意`，`2=已拒绝`，`3=已完成` |
+| `refund_amount` | `DECIMAL(10,2)` | NOT NULL | 退款金额快照 |
+| `handle_remark` | `VARCHAR(200)` | 可空 | 管理员处理说明 |
+| `created_at` | `TIMESTAMP` | 默认当前时间 | 申请时间 |
+| `handled_at` | `TIMESTAMP` | 可空 | 处理时间 |
+
+设计说明：
+
+- 售后是订单之后的独立生命周期，不把售后原因、审核说明等字段塞回 `order` 或 `order_item`。
+- 审核通过时，后端事务会把订单置为 `REFUNDED`；若为退货退款，会按订单明细回补库存；若订单使用过优惠券，会重置为可用。
+
 ### 5.7 `product_favorite` 商品收藏表
 
 用途：存储用户收藏商品，支撑商品详情页收藏状态、收藏列表和个人中心近期收藏。
@@ -315,6 +345,12 @@ PENDING_PAYMENT --取消--> CANCELLED
 | `product_favorite` | `idx_favorite_user_created` | `user_id,created_at` | 普通索引 | 用户收藏列表 |
 | `product_view_history` | `uk_view_history_user_product` | `user_id,product_id` | 唯一索引 | 合并同一用户同一商品足迹 |
 | `product_view_history` | `idx_view_history_user_last` | `user_id,last_viewed_at` | 普通索引 | 用户最近浏览列表 |
+| `product_view_log` | `idx_user` | `user_id` | 普通索引 | 用户近期浏览信号 |
+| `product_view_log` | `idx_product` | `product_id` | 普通索引 | 商品浏览统计扩展 |
+| `shipping_address` | `idx_user` | `user_id` | 普通索引 | 用户地址列表 |
+| `search_keyword_log` | `idx_keyword` | `keyword` | 普通索引 | 热词聚合和屏蔽更新 |
+| `product_tag_relation` | `PRIMARY` | `product_id,tag_id` | 联合主键 | 防止重复绑定标签 |
+| `admin_operation_log` | `idx_admin` | `admin_id` | 普通索引 | 管理员操作审计查询 |
 | `agent_conversation` | `idx_agent_conversation_session` | `session_id` | 普通索引 | 会话历史恢复 |
 | `agent_conversation` | `idx_agent_conversation_user_session` | `user_id,session_id,id` | 普通索引 | 用户会话隔离查询 |
 | `user_preference` | `uk_user_preference_tag` | `user_id,preference_tag` | 唯一索引 | 偏好 upsert |
@@ -433,6 +469,7 @@ WHERE id = :id;
 - 3 条收藏记录和 4 条浏览足迹，方便演示个人中心、收藏页和用户行为闭环。
 - 1 条用户偏好数据，方便演示长期记忆读取。
 - 1 个抢购测试商品，库存为 80，配合并发测试脚本验证不会超卖。
+- Batch 5 新增地址簿、浏览日志、热词、推荐位和商品标签演示数据，方便演示“猜你喜欢”、地址选择、Banner 配置和标签管理。
 
 ## 11. SQL 文件说明
 

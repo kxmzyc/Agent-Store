@@ -80,18 +80,20 @@ public class AdminController {
   }
 
   @GetMapping("/orders")
-  PageResponse<OrderResponse> orders(@RequestParam(defaultValue = "all") String status,
-                                     @RequestParam(defaultValue = "1") int page,
-                                     @RequestParam(defaultValue = "20") int size) {
+  PageResponse<AdminOrderResponse> orders(@RequestParam(defaultValue = "all") String status,
+                                          @RequestParam(defaultValue = "1") int page,
+                                          @RequestParam(defaultValue = "20") int size) {
     Pageable pageable = PageRequest.of(
         Math.max(page, 1) - 1,
         Math.min(Math.max(size, 1), 100),
         Sort.by(Sort.Direction.DESC, "createdAt")
     );
-    Page<Order> result = "all".equalsIgnoreCase(status)
-        ? orders.findAllByOrderByCreatedAtDesc(pageable)
-        : orders.findByStatusOrderByCreatedAtDesc(status, pageable);
-    return new PageResponse<>(result.getTotalElements(), result.getContent().stream().map(orderService::toResponse).toList());
+    String normalizedStatus = "all".equalsIgnoreCase(status) ? "all" : status;
+    Page<OrderRepository.AdminOrderView> result = orders.findAdminOrders(normalizedStatus, pageable);
+    return new PageResponse<>(result.getTotalElements(), result.getContent().stream()
+        .map(row -> AdminOrderResponse.from(orderService.toResponse(row.getOrderEntity()),
+            row.getOrderEntity().userId, row.getUsername(), row.getPhone()))
+        .toList());
   }
 
   @GetMapping("/orders/export")

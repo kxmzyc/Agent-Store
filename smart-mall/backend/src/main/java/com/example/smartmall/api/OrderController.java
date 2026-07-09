@@ -2,6 +2,7 @@ package com.example.smartmall.api;
 
 import com.example.smartmall.domain.*;
 import com.example.smartmall.repo.*;
+import com.example.smartmall.audit.AdminOperation;
 import com.example.smartmall.security.CurrentUser;
 import com.example.smartmall.service.OrderService;
 import jakarta.validation.Valid;
@@ -140,6 +141,7 @@ public class OrderController {
 
   @PutMapping("/orders/{id}/ship")
   @PreAuthorize("hasRole('ADMIN')")
+  @AdminOperation(action = "order.ship", targetType = "order")
   OrderResponse ship(@PathVariable Long id) {
     return orderService.ship(id);
   }

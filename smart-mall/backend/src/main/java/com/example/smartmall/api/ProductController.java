@@ -2,6 +2,7 @@ package com.example.smartmall.api;
 
 import com.example.smartmall.domain.*;
 import com.example.smartmall.repo.*;
+import com.example.smartmall.audit.AdminOperation;
 import com.example.smartmall.security.CurrentUser;
 import jakarta.validation.Valid;
 import java.time.LocalDateTime;
@@ -23,23 +24,38 @@ public class ProductController {
   private final ProductRepository products;
   private final ProductFavoriteRepository favorites;
   private final ProductViewHistoryRepository viewHistory;
+  private final ProductViewLogRepository viewLogs;
   private final ProductReviewRepository reviews;
   private final OrderItemRepository orderItems;
   private final UserRepository users;
+  private final UserPreferenceRepository preferences;
+  private final SearchKeywordLogRepository keywordLogs;
+  private final ProductTagRepository tags;
+  private final ProductTagRelationRepository tagRelations;
 
   public ProductController(CategoryRepository categories, ProductRepository products,
                            ProductFavoriteRepository favorites,
                            ProductViewHistoryRepository viewHistory,
+                           ProductViewLogRepository viewLogs,
                            ProductReviewRepository reviews,
                            OrderItemRepository orderItems,
-                           UserRepository users) {
+                           UserRepository users,
+                           UserPreferenceRepository preferences,
+                           SearchKeywordLogRepository keywordLogs,
+                           ProductTagRepository tags,
+                           ProductTagRelationRepository tagRelations) {
     this.categories = categories;
     this.products = products;
     this.favorites = favorites;
     this.viewHistory = viewHistory;
+    this.viewLogs = viewLogs;
     this.reviews = reviews;
     this.orderItems = orderItems;
     this.users = users;
+    this.preferences = preferences;
+    this.keywordLogs = keywordLogs;
+    this.tags = tags;
+    this.tagRelations = tagRelations;
   }
 
   @GetMapping("/categories")
@@ -63,7 +79,7 @@ public class ProductController {
     Page<Product> result = categoryId == null
         ? products.findByStatus(1, pageable)
         : products.findByStatusAndCategoryIdIn(1, categoryIdsWithChildren(categoryId), pageable);
-    return new PageResponse<>(result.getTotalElements(), result.getContent().stream().map(ProductResponse::from).toList());
+    return new PageResponse<>(result.getTotalElements(), toProductResponses(result.getContent()));
   }
 
   @GetMapping("/products/admin")
@@ -77,17 +93,75 @@ public class ProductController {
         Sort.by(Sort.Direction.DESC, "id"));
     Integer statusValue = parseStatus(status);
     Page<Product> result = products.adminSearch(keyword.trim(), categoryId, statusValue, pageable);
-    return new PageResponse<>(result.getTotalElements(), result.getContent().stream().map(ProductResponse::from).toList());
+    return new PageResponse<>(result.getTotalElements(), toProductResponses(result.getContent()));
   }
 
   @GetMapping("/products/search")
   PageResponse<ProductResponse> search(@RequestParam(defaultValue = "") String keyword,
                                        @RequestParam(defaultValue = "1") int page,
-                                       @RequestParam(defaultValue = "20") int size) {
+                                       @RequestParam(defaultValue = "20") int size,
+                                       @AuthenticationPrincipal CurrentUser user) {
     Pageable pageable = PageRequest.of(Math.max(page, 1) - 1, Math.min(Math.max(size, 1), 100),
         Sort.by(Sort.Direction.DESC, "salesCount").and(Sort.by(Sort.Direction.DESC, "id")));
     Page<Product> result = products.search(keyword, pageable);
-    return new PageResponse<>(result.getTotalElements(), result.getContent().stream().map(ProductResponse::from).toList());
+    recordKeyword(keyword, user == null ? null : user.id());
+    return new PageResponse<>(result.getTotalElements(), toProductResponses(result.getContent()));
+  }
+
+  @GetMapping("/products/recommendations")
+  RecommendationResponse recommendations(@AuthenticationPrincipal CurrentUser user,
+                                         @RequestParam(defaultValue = "8") int limit) {
+    int cappedLimit = Math.min(Math.max(limit, 1), 20);
+    List<Product> pool = products.findByStatusOrderBySalesCountDescIdDesc(1, PageRequest.of(0, 200));
+    if (user == null) {
+      return new RecommendationResponse("fallback", toProductResponses(pool.stream().limit(cappedLimit).toList()));
+    }
+
+    List<UserPreference> prefRows = preferences.findByUserIdOrderByWeightDescUpdatedAtDesc(user.id(), PageRequest.of(0, 8));
+    List<ProductViewLog> recentViews = viewLogs.findByUserIdOrderByViewedAtDesc(user.id(), PageRequest.of(0, 20));
+    Set<Long> viewedCategoryIds = recentViews.stream()
+        .map(v -> v.product)
+        .filter(Objects::nonNull)
+        .map(p -> p.categoryId)
+        .collect(Collectors.toCollection(LinkedHashSet::new));
+    Set<Long> bought = new HashSet<>(orderItems.findPurchasedProductIds(user.id()));
+    boolean hasSignals = !prefRows.isEmpty() || !viewedCategoryIds.isEmpty();
+    if (!hasSignals) {
+      return new RecommendationResponse("fallback", toProductResponses(topSelling(pool, bought, cappedLimit)));
+    }
+
+    Map<Long, String> categoryNames = categories.findAll().stream()
+        .collect(Collectors.toMap(c -> c.id, c -> c.name));
+    List<String> terms = prefRows.stream()
+        .map(p -> p.preferenceTag == null ? "" : p.preferenceTag.trim().toLowerCase(Locale.ROOT))
+        .filter(s -> !s.isBlank())
+        .toList();
+
+    LinkedHashMap<Long, Product> picked = new LinkedHashMap<>();
+    for (Product product : pool) {
+      if (picked.size() >= cappedLimit) break;
+      if (bought.contains(product.id)) continue;
+      String categoryName = categoryNames.getOrDefault(product.categoryId, "");
+      if (matchesPreference(product, categoryName, terms) || viewedCategoryIds.contains(product.categoryId)) {
+        picked.put(product.id, product);
+      }
+    }
+    for (Product product : pool) {
+      if (picked.size() >= cappedLimit) break;
+      if (!bought.contains(product.id) && viewedCategoryIds.contains(product.categoryId)) {
+        picked.putIfAbsent(product.id, product);
+      }
+    }
+    if (picked.isEmpty()) {
+      return new RecommendationResponse("fallback", toProductResponses(topSelling(pool, bought, cappedLimit)));
+    }
+    for (Product product : pool) {
+      if (picked.size() >= cappedLimit) break;
+      if (!bought.contains(product.id)) {
+        picked.putIfAbsent(product.id, product);
+      }
+    }
+    return new RecommendationResponse("personalized", toProductResponses(new ArrayList<>(picked.values())));
   }
 
   @GetMapping("/products/{id}")
@@ -98,6 +172,18 @@ public class ProductController {
       recordView(user.id(), product.id);
     }
     return productResponse(product);
+  }
+
+  @PostMapping("/products/{id}/view")
+  @ResponseStatus(HttpStatus.NO_CONTENT)
+  void recordProductView(@PathVariable Long id, @AuthenticationPrincipal CurrentUser user) {
+    products.findById(id).filter(p -> p.status == 1)
+        .orElseThrow(() -> BizException.notFound("商品不存在"));
+    ProductViewLog log = new ProductViewLog();
+    log.userId = user == null ? null : user.id();
+    log.productId = id;
+    log.viewedAt = LocalDateTime.now();
+    viewLogs.save(log);
   }
 
   @GetMapping("/products/{id}/reviews")
@@ -185,25 +271,34 @@ public class ProductController {
 
   @PostMapping("/products")
   @PreAuthorize("hasRole('ADMIN')")
+  @Transactional
+  @AdminOperation(action = "product.create", targetType = "product")
   ResponseEntity<ProductResponse> create(@Valid @RequestBody ProductRequest request) {
     Product product = new Product();
     apply(product, request);
     product.salesCount = 0;
     product.version = 0;
     product.createdAt = LocalDateTime.now();
-    return ResponseEntity.status(HttpStatus.CREATED).body(ProductResponse.from(products.save(product)));
+    Product saved = products.save(product);
+    applyTags(saved.id, request.tagIds());
+    return ResponseEntity.status(HttpStatus.CREATED).body(productResponse(saved));
   }
 
   @PutMapping("/products/{id}")
   @PreAuthorize("hasRole('ADMIN')")
+  @Transactional
+  @AdminOperation(action = "product.update", targetType = "product")
   ProductResponse update(@PathVariable Long id, @Valid @RequestBody ProductRequest request) {
     Product product = products.findById(id).orElseThrow(() -> BizException.notFound("商品不存在"));
     apply(product, request);
-    return ProductResponse.from(products.save(product));
+    Product saved = products.save(product);
+    applyTags(saved.id, request.tagIds());
+    return productResponse(saved);
   }
 
   @DeleteMapping("/products/{id}")
   @PreAuthorize("hasRole('ADMIN')")
+  @AdminOperation(action = "product.delete", targetType = "product")
   Map<String, Object> delete(@PathVariable Long id) {
     Product product = products.findById(id).orElseThrow(() -> BizException.notFound("商品不存在"));
     product.status = 0;
@@ -255,6 +350,23 @@ public class ProductController {
     product.status = request.status() == null ? 1 : request.status();
   }
 
+  private void applyTags(Long productId, List<Long> tagIds) {
+    if (tagIds == null) return;
+    List<Long> uniqueIds = tagIds.stream().filter(Objects::nonNull).distinct().toList();
+    List<ProductTag> found = tags.findAllById(uniqueIds);
+    if (found.size() != uniqueIds.size()) {
+      throw BizException.badRequest("商品标签不存在");
+    }
+    tagRelations.deleteByProductId(productId);
+    List<ProductTagRelation> relations = uniqueIds.stream().map(tagId -> {
+      ProductTagRelation relation = new ProductTagRelation();
+      relation.productId = productId;
+      relation.tagId = tagId;
+      return relation;
+    }).toList();
+    tagRelations.saveAll(relations);
+  }
+
   private void recordView(Long userId, Long productId) {
     ProductViewHistory history = viewHistory.findByUserIdAndProductId(userId, productId).orElseGet(ProductViewHistory::new);
     LocalDateTime now = LocalDateTime.now();
@@ -271,6 +383,56 @@ public class ProductController {
     Long reviewCount = reviews.countByProductId(product.id);
     return new ProductResponse(product.id, product.categoryId, product.name, product.description, product.price,
         product.stock, product.salesCount, product.imageUrl, product.status, product.version,
-        Math.round((avgRating == null ? 0.0 : avgRating) * 10.0) / 10.0, reviewCount);
+        Math.round((avgRating == null ? 0.0 : avgRating) * 10.0) / 10.0, reviewCount, tagsForProduct(product.id));
+  }
+
+  private List<ProductResponse> toProductResponses(List<Product> productList) {
+    Map<Long, List<TagResponse>> tagsByProduct = tagsByProductIds(productList.stream().map(p -> p.id).toList());
+    return productList.stream()
+        .map(p -> ProductResponse.from(p, tagsByProduct.getOrDefault(p.id, List.of())))
+        .toList();
+  }
+
+  private List<TagResponse> tagsForProduct(Long productId) {
+    return tagRelations.findByProductId(productId).stream()
+        .filter(r -> r.tag != null)
+        .map(r -> new TagResponse(r.tag.id, r.tag.name))
+        .toList();
+  }
+
+  private Map<Long, List<TagResponse>> tagsByProductIds(List<Long> productIds) {
+    if (productIds.isEmpty()) return Map.of();
+    return tagRelations.findByProductIdIn(productIds).stream()
+        .filter(r -> r.tag != null)
+        .collect(Collectors.groupingBy(
+            r -> r.productId,
+            Collectors.mapping(r -> new TagResponse(r.tag.id, r.tag.name), Collectors.toList())
+        ));
+  }
+
+  private boolean matchesPreference(Product product, String categoryName, List<String> terms) {
+    String text = String.join(" ",
+        product.name == null ? "" : product.name,
+        product.description == null ? "" : product.description,
+        categoryName == null ? "" : categoryName).toLowerCase(Locale.ROOT);
+    return terms.stream().anyMatch(text::contains);
+  }
+
+  private List<Product> topSelling(List<Product> pool, Set<Long> excludedIds, int limit) {
+    return pool.stream()
+        .filter(p -> !excludedIds.contains(p.id))
+        .limit(limit)
+        .toList();
+  }
+
+  private void recordKeyword(String keyword, Long userId) {
+    String clean = keyword == null ? "" : keyword.trim();
+    if (clean.isBlank()) return;
+    SearchKeywordLog log = new SearchKeywordLog();
+    log.keyword = clean.length() > 64 ? clean.substring(0, 64) : clean;
+    log.userId = userId;
+    log.isBlocked = 0;
+    log.searchedAt = LocalDateTime.now();
+    keywordLogs.save(log);
   }
 }

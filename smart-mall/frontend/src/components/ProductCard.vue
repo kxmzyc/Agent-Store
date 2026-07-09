@@ -20,6 +20,9 @@
     <div class="body">
       <router-link :to="`/products/${product.id}`"><h3 v-html="highlightedName"></h3></router-link>
       <p class="desc" v-html="highlightedDescription"></p>
+      <div v-if="product.tags?.length" class="tag-row product-card-tags">
+        <span v-for="tag in product.tags" :key="tag.id" class="product-tag">{{ tag.name }}</span>
+      </div>
       <div class="product-card-foot">
         <div class="price-row">
           <span class="price">¥{{ product.price }}</span>

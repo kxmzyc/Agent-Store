@@ -23,9 +23,10 @@ from sqlalchemy import create_engine, text
 from sqlalchemy.orm import sessionmaker
 
 try:
-    from langchain_openai import ChatOpenAI
+    from langchain_openai import ChatOpenAI, OpenAIEmbeddings
 except Exception:  # pragma: no cover
     ChatOpenAI = None
+    OpenAIEmbeddings = None
 
 logger = logging.getLogger("smart_mall_agent")
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s - %(message)s")
@@ -36,6 +37,7 @@ INTERNAL_SERVICE_SECRET = os.getenv("INTERNAL_SERVICE_SECRET", "agent-internal-s
 LLM_API_KEY = os.getenv("LLM_API_KEY", "")
 LLM_BASE_URL = os.getenv("LLM_BASE_URL") or None
 LLM_MODEL = os.getenv("LLM_MODEL", "gpt-4o-mini")
+EMBEDDING_MODEL = os.getenv("EMBEDDING_MODEL", "text-embedding-3-small")
 LLM_PLACEHOLDER = "__PLACEHOLDER_WILL_BE_PROVIDED_BY_USER__"
 
 engine = create_engine(DATABASE_URL, pool_pre_ping=True)
@@ -215,6 +217,104 @@ def _json_default(value: Any) -> str:
     return str(value)
 
 
+def embedding_enabled() -> bool:
+    return bool(is_configured(LLM_API_KEY) and OpenAIEmbeddings)
+
+
+def _embedding_client() -> Any | None:
+    if not embedding_enabled():
+        return None
+    try:
+        kwargs: dict[str, Any] = {
+            "api_key": LLM_API_KEY,
+            "model": EMBEDDING_MODEL,
+        }
+        if is_configured(LLM_BASE_URL):
+            kwargs["base_url"] = LLM_BASE_URL
+        return OpenAIEmbeddings(**kwargs)
+    except Exception as exc:
+        logger.info("embedding client unavailable, falling back to keyword search, error=%s", exc)
+        return None
+
+
+def _tokenize_for_search(text_value: str) -> set[str]:
+    text_value = (text_value or "").lower()
+    latin_terms = re.findall(r"[a-z0-9]+", text_value)
+    cjk_chars = re.findall(r"[\u4e00-\u9fff]", text_value)
+    cjk_bigrams = ["".join(cjk_chars[index:index + 2]) for index in range(max(len(cjk_chars) - 1, 0))]
+    return {term for term in [*latin_terms, *cjk_chars, *cjk_bigrams] if term.strip()}
+
+
+def _cosine_similarity(left: list[float], right: list[float]) -> float:
+    if not left or not right or len(left) != len(right):
+        return 0.0
+    dot = sum(a * b for a, b in zip(left, right))
+    left_norm = sum(a * a for a in left) ** 0.5
+    right_norm = sum(b * b for b in right) ** 0.5
+    if left_norm == 0 or right_norm == 0:
+        return 0.0
+    return dot / (left_norm * right_norm)
+
+
+def _knowledge_rows(query: str, limit: int = 4) -> list[dict[str, Any]]:
+    with SessionLocal() as db:
+        rows = db.execute(
+            text("""
+                SELECT id, source_type, source_id, content, embedding_json
+                FROM knowledge_chunk
+                ORDER BY id DESC LIMIT 600
+            """)
+        ).mappings().all()
+
+    if not rows:
+        return []
+
+    scored: list[tuple[float, dict[str, Any]]] = []
+    has_stored_embeddings = any(row.get("embedding_json") for row in rows)
+    embedding_client = _embedding_client() if has_stored_embeddings else None
+    query_embedding: list[float] | None = None
+    if embedding_client is not None:
+        try:
+            query_embedding = list(embedding_client.embed_query(query))
+        except Exception as exc:
+            logger.info("knowledge query embedding failed, falling back to keyword search, error=%s", exc)
+
+    if query_embedding is not None:
+        for row in rows:
+            raw_embedding = row.get("embedding_json")
+            if not raw_embedding:
+                continue
+            try:
+                score = _cosine_similarity(query_embedding, json.loads(raw_embedding))
+            except Exception:
+                score = 0.0
+            if score > 0:
+                scored.append((score, dict(row)))
+
+    if not scored:
+        query_tokens = _tokenize_for_search(query)
+        for row in rows:
+            content = row["content"] or ""
+            content_tokens = _tokenize_for_search(content)
+            overlap = query_tokens & content_tokens
+            score = len(overlap) / max(len(query_tokens), 1)
+            if score > 0:
+                scored.append((score, dict(row)))
+
+    scored.sort(key=lambda item: (item[0], item[1]["id"]), reverse=True)
+    return [row for _, row in scored[:limit]]
+
+
+def _format_knowledge_result(rows: list[dict[str, Any]]) -> str:
+    if not rows:
+        return "知识库中没有找到相关商品说明、评价或平台规则。"
+    formatted = []
+    for row in rows:
+        source_id = f"#{row['source_id']}" if row.get("source_id") is not None else ""
+        formatted.append(f"[{row['source_type']}{source_id}] {row['content']}")
+    return "\n".join(formatted)
+
+
 @tool
 def search_products(keyword: str, max_price: float | None = None) -> str:
     """根据关键词搜索真实商品，可选传入最高预算价格筛选。"""
@@ -336,7 +436,73 @@ def query_order_status(user_id: int, order_id: int | None = None) -> str:
     return "\n".join(f"{o['orderNo']} - {o['status']} - ¥{o['totalAmount']}" for o in rows)
 
 
-TOOLS = [search_products, get_product_detail, compare_products, recommend_by_preference, add_to_cart, query_order_status]
+@tool
+def search_knowledge_base(query: str) -> str:
+    """Search the RAG knowledge base built from product descriptions, product reviews, and platform FAQ."""
+    logger.info("tool search_knowledge_base called, query=%s", query)
+    return _format_knowledge_result(_knowledge_rows(query))
+
+
+def _parse_product_ids(product_ids: str | list[int]) -> list[int]:
+    if isinstance(product_ids, list):
+        return [int(product_id) for product_id in product_ids[:8]]
+    return [int(value) for value in re.findall(r"\d+", str(product_ids))[:8]]
+
+
+@tool
+def build_purchase_plan(product_ids: str, budget: float | None = None) -> str:
+    """Build a multi-step purchase plan from real product IDs, including total cost, stock, and budget fit."""
+    ids = _parse_product_ids(product_ids)
+    logger.info("tool build_purchase_plan called, product_ids=%s, budget=%s", ids, budget)
+    if not ids:
+        return "请先提供候选商品ID，我才能生成购买方案。"
+
+    items: list[dict[str, Any]] = []
+    with httpx.Client(timeout=8) as client:
+        for product_id in ids:
+            resp = client.get(f"{BACKEND_BASE}/api/products/{product_id}")
+            resp.raise_for_status()
+            items.append(resp.json())
+
+    total = sum(float(item["price"]) for item in items)
+    lines = ["购买方案："]
+    for index, item in enumerate(items, start=1):
+        stock_note = "可购买" if int(item.get("stock") or 0) > 0 else "已售罄"
+        lines.append(
+            f"{index}. ID {item['id']} - {item['name']} - ¥{item['price']} - 库存{item['stock']} - {stock_note}"
+        )
+    lines.append(f"合计：¥{total:.2f}")
+    if budget is not None:
+        diff = float(budget) - total
+        if diff >= 0:
+            lines.append(f"预算：¥{float(budget):.2f}，在预算内，剩余约 ¥{diff:.2f}。")
+        else:
+            lines.append(f"预算：¥{float(budget):.2f}，超出约 ¥{abs(diff):.2f}，建议删减或换低价款。")
+    sold_out = [str(item["id"]) for item in items if int(item.get("stock") or 0) <= 0]
+    if sold_out:
+        lines.append(f"注意：商品ID {', '.join(sold_out)} 当前无库存，不能直接加入购物车。")
+    lines.append("下一步：如果用户明确确认，再调用 add_to_cart；不要自动加购。")
+    return "\n".join(lines)
+
+
+search_products.description = "Search real products by keyword and optional max price. Returns product IDs, names, prices, and stock."
+get_product_detail.description = "Get full details for one real product by product ID."
+compare_products.description = "Compare up to four real products by price, stock, sales, and description."
+recommend_by_preference.description = "Recommend real products according to the current user's long-term preference tags."
+add_to_cart.description = "Add a product to the current user's cart only after explicit user confirmation."
+query_order_status.description = "Query the current user's real order status through the backend internal API."
+
+
+TOOLS = [
+    search_products,
+    get_product_detail,
+    compare_products,
+    recommend_by_preference,
+    add_to_cart,
+    query_order_status,
+    search_knowledge_base,
+    build_purchase_plan,
+]
 
 def ensure_tables() -> None:
     with engine.begin() as conn:
@@ -359,6 +525,17 @@ def ensure_tables() -> None:
               weight DECIMAL(3,2) NOT NULL DEFAULT 1.0,
               updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
               UNIQUE KEY uk_user_tag (user_id, preference_tag)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+        """))
+        conn.execute(text("""
+            CREATE TABLE IF NOT EXISTS knowledge_chunk (
+              id BIGINT PRIMARY KEY AUTO_INCREMENT,
+              source_type VARCHAR(20) NOT NULL,
+              source_id BIGINT NULL,
+              content TEXT NOT NULL,
+              embedding_json MEDIUMTEXT NULL,
+              updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+              INDEX idx_knowledge_source (source_type, source_id)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
         """))
 
@@ -677,6 +854,203 @@ def offline_agent(user_id: int, tags: list[str], message: str) -> tuple[str, lis
     return reply, ["search_products"]
 
 
+def extract_budget(message: str) -> float | None:
+    patterns = [
+        r"(?:预算|不超过|不高于|低于|最高|控制在|以内|以下)\s*[¥￥]?\s*(\d+(?:\.\d+)?)",
+        r"[¥￥]\s*(\d+(?:\.\d+)?)",
+        r"(\d+(?:\.\d+)?)\s*(?:元|块|块钱|rmb|RMB|以内|以下|左右)",
+    ]
+    for pattern in patterns:
+        match = re.search(pattern, message)
+        if match:
+            return float(match.group(1))
+    return None
+
+
+def extract_product_id(message: str) -> int | None:
+    patterns = [
+        r"(?:商品\s*ID|ID|编号)\s*[:：]?\s*(\d+)",
+        r"第\s*(\d+)\s*(?:个|款|件)",
+    ]
+    for pattern in patterns:
+        match = re.search(pattern, message, re.IGNORECASE)
+        if match:
+            return int(match.group(1))
+    return None
+
+
+def extract_quantity(message: str) -> int:
+    match = re.search(r"(\d+)\s*(?:件|个|台|把|份)", message)
+    if match:
+        return max(1, int(match.group(1)))
+    return 1
+
+
+def wants_add_to_cart(message: str) -> bool:
+    return any(word in message for word in ["加入购物车", "加购物车", "放购物车", "加到购物车", "加入我的购物车"])
+
+
+def is_confirmation(message: str) -> bool:
+    normalized = message.strip().lower()
+    return normalized in {"确认", "确定", "可以", "是的", "好的", "好", "ok", "yes", "y"} or "确认加入" in normalized
+
+
+def extract_preferences_rule(message: str) -> list[str]:
+    rules = {
+        "机械键盘": ["机械键盘", "键盘", "青轴", "茶轴", "敲代码"],
+        "预算敏感": ["预算", "便宜", "性价比", "不要太贵", "以内"],
+        "数码产品": ["耳机", "显示器", "充电器", "鼠标", "电脑", "数码"],
+        "办公学习": ["办公", "学习", "宿舍", "编程", "敲代码"],
+    }
+    tags = []
+    for tag, keywords in rules.items():
+        if any(keyword in message for keyword in keywords):
+            tags.append(tag)
+    return tags
+
+
+def has_preference_signal(message: str) -> bool:
+    keywords = [
+        "喜欢", "偏好", "预算", "便宜", "性价比", "不要太贵", "以内",
+        "键盘", "机械", "青轴", "茶轴", "敲代码", "编程",
+        "耳机", "显示器", "充电器", "鼠标", "电脑", "数码",
+        "办公", "学习", "宿舍",
+    ]
+    return any(keyword in message for keyword in keywords)
+
+
+def product_keyword(message: str, tags: list[str]) -> str:
+    keyword_rules = [
+        ("键盘", ["键盘", "敲代码", "机械", "青轴", "茶轴", "程序员"]),
+        ("耳机", ["耳机", "降噪", "蓝牙"]),
+        ("显示器", ["显示器", "屏幕", "外接屏"]),
+        ("鼠标", ["鼠标"]),
+        ("充电器", ["充电器", "快充", "充电头"]),
+        ("电脑", ["电脑", "笔记本"]),
+    ]
+    for keyword, words in keyword_rules:
+        if any(word in message for word in words):
+            return keyword
+    if "机械键盘" in tags:
+        return "键盘"
+    if "数码产品" in tags:
+        return "数码"
+    return message[:12] or "键盘"
+
+
+def system_prompt(tags: list[str]) -> str:
+    tag_text = ", ".join(tags) if tags else "暂无"
+    return (
+        "你是智能商城的导购助手。"
+        f"该用户的历史偏好标签：{tag_text}。"
+        "你只回答购物、商品推荐、平台规则、售后和订单相关问题。"
+        "推荐商品时必须基于工具返回的真实数据，不要编造商品。"
+        "用户问订单时必须调用 query_order_status。"
+        "用户问商品是否适合、用户评价、售后政策、优惠券、积分、配送或平台 FAQ 时，优先调用 search_knowledge_base。"
+        "用户要求礼物建议、搭配、清单或预算方案时，先澄清对象/场景/预算/品类；信息足够后调用 search_products 或 recommend_by_preference，再调用 build_purchase_plan。"
+        "用户问商品详情时调用 get_product_detail；要求对比时调用 compare_products。"
+        "只有用户明确确认加入购物车后，才能调用 add_to_cart；否则先询问确认。"
+        "天气、新闻、股票等非购物问题要礼貌说明自己只能处理商城购物相关问题。"
+        "回复使用简洁中文，不要使用 emoji。"
+    )
+
+
+def history_text(history: list[dict[str, str]]) -> str:
+    if not history:
+        return "暂无历史对话"
+    return "\n".join(f"{item['role']}: {item['content']}" for item in history[-6:])
+
+
+def _ids_from_tool_result(tool_result: str, limit: int = 3) -> list[int]:
+    return [int(value) for value in re.findall(r"ID\s+(\d+)", tool_result)[:limit]]
+
+
+def is_purchase_plan_request(message: str) -> bool:
+    return any(word in message for word in ["购买方案", "预算方案", "搭配", "清单", "礼物", "送给", "组合"])
+
+
+def build_purchase_plan_reply(message: str, tags: list[str]) -> tuple[str, list[str]]:
+    budget = extract_budget(message)
+    ids = [int(value) for value in re.findall(r"\d+", message)[:4] if budget is None or float(value) != budget]
+    tools_used = []
+    if not ids:
+        search_result = search_products.invoke({"keyword": product_keyword(message, tags), "max_price": budget})
+        tools_used.append("search_products")
+        ids = _ids_from_tool_result(search_result, 3)
+    if ids:
+        plan = build_purchase_plan.invoke({"product_ids": ",".join(str(product_id) for product_id in ids), "budget": budget})
+        knowledge = search_knowledge_base.invoke({"query": message})
+        tools_used.extend(["build_purchase_plan", "search_knowledge_base"])
+        return f"{plan}\n\n参考知识库：\n{knowledge}", tools_used
+    return "我需要先知道你想买的品类或候选商品ID，才能生成购买方案。", tools_used
+
+
+def offline_agent(user_id: int, tags: list[str], message: str) -> tuple[str, list[str]]:
+    pending_key = memory_key(user_id, "__pending_cart__")
+    if is_confirmation(message) and pending_key in pending_cart_actions:
+        return confirm_pending_cart(user_id), ["add_to_cart"]
+
+    if wants_add_to_cart(message):
+        return request_cart_confirmation(user_id, message)
+
+    if is_purchase_plan_request(message):
+        return build_purchase_plan_reply(message, tags)
+
+    if any(word in message for word in ["订单", "买的", "购买", "上次", "到哪", "物流", "发货", "状态"]):
+        tool_result = query_order_status.invoke({"user_id": user_id, "order_id": None})
+        return f"我查到你的最近订单：\n{tool_result}", ["query_order_status"]
+
+    if any(word in message for word in ["天气", "新闻", "股票", "世界杯"]):
+        return "我是智能商城导购助手，主要帮你查商品、做推荐、查订单和解释商城规则，这类问题我不能可靠回答。", []
+
+    budget = extract_budget(message)
+    if any(word in message for word in ["对比", "比较", "哪个好"]):
+        ids = [int(value) for value in re.findall(r"\d+", message)[:4]]
+        if len(ids) >= 2:
+            tool_result = compare_products.invoke({"product_ids": ids})
+            return f"我查到这些真实商品信息，方便你对比：\n{tool_result}", ["compare_products"]
+
+    if any(word in message for word in ["详情", "详细", "具体参数", "介绍一下"]):
+        product_id = extract_product_id(message)
+        if product_id is not None:
+            tool_result = get_product_detail.invoke({"product_id": product_id})
+            return tool_result, ["get_product_detail"]
+
+    if any(word in message for word in ["购买方案", "搭配", "清单", "礼物", "送给", "预算方案", "组合"]):
+        ids = [int(value) for value in re.findall(r"\d+", message)[:4] if float(value) != budget]
+        tools_used = []
+        if not ids:
+            search_result = search_products.invoke({"keyword": product_keyword(message, tags), "max_price": budget})
+            tools_used.append("search_products")
+            ids = _ids_from_tool_result(search_result, 3)
+        if ids:
+            plan = build_purchase_plan.invoke({"product_ids": ",".join(str(product_id) for product_id in ids), "budget": budget})
+            knowledge = search_knowledge_base.invoke({"query": message})
+            tools_used.extend(["build_purchase_plan", "search_knowledge_base"])
+            return f"{plan}\n\n参考知识库：\n{knowledge}", tools_used
+        return "我需要先知道你想买的品类或候选商品ID，才能生成购买方案。", tools_used
+
+    if any(word in message for word in ["售后", "退货", "换货", "退款", "优惠券", "积分", "配送", "平台规则", "FAQ", "评价", "评论", "适合", "好不好"]):
+        knowledge = search_knowledge_base.invoke({"query": message})
+        product_result = search_products.invoke({"keyword": product_keyword(message, tags), "max_price": budget})
+        return f"我先查了知识库和真实商品数据：\n{knowledge}\n\n相关商品：\n{product_result}", ["search_knowledge_base", "search_products"]
+
+    if any(word in message for word in ["新品推荐", "猜你喜欢", "按我的偏好", "给我推荐", "推荐一个"]):
+        tool_result = recommend_by_preference.invoke({"user_id": user_id, "max_price": budget})
+        return f"我按你的长期偏好找了一组真实商品：\n{tool_result}", ["recommend_by_preference", "search_products"]
+
+    keyword = product_keyword(message, tags)
+    product_result = search_products.invoke({"keyword": keyword, "max_price": budget})
+    knowledge = search_knowledge_base.invoke({"query": message})
+    reply = (
+        f"结合你的偏好（{', '.join(tags) or '暂未记录'}），我从真实商品里找到这些选择：\n"
+        f"{product_result}\n\n"
+        f"知识库补充：\n{knowledge}\n"
+        "你可以继续告诉我预算、使用场景或想要的手感，我再帮你缩小范围。"
+    )
+    return reply, ["search_products", "search_knowledge_base"]
+
+
 def timing_payload(
     t0: float,
     t1: float,
@@ -743,6 +1117,12 @@ def handle_chat(
                 reply, tools_used = request_cart_confirmation(user_id, message)
             except Exception as tool_exc:
                 reply = f"服务暂时无法读取商品信息：{tool_exc}"
+                tools_used = []
+        elif is_purchase_plan_request(message):
+            try:
+                reply, tools_used = offline_agent(user_id, tags, message)
+            except Exception as tool_exc:
+                reply = f"服务暂时无法生成购买方案：{tool_exc}"
                 tools_used = []
         else:
             try:

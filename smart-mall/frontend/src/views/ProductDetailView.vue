@@ -8,6 +8,9 @@
         <div>
           <h1>{{ product.name }}</h1>
           <p>{{ product.description }}</p>
+          <div v-if="product.tags?.length" class="tag-row">
+            <span v-for="tag in product.tags" :key="tag.id" class="product-tag">{{ tag.name }}</span>
+          </div>
         </div>
       </div>
       <p class="price">¥{{ product.price }}</p>
@@ -100,7 +103,7 @@
 <script setup>
 import { computed, onMounted, reactive, ref } from 'vue'
 import { useRoute } from 'vue-router'
-import { api, errorMessage } from '../api/http'
+import { api, errorMessage, refreshCartCount } from '../api/http'
 import { router } from '../router'
 import { store } from '../store'
 import { useToast } from '../composables/useToast'
@@ -120,6 +123,7 @@ const reviewScore = computed(() => Number(product.value?.avgRating || 0).toFixed
 onMounted(async () => {
   const { data } = await api.get(`/products/${route.params.id}`)
   product.value = data
+  reportViewOnce(data.id)
   await loadReviews()
   if (store.token) {
     try {
@@ -138,10 +142,11 @@ async function loadReviews() {
 }
 
 async function addCart(event) {
-  if (!store.token) return router.push('/login')
+  if (!store.token) return router.push({ path: '/login', query: { redirect: router.currentRoute.value.fullPath } })
   flyToCart(event, { imageUrl: product.value.imageUrl })
   try {
     await api.post('/cart', { productId: product.value.id, quantity: quantity.value })
+    await refreshCartCount()
     toast.show('已加入购物车')
   } catch (e) {
     toast.show(errorMessage(e))
@@ -149,12 +154,12 @@ async function addCart(event) {
 }
 
 async function buyNow() {
-  if (!store.token) return router.push('/login')
+  if (!store.token) return router.push({ path: '/login', query: { redirect: router.currentRoute.value.fullPath } })
   router.push({ path: '/checkout', query: { mode: 'direct', productId: product.value.id, quantity: quantity.value } })
 }
 
 async function toggleFavorite() {
-  if (!store.token) return router.push('/login')
+  if (!store.token) return router.push({ path: '/login', query: { redirect: router.currentRoute.value.fullPath } })
   try {
     if (favorited.value) {
       const { data } = await api.delete(`/user/favorites/${product.value.id}`)
@@ -197,5 +202,18 @@ function formatTime(value) {
 
 function displayName(review) {
   return review.username || '用户'
+}
+
+async function reportViewOnce(productId) {
+  const key = `productView:${productId}`
+  const last = Number(sessionStorage.getItem(key) || 0)
+  const now = Date.now()
+  if (now - last < 5 * 60 * 1000) return
+  sessionStorage.setItem(key, String(now))
+  try {
+    await api.post(`/products/${productId}/view`)
+  } catch {
+    sessionStorage.removeItem(key)
+  }
 }
 </script>

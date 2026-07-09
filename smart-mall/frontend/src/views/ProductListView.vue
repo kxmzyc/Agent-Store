@@ -55,10 +55,54 @@
 
     <BannerCarousel v-if="hotProducts.length" :items="hotProducts" />
 
+    <section v-if="recommendations.length" class="recommend-section">
+      <div class="section-title">
+        <h2>{{ recommendationTitle }}</h2>
+        <span class="muted">{{ recommendationSource === 'personalized' ? '已排除近期购买商品' : '按全站销量生成' }}</span>
+      </div>
+      <div class="recommend-showcase">
+        <router-link class="recommend-lead" :to="`/products/${leadRecommendation.id}`">
+          <div class="recommend-lead-media">
+            <img :src="leadRecommendation.imageUrl" :alt="leadRecommendation.name" />
+          </div>
+          <div class="recommend-lead-copy">
+            <span>{{ recommendationBadge }}</span>
+            <h3>{{ leadRecommendation.name }}</h3>
+            <p>{{ leadRecommendation.description }}</p>
+            <div class="recommend-lead-meta">
+              <strong>¥{{ leadRecommendation.price }}</strong>
+              <small>库存 {{ leadRecommendation.stock }} · 已售 {{ leadRecommendation.salesCount }}</small>
+            </div>
+          </div>
+        </router-link>
+
+        <div class="recommend-stack">
+          <article v-for="p in sideRecommendations" :key="`rec-mini-${p.id}`" class="recommend-mini">
+            <router-link class="recommend-mini-link" :to="`/products/${p.id}`">
+              <img :src="p.imageUrl" :alt="p.name" />
+              <span>
+                <strong>{{ p.name }}</strong>
+                <small>¥{{ p.price }} · 库存 {{ p.stock }}</small>
+              </span>
+            </router-link>
+            <button type="button" :disabled="p.stock <= 0" @click="addCart(p, $event)">
+              <ShoppingCart size="16" /> 加购
+            </button>
+          </article>
+        </div>
+      </div>
+    </section>
+
     <div ref="dockRef" class="search-dock">
       <form class="search-box catalog-search" @submit.prevent="search">
         <Search size="18" />
-        <input v-model="keyword" placeholder="搜索机械键盘、显示器、耳机" />
+        <input
+          v-model="keyword"
+          placeholder="搜索机械键盘、显示器、耳机"
+          @focus="openHotKeywords"
+          @input="showHotKeywords = !keyword.trim()"
+          @blur="closeHotKeywords"
+        />
         <select v-model="sort" aria-label="商品排序" @change="loadProducts(1)">
           <option value="sales_desc">销量优先</option>
           <option value="price_asc">价格升序</option>
@@ -67,6 +111,14 @@
         </select>
         <button class="primary search-submit" type="submit">搜索</button>
       </form>
+      <div v-if="showHotKeywords && !keyword.trim() && hotKeywords.length" class="hot-keyword-popover">
+        <button
+          v-for="item in hotKeywords"
+          :key="item.keyword"
+          type="button"
+          @mousedown.prevent="searchHotKeyword(item.keyword)"
+        >{{ item.keyword }}</button>
+      </div>
     </div>
 
     <div class="category-scroll" aria-label="商品分类">
@@ -89,7 +141,7 @@
       :css="categoryTransition"
     >
       <ProductCard
-        v-for="(p, index) in products"
+        v-for="(p, index) in catalogProducts"
         :key="p.id"
         :product="p"
         :keyword="searchMode ? keyword : ''"
@@ -109,7 +161,7 @@
 
 <script setup>
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
-import { api, errorMessage } from '../api/http'
+import { api, errorMessage, refreshCartCount } from '../api/http'
 import { router } from '../router'
 import { store } from '../store'
 import { useToast } from '../composables/useToast'
@@ -123,6 +175,10 @@ const dockRef = ref(null)
 const categories = ref([])
 const products = ref([])
 const hotProducts = ref([])
+const recommendations = ref([])
+const recommendationSource = ref('fallback')
+const hotKeywords = ref([])
+const showHotKeywords = ref(false)
 const keyword = ref('')
 const categoryId = ref(null)
 const sort = ref('sales_desc')
@@ -139,6 +195,18 @@ const heroIndex = ref(0)
 const isCarouselPaused = ref(false)
 const heroProducts = computed(() => products.value.slice(0, Math.min(products.value.length, 5)))
 const activeHeroProduct = computed(() => heroProducts.value[heroIndex.value] || null)
+const recommendationTitle = computed(() => recommendationSource.value === 'personalized'
+  ? '猜你喜欢 · 基于你的浏览与偏好'
+  : '新品热卖 · 为你精选')
+const recommendationBadge = computed(() => recommendationSource.value === 'personalized' ? 'PERSONAL PICK' : 'CURATED HOT')
+const leadRecommendation = computed(() => recommendations.value[0] || null)
+const sideRecommendations = computed(() => recommendations.value.slice(1, 5))
+const recommendationIds = computed(() => new Set(recommendations.value.map((product) => product.id)))
+const catalogProducts = computed(() => {
+  if (page.value !== 1 || searchMode.value || categoryId.value || !recommendationIds.value.size) return products.value
+  const filtered = products.value.filter((product) => !recommendationIds.value.has(product.id))
+  return filtered.length >= 4 ? filtered : products.value
+})
 const carouselStatusText = computed(() => {
   if (!activeHeroProduct.value) return '当前没有可展示的主推商品'
   return `正在展示第 ${heroIndex.value + 1} 件商品：${activeHeroProduct.value.name}`
@@ -156,6 +224,7 @@ onMounted(async () => {
     toast.show(errorMessage(e))
   }
   loadHotProducts()
+  loadRecommendations()
   await loadProducts(1)
   startCarousel()
 })
@@ -253,21 +322,58 @@ async function loadProducts(nextPage) {
 
 async function loadHotProducts() {
   try {
-    const { data } = await api.get('/products', { params: { page: 1, size: 3, sort: 'sales' } })
-    hotProducts.value = data.list || []
+    const { data } = await api.get('/banner-slots/active')
+    hotProducts.value = data || []
   } catch {
     hotProducts.value = []
   }
 }
 
+async function loadRecommendations() {
+  try {
+    const { data } = await api.get('/products/recommendations', { params: { limit: 5 } })
+    recommendations.value = data.list || []
+    recommendationSource.value = data.source || 'fallback'
+  } catch {
+    recommendations.value = []
+    recommendationSource.value = 'fallback'
+  }
+}
+
+async function loadHotKeywords() {
+  if (hotKeywords.value.length) return
+  try {
+    const { data } = await api.get('/search/hot-keywords')
+    hotKeywords.value = data || []
+  } catch {
+    hotKeywords.value = []
+  }
+}
+
+function openHotKeywords() {
+  showHotKeywords.value = !keyword.value.trim()
+  loadHotKeywords()
+}
+
+function closeHotKeywords() {
+  window.setTimeout(() => { showHotKeywords.value = false }, 120)
+}
+
+function searchHotKeyword(value) {
+  keyword.value = value
+  showHotKeywords.value = false
+  search()
+}
+
 async function addCart(product, event) {
   if (!store.token) {
-    router.push('/login')
+    router.push({ path: '/login', query: { redirect: router.currentRoute.value.fullPath } })
     return
   }
   flyToCart(event, { imageUrl: product.imageUrl })
   try {
     await api.post('/cart', { productId: product.id, quantity: 1 })
+    await refreshCartCount()
     toast.show('已加入购物车')
   } catch (e) {
     toast.show(errorMessage(e))
