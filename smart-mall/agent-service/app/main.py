@@ -18,7 +18,7 @@ from langchain.agents import AgentExecutor, create_tool_calling_agent
 from langchain_core.callbacks import BaseCallbackHandler
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain_core.tools import tool
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from sqlalchemy import create_engine, text
 from sqlalchemy.orm import sessionmaker
 
@@ -45,7 +45,9 @@ SessionLocal = sessionmaker(bind=engine)
 memory: dict[str, deque[dict[str, str]]] = defaultdict(lambda: deque(maxlen=12))
 pending_cart_actions: dict[str, dict[str, int]] = {}
 cart_confirmation_grants: dict[tuple[int, int, int], int] = defaultdict(int)
+purchase_plan_sessions: dict[str, dict[str, Any]] = {}
 active_tool_user_id: ContextVar[int | None] = ContextVar("active_tool_user_id", default=None)
+active_ui_capture: ContextVar[dict[str, Any] | None] = ContextVar("active_ui_capture", default=None)
 
 
 class Utf8JSONResponse(JSONResponse):
@@ -80,12 +82,62 @@ class ChatRequest(BaseModel):
     userId: int | None = None
     sessionId: str
     message: str
+    ignorePreferences: bool = False
 
 
 class ChatResponse(BaseModel):
     reply: str
     toolsUsed: list[str]
     sessionId: str
+    ui: "ChatUi"
+
+
+class ProductCard(BaseModel):
+    id: int
+    name: str
+    price: float
+    stock: int
+    imageUrl: str | None = None
+    status: str
+    reason: str | None = None
+
+
+class SuggestedAction(BaseModel):
+    key: str
+    label: str
+    prompt: str | None = None
+    action: str | None = None
+    productId: int | None = None
+
+
+class CartConfirmation(BaseModel):
+    productId: int
+    quantity: int
+
+
+class AgentTaskStep(BaseModel):
+    key: str
+    label: str
+    status: str
+
+
+class AgentTask(BaseModel):
+    type: str
+    title: str
+    stage: str
+    steps: list[AgentTaskStep] = Field(default_factory=list)
+    summary: str
+    canExpand: bool = False
+
+
+class ChatUi(BaseModel):
+    """Stable, non-LLM UI metadata for a completed assistant message."""
+
+    productCards: list[ProductCard] = Field(default_factory=list)
+    suggestedActions: list[SuggestedAction] = Field(default_factory=list)
+    source: dict[str, bool] = Field(default_factory=dict)
+    pendingCart: CartConfirmation | None = None
+    agentTask: AgentTask | None = None
 
 
 class AgentTiming(BaseCallbackHandler):
@@ -153,6 +205,7 @@ class ChatResult(BaseModel):
     toolsUsed: list[str]
     sessionId: str
     timing: dict[str, float]
+    ui: ChatUi
 
 
 class AuthenticatedUser(BaseModel):
@@ -315,6 +368,191 @@ def _format_knowledge_result(rows: list[dict[str, Any]]) -> str:
     return "\n".join(formatted)
 
 
+def _new_ui_capture() -> dict[str, Any]:
+    return {
+        "cards_by_id": {},
+        "card_order": [],
+        "sources": set(),
+        "had_product_result": False,
+        "had_empty_product_result": False,
+        "reason": None,
+        "pending_cart": None,
+        "agent_task": None,
+    }
+
+
+def _mark_ui_source(source: str, reason: str | None = None) -> None:
+    capture = active_ui_capture.get()
+    if capture is None:
+        return
+    capture["sources"].add(source)
+    if reason:
+        capture["reason"] = reason
+
+
+def _product_card_from_backend(product: dict[str, Any], reason: str | None = None) -> ProductCard:
+    """Convert one already-fetched backend product into a safe public card DTO."""
+    stock = int(product.get("stock") or 0)
+    raw_status = product.get("status", 1)
+    off_shelf = raw_status in {0, "0", False, "OFF_SHELF", "INACTIVE"}
+    status = "SOLD_OUT" if stock <= 0 else "OFF_SHELF" if off_shelf else "IN_STOCK"
+    image_url = product.get("imageUrl") or product.get("image_url")
+    return ProductCard(
+        id=int(product["id"]),
+        name=str(product.get("name") or "未命名商品"),
+        price=float(product.get("price") or 0),
+        stock=stock,
+        imageUrl=str(image_url) if image_url else None,
+        status=status,
+        reason=reason,
+    )
+
+
+def _capture_products(products: list[dict[str, Any]], source: str, reason: str | None = None) -> None:
+    """Reuse product payloads returned by tools; never derive cards from model text."""
+    capture = active_ui_capture.get()
+    if capture is None:
+        return
+    _mark_ui_source(source)
+    if not products:
+        capture["had_empty_product_result"] = True
+        return
+
+    capture["had_product_result"] = True
+    card_reason = reason or capture.get("reason")
+    for product in products:
+        if not isinstance(product, dict) or product.get("id") is None:
+            continue
+        card = _product_card_from_backend(product, card_reason)
+        if card.id not in capture["cards_by_id"]:
+            capture["card_order"].append(card.id)
+        capture["cards_by_id"][card.id] = card
+
+
+def _suggested_action(
+    key: str,
+    label: str,
+    *,
+    prompt: str | None = None,
+    action: str | None = None,
+    product_id: int | None = None,
+) -> SuggestedAction:
+    return SuggestedAction(key=key, label=label, prompt=prompt, action=action, productId=product_id)
+
+
+def _set_ui_suggested_actions(actions: list[SuggestedAction]) -> None:
+    capture = active_ui_capture.get()
+    if capture is not None:
+        capture["suggested_actions"] = actions
+
+
+def _set_pending_cart_confirmation(product_id: int, quantity: int) -> None:
+    capture = active_ui_capture.get()
+    if capture is None:
+        return
+    capture["pending_cart"] = CartConfirmation(productId=int(product_id), quantity=int(quantity))
+    _set_ui_suggested_actions([
+        _suggested_action("confirm-cart", "确认加入购物车", prompt="确认", product_id=product_id),
+        _suggested_action(f"view-cart-product-{product_id}", "查看详情", action="view_product", product_id=product_id),
+    ])
+
+
+def _set_agent_task(task: AgentTask) -> None:
+    capture = active_ui_capture.get()
+    if capture is not None:
+        capture["agent_task"] = task
+
+
+def _build_ui_metadata(message: str, tools_used: list[str]) -> ChatUi:
+    """Build deterministic contextual actions from captured real tool data."""
+    capture = active_ui_capture.get() or _new_ui_capture()
+    cards = [capture["cards_by_id"][product_id] for product_id in capture["card_order"]]
+    sources = set(capture["sources"])
+    actions: list[SuggestedAction] = []
+    product_tools = {
+        "search_products",
+        "recommend_by_preference",
+        "get_product_detail",
+        "compare_products",
+        "build_purchase_plan",
+    }
+    queried = bool(sources & product_tools) or capture["had_product_result"] or capture["had_empty_product_result"]
+    explicit_actions = capture.get("suggested_actions")
+    if explicit_actions:
+        return ChatUi(
+            productCards=cards,
+            suggestedActions=explicit_actions,
+            source={"productsQueried": queried, "inventoryVerified": bool(cards)},
+            pendingCart=capture.get("pending_cart"),
+            agentTask=capture.get("agent_task"),
+        )
+
+    if cards:
+        first = cards[0]
+        available = next((card for card in cards if card.status == "IN_STOCK"), None)
+        context_is_detail = bool(sources & {"get_product_detail", "compare_products", "build_purchase_plan"})
+        if context_is_detail:
+            if available:
+                actions.append(_suggested_action(
+                    f"add-product-{available.id}",
+                    "加入购物车",
+                    prompt=f"把商品 ID {available.id} 加入购物车",
+                    product_id=available.id,
+                ))
+            actions.append(_suggested_action(
+                "change-option",
+                "换一款",
+                prompt=f"换一款和「{first.name}」相近的商品，优先考虑性价比。",
+            ))
+            if len(cards) > 1:
+                actions.append(_suggested_action(
+                    "continue-compare",
+                    "继续比较",
+                    prompt=f"继续比较商品 ID {cards[0].id} 和 ID {cards[1].id} 的适用场景。",
+                ))
+        else:
+            if len(cards) > 1:
+                actions.append(_suggested_action(
+                    f"compare-{cards[0].id}-{cards[1].id}",
+                    "比较已选商品",
+                    prompt=f"对比商品 ID {cards[0].id} 和 ID {cards[1].id}，帮我选更合适的一款。",
+                ))
+            budget = extract_budget(message)
+            budget_prompt = (
+                f"按预算 ¥{budget:g} 再筛选刚才的商品，优先推荐最合适的一款。"
+                if budget is not None
+                else "按预算 500 元以内再筛选刚才的商品。"
+            )
+            actions.append(_suggested_action("filter-by-budget", "按预算筛选", prompt=budget_prompt))
+            actions.append(_suggested_action(
+                f"view-product-{first.id}",
+                "查看商品详情",
+                action="view_product",
+                product_id=first.id,
+            ))
+    elif "query_order_status" in sources or "query_order_status" in tools_used:
+        actions = [
+            _suggested_action("view-orders", "查看订单页", action="navigate_orders"),
+            _suggested_action("continue-shopping", "继续购物", action="navigate_products"),
+        ]
+    elif capture["had_empty_product_result"] or bool(sources & product_tools):
+        actions = [
+            _suggested_action("refine-keyword", "修改关键词", prompt="换一个更具体的商品关键词再搜索。"),
+            _suggested_action("relax-budget", "放宽预算", prompt="适当放宽预算后，再帮我找几款合适的商品。"),
+            _suggested_action("browse-popular", "查看热门品类", prompt="推荐几个热门商品品类给我看看。"),
+        ]
+    else:
+        actions = [_suggested_action("preference-recommend", "偏好推荐", prompt="按我的偏好推荐几款商品")]
+
+    return ChatUi(
+        productCards=cards,
+        suggestedActions=actions,
+        source={"productsQueried": queried, "inventoryVerified": bool(cards)},
+        pendingCart=capture.get("pending_cart"),
+        agentTask=capture.get("agent_task"),
+    )
+
+
 @tool
 def search_products(keyword: str, max_price: float | None = None) -> str:
     """根据关键词搜索真实商品，可选传入最高预算价格筛选。"""
@@ -326,6 +564,7 @@ def search_products(keyword: str, max_price: float | None = None) -> str:
         products = resp.json()["list"]
     if max_price is not None:
         products = [p for p in products if float(p["price"]) <= max_price]
+    _capture_products(products, "search_products")
     if not products:
         return "未找到符合条件的商品"
     return "\n".join(f"ID {p['id']} - {p['name']} - ¥{p['price']} - 库存{p['stock']}" for p in products)
@@ -339,6 +578,7 @@ def get_product_detail(product_id: int) -> str:
         resp = client.get(f"{BACKEND_BASE}/api/products/{product_id}")
         resp.raise_for_status()
         product = resp.json()
+    _capture_products([product], "get_product_detail")
     return (
         f"商品ID {product['id']}：{product['name']}\n"
         f"价格：¥{product['price']}，库存：{product['stock']}，销量：{product['salesCount']}\n"
@@ -360,11 +600,13 @@ def compare_products(product_ids: list[int]) -> str:
             resp = client.get(f"{BACKEND_BASE}/api/products/{product_id}")
             resp.raise_for_status()
             product = resp.json()
-            rows.append(
-                f"ID {product['id']}｜{product['name']}｜¥{product['price']}｜"
-                f"库存{product['stock']}｜销量{product['salesCount']}｜{product.get('description') or '暂无描述'}"
-            )
-    return "\n".join(rows)
+            rows.append(product)
+    _capture_products(rows, "compare_products")
+    return "\n".join(
+        f"ID {product['id']}｜{product['name']}｜¥{product['price']}｜"
+        f"库存{product['stock']}｜销量{product['salesCount']}｜{product.get('description') or '暂无描述'}"
+        for product in rows
+    )
 
 
 @tool
@@ -374,6 +616,7 @@ def recommend_by_preference(user_id: int, max_price: float | None = None) -> str
     tags = preference_tags(user_id)
     keyword = product_keyword("", tags)
     logger.info("tool recommend_by_preference called, user_id=%s, tags=%s, max_price=%s", user_id, tags, max_price)
+    _mark_ui_source("recommend_by_preference", "根据你的长期偏好推荐")
     result = search_products.invoke({"keyword": keyword, "max_price": max_price})
     return f"用户偏好标签：{', '.join(tags) or '暂无'}\n推荐结果：\n{result}"
 
@@ -394,6 +637,8 @@ def add_to_cart(user_id: int, product_id: int, quantity: int = 1) -> str:
             "product_id": int(product_id),
             "quantity": quantity,
         }
+        _capture_products([product], "get_product_detail")
+        _set_pending_cart_confirmation(product_id, quantity)
         return f"请先向用户确认：是否将「{product['name']}」x {quantity} 加入购物车？用户确认后再调用本工具。"
     cart_confirmation_grants[grant_key] -= 1
     with httpx.Client(timeout=8) as client:
@@ -463,6 +708,8 @@ def build_purchase_plan(product_ids: str, budget: float | None = None) -> str:
             resp = client.get(f"{BACKEND_BASE}/api/products/{product_id}")
             resp.raise_for_status()
             items.append(resp.json())
+
+    _capture_products(items, "build_purchase_plan", "已按当前候选商品生成购买方案")
 
     total = sum(float(item["price"]) for item in items)
     lines = ["购买方案："]
@@ -672,6 +919,7 @@ def request_cart_confirmation(user_id: int, message: str) -> tuple[str, list[str
     quantity = extract_quantity(message)
     pending_cart_actions[memory_key(user_id, "__pending_cart__")] = {"product_id": product_id, "quantity": quantity}
     detail = get_product_detail.invoke({"product_id": product_id})
+    _set_pending_cart_confirmation(product_id, quantity)
     return f"{detail}\n确认将商品 ID {product_id} x {quantity} 加入购物车吗？", ["get_product_detail"]
 
 
@@ -761,27 +1009,6 @@ def extract_preferences(
     return []
 
 
-def system_prompt(tags: list[str]) -> str:
-    return (
-        "你是智能商城的导购助手。"
-        f"该用户的历史偏好标签：{', '.join(tags) or '暂无'}。"
-        "你只能回答购物、商品推荐和订单相关问题。"
-        "推荐商品时必须基于工具返回的真实商品数据，不要编造不存在的商品。"
-        "回复使用简洁中文，不要使用 emoji。"
-        "用户问订单时必须调用订单工具。用户问商品或推荐时必须调用商品搜索工具。"
-        "用户问某个商品详情时调用 get_product_detail；用户要求对比商品时调用 compare_products。"
-        "用户问新品推荐、猜你喜欢、按我的偏好推荐时优先调用 recommend_by_preference。"
-        "只有用户明确确认加入购物车后，才可以调用 add_to_cart；否则先询问确认。"
-        "用户问天气、新闻、股票等非购物问题时，礼貌说明自己只能处理商城购物相关问题。"
-    )
-
-
-def history_text(history: list[dict[str, str]]) -> str:
-    if not history:
-        return "暂无历史对话"
-    return "\n".join(f"{item['role']}: {item['content']}" for item in history[-6:])
-
-
 def run_langchain_agent(
     user_id: int,
     tags: list[str],
@@ -809,49 +1036,6 @@ def run_langchain_agent(
     tools_used = [step[0].tool for step in result.get("intermediate_steps", [])]
     logger.info("langchain agent completed, user_id=%s, tools=%s", user_id, tools_used)
     return str(result["output"]), tools_used
-
-
-def offline_agent(user_id: int, tags: list[str], message: str) -> tuple[str, list[str]]:
-    pending_key = memory_key(user_id, "__pending_cart__")
-    if is_confirmation(message) and pending_key in pending_cart_actions:
-        tool_result = confirm_pending_cart(user_id)
-        return tool_result, ["add_to_cart"]
-
-    if wants_add_to_cart(message):
-        return request_cart_confirmation(user_id, message)
-
-    if any(word in message for word in ["对比", "比较", "哪个好"]):
-        ids = [int(value) for value in re.findall(r"\d+", message)[:4]]
-        if len(ids) >= 2:
-            tool_result = compare_products.invoke({"product_ids": ids})
-            return f"我查到这些真实商品信息，方便你对比：\n{tool_result}", ["compare_products"]
-
-    if any(word in message for word in ["详情", "详细", "具体参数", "介绍一下"]):
-        product_id = extract_product_id(message)
-        if product_id is not None:
-            tool_result = get_product_detail.invoke({"product_id": product_id})
-            return tool_result, ["get_product_detail"]
-
-    if any(word in message for word in ["订单", "买的", "购买", "上次", "到哪", "物流", "发货", "状态"]):
-        tool_result = query_order_status.invoke({"user_id": user_id, "order_id": None})
-        return f"我查到你的最近订单：\n{tool_result}", ["query_order_status"]
-
-    if any(word in message for word in ["天气", "新闻", "股票", "世界杯"]):
-        return "我是智能商城导购助手，主要帮你查商品、做推荐和查询订单，这类问题我不能可靠回答。", []
-
-    budget = extract_budget(message)
-    if any(word in message for word in ["新品推荐", "猜你喜欢", "按我的偏好", "给我推荐", "推荐一下"]):
-        tool_result = recommend_by_preference.invoke({"user_id": user_id, "max_price": budget})
-        return f"我按你的长期偏好找了一组真实商品：\n{tool_result}", ["recommend_by_preference", "search_products"]
-
-    keyword = product_keyword(message, tags)
-    tool_result = search_products.invoke({"keyword": keyword, "max_price": budget})
-    reply = (
-        f"结合你的偏好（{', '.join(tags) or '暂未记录'}），我从真实商品里找到这些选择：\n"
-        f"{tool_result}\n"
-        "你可以继续告诉我预算、使用场景或想要的手感，我再帮你缩小范围。"
-    )
-    return reply, ["search_products"]
 
 
 def extract_budget(message: str) -> float | None:
@@ -946,14 +1130,18 @@ def system_prompt(tags: list[str]) -> str:
     return (
         "你是智能商城的导购助手。"
         f"该用户的历史偏好标签：{tag_text}。"
+        "若本轮未提供历史偏好标签，按用户本轮需求推荐，不要编造或暗示历史偏好。"
         "你只回答购物、商品推荐、平台规则、售后和订单相关问题。"
         "推荐商品时必须基于工具返回的真实数据，不要编造商品。"
         "用户问订单时必须调用 query_order_status。"
         "用户问商品是否适合、用户评价、售后政策、优惠券、积分、配送或平台 FAQ 时，优先调用 search_knowledge_base。"
-        "用户要求礼物建议、搭配、清单或预算方案时，先澄清对象/场景/预算/品类；信息足够后调用 search_products 或 recommend_by_preference，再调用 build_purchase_plan。"
+        "用户要求礼物建议、搭配、清单或预算方案时，必须先按当前会话收集使用对象或场景、预算、品类或核心诉求；每次只追问最关键的一项。"
+        "信息未收集完整前不得调用 search_products、recommend_by_preference 或 build_purchase_plan 生成方案；完整后只能使用真实工具结果生成最多三件商品的方案。"
         "用户问商品详情时调用 get_product_detail；要求对比时调用 compare_products。"
         "只有用户明确确认加入购物车后，才能调用 add_to_cart；否则先询问确认。"
         "天气、新闻、股票等非购物问题要礼貌说明自己只能处理商城购物相关问题。"
+        "当你返回商品搜索、推荐、对比、详情或购买方案等当前结果后，结尾必须附上一条简洁且基于当前结果的下一步建议或追问，例如预算、使用场景、静音需求、是否比较或查看详情。"
+        "不要为凑足这条建议而编造商品、库存、评价或订单数据。"
         "回复使用简洁中文，不要使用 emoji。"
     )
 
@@ -972,23 +1160,151 @@ def is_purchase_plan_request(message: str) -> bool:
     return any(word in message for word in ["购买方案", "预算方案", "搭配", "清单", "礼物", "送给", "组合"])
 
 
-def build_purchase_plan_reply(message: str, tags: list[str]) -> tuple[str, list[str]]:
-    budget = extract_budget(message)
-    ids = [int(value) for value in re.findall(r"\d+", message)[:4] if budget is None or float(value) != budget]
-    tools_used = []
-    if not ids:
-        search_result = search_products.invoke({"keyword": product_keyword(message, tags), "max_price": budget})
-        tools_used.append("search_products")
-        ids = _ids_from_tool_result(search_result, 3)
-    if ids:
-        plan = build_purchase_plan.invoke({"product_ids": ",".join(str(product_id) for product_id in ids), "budget": budget})
-        knowledge = search_knowledge_base.invoke({"query": message})
-        tools_used.extend(["build_purchase_plan", "search_knowledge_base"])
-        return f"{plan}\n\n参考知识库：\n{knowledge}", tools_used
-    return "我需要先知道你想买的品类或候选商品ID，才能生成购买方案。", tools_used
+def _purchase_plan_key(user_id: int, session_id: str) -> str:
+    return memory_key(user_id, f"__purchase_plan__:{session_id}")
 
 
-def offline_agent(user_id: int, tags: list[str], message: str) -> tuple[str, list[str]]:
+def _has_active_purchase_plan(user_id: int, session_id: str, message: str) -> bool:
+    return _purchase_plan_key(user_id, session_id) in purchase_plan_sessions or is_purchase_plan_request(message)
+
+
+def _purchase_plan_signals(message: str) -> dict[str, Any]:
+    scenario = None
+    need = None
+    if any(word in message for word in ["跑步", "慢跑", "夜跑"]):
+        scenario = "户外跑步" if "户外" in message else "跑步"
+        need = "跑步装备"
+    elif any(word in message for word in ["露营", "野餐", "徒步"]):
+        scenario = "户外露营"
+        need = "露营装备"
+    elif any(word in message for word in ["办公室", "办公", "宿舍", "学习"]):
+        scenario = "办公学习"
+    elif any(word in message for word in ["礼物", "送给", "送礼"]):
+        scenario = "送礼"
+
+    keyword_rules = [
+        ("键盘", ["键盘", "敲代码", "机械"]),
+        ("耳机", ["耳机", "降噪"]),
+        ("显示器", ["显示器", "屏幕"]),
+        ("鼠标", ["鼠标"]),
+        ("跑步装备", ["跑鞋", "跑步装备"]),
+        ("露营装备", ["露营装备", "帐篷"]),
+    ]
+    for candidate, words in keyword_rules:
+        if any(word in message for word in words):
+            need = candidate
+            break
+    return {"scenario": scenario, "budget": extract_budget(message), "need": need}
+
+
+def _purchase_plan_missing_field(state: dict[str, Any]) -> str | None:
+    if not state.get("scenario"):
+        return "scenario"
+    if state.get("budget") is None:
+        return "budget"
+    if not state.get("need"):
+        return "need"
+    return None
+
+
+def _purchase_plan_question(state: dict[str, Any], missing: str) -> str:
+    if missing == "scenario":
+        return "这套方案主要给谁使用，或准备在哪个场景使用？"
+    if missing == "budget":
+        return f"这套{state['scenario']}{state['need'] or '装备'}的预算大约是多少？"
+    return f"你希望这套{state['scenario']}方案围绕哪类商品或核心诉求搭配？"
+
+
+def _purchase_plan_keyword(state: dict[str, Any], tags: list[str]) -> str:
+    text = f"{state.get('scenario') or ''} {state.get('need') or ''}"
+    if "跑步" in text:
+        return "跑步"
+    if "露营" in text:
+        return "露营"
+    return product_keyword(str(state.get("need") or state.get("scenario") or ""), tags)
+
+
+def _set_purchase_plan_actions(state: dict[str, Any]) -> None:
+    product_ids = state.get("product_ids") or []
+    actions: list[SuggestedAction] = []
+    if product_ids:
+        primary_id = int(product_ids[0])
+        actions.append(_suggested_action(
+            f"view-plan-product-{primary_id}",
+            "查看详情",
+            action="view_product",
+            product_id=primary_id,
+        ))
+        actions.append(_suggested_action(
+            f"add-plan-product-{primary_id}",
+            "加入方案商品",
+            prompt=f"把商品 ID {primary_id} 加入购物车",
+            product_id=primary_id,
+        ))
+    actions.extend([
+        _suggested_action("adjust-plan-budget", "调整预算", action="edit_plan_budget"),
+        _suggested_action("go-to-cart", "前往购物车结算", action="navigate_cart"),
+    ])
+    _set_ui_suggested_actions(actions)
+
+
+def advance_purchase_plan(
+    user_id: int,
+    session_id: str,
+    tags: list[str],
+    message: str,
+) -> tuple[str, list[str]]:
+    """Guide one deterministic purchase-plan turn without persisting unfinished state."""
+    key = _purchase_plan_key(user_id, session_id)
+    state = purchase_plan_sessions.setdefault(key, {"scenario": None, "budget": None, "need": None, "product_ids": []})
+    signals = _purchase_plan_signals(message)
+    for field in ("scenario", "budget", "need"):
+        if field == "scenario" and state.get(field) and signals[field] and signals[field] in state[field]:
+            continue
+        if signals[field] is not None:
+            state[field] = signals[field]
+
+    missing = _purchase_plan_missing_field(state)
+    if missing:
+        state["stage"] = "collecting"
+        if missing == "budget":
+            _set_ui_suggested_actions([_suggested_action(
+                "tell-plan-budget",
+                "告诉我预算",
+                prompt="预算500，刚开始跑步",
+            )])
+        return _purchase_plan_question(state, missing), []
+
+    keyword = _purchase_plan_keyword(state, tags)
+    search_result = search_products.invoke({"keyword": keyword, "max_price": state["budget"]})
+    product_ids = _ids_from_tool_result(search_result, 3)
+    if not product_ids:
+        _set_ui_suggested_actions([
+            _suggested_action("adjust-plan-budget", "调整预算", action="edit_plan_budget"),
+            _suggested_action("refine-plan-need", "调整需求", prompt="我想调整这套方案的核心诉求。"),
+        ])
+        return "暂时没有找到满足当前预算的真实商品。你可以调整预算或补充核心诉求，我再继续搭配。", ["search_products"]
+
+    state["product_ids"] = product_ids
+    state["stage"] = "ready"
+    plan = build_purchase_plan.invoke({
+        "product_ids": ",".join(str(product_id) for product_id in product_ids),
+        "budget": state["budget"],
+    })
+    _set_purchase_plan_actions(state)
+    reply = (
+        f"为你整理了一套{state['scenario']}{state['need']}主推方案（最多 3 件，均来自真实库存）：\n"
+        f"{plan}\n\n"
+        "下一步：可以查看详情、调整预算，或选择其中一件加入购物车；加入前我会先请你确认。"
+    )
+    return reply, ["search_products", "build_purchase_plan"]
+
+
+def with_next_step(reply: str, suggestion: str) -> str:
+    return f"{reply.rstrip()}\n\n下一步：{suggestion}"
+
+
+def offline_agent(user_id: int, tags: list[str], message: str, session_id: str) -> tuple[str, list[str]]:
     pending_key = memory_key(user_id, "__pending_cart__")
     if is_confirmation(message) and pending_key in pending_cart_actions:
         return confirm_pending_cart(user_id), ["add_to_cart"]
@@ -996,12 +1312,12 @@ def offline_agent(user_id: int, tags: list[str], message: str) -> tuple[str, lis
     if wants_add_to_cart(message):
         return request_cart_confirmation(user_id, message)
 
-    if is_purchase_plan_request(message):
-        return build_purchase_plan_reply(message, tags)
+    if _has_active_purchase_plan(user_id, session_id, message):
+        return advance_purchase_plan(user_id, session_id, tags, message)
 
     if any(word in message for word in ["订单", "买的", "购买", "上次", "到哪", "物流", "发货", "状态"]):
         tool_result = query_order_status.invoke({"user_id": user_id, "order_id": None})
-        return f"我查到你的最近订单：\n{tool_result}", ["query_order_status"]
+        return with_next_step(f"我查到你的最近订单：\n{tool_result}", "要不要继续查看某笔订单的商品详情，或再帮你挑选同类商品？"), ["query_order_status"]
 
     if any(word in message for word in ["天气", "新闻", "股票", "世界杯"]):
         return "我是智能商城导购助手，主要帮你查商品、做推荐、查订单和解释商城规则，这类问题我不能可靠回答。", []
@@ -1011,36 +1327,23 @@ def offline_agent(user_id: int, tags: list[str], message: str) -> tuple[str, lis
         ids = [int(value) for value in re.findall(r"\d+", message)[:4]]
         if len(ids) >= 2:
             tool_result = compare_products.invoke({"product_ids": ids})
-            return f"我查到这些真实商品信息，方便你对比：\n{tool_result}", ["compare_products"]
+            return with_next_step(f"我查到这些真实商品信息，方便你对比：\n{tool_result}", "你更在意预算、静音，还是性能？我可以据此帮你选一款。"), ["compare_products"]
 
     if any(word in message for word in ["详情", "详细", "具体参数", "介绍一下"]):
         product_id = extract_product_id(message)
         if product_id is not None:
             tool_result = get_product_detail.invoke({"product_id": product_id})
-            return tool_result, ["get_product_detail"]
-
-    if any(word in message for word in ["购买方案", "搭配", "清单", "礼物", "送给", "预算方案", "组合"]):
-        ids = [int(value) for value in re.findall(r"\d+", message)[:4] if float(value) != budget]
-        tools_used = []
-        if not ids:
-            search_result = search_products.invoke({"keyword": product_keyword(message, tags), "max_price": budget})
-            tools_used.append("search_products")
-            ids = _ids_from_tool_result(search_result, 3)
-        if ids:
-            plan = build_purchase_plan.invoke({"product_ids": ",".join(str(product_id) for product_id in ids), "budget": budget})
-            knowledge = search_knowledge_base.invoke({"query": message})
-            tools_used.extend(["build_purchase_plan", "search_knowledge_base"])
-            return f"{plan}\n\n参考知识库：\n{knowledge}", tools_used
-        return "我需要先知道你想买的品类或候选商品ID，才能生成购买方案。", tools_used
+            return with_next_step(tool_result, "要不要继续比较其他商品，或确认是否加入购物车？"), ["get_product_detail"]
 
     if any(word in message for word in ["售后", "退货", "换货", "退款", "优惠券", "积分", "配送", "平台规则", "FAQ", "评价", "评论", "适合", "好不好"]):
         knowledge = search_knowledge_base.invoke({"query": message})
         product_result = search_products.invoke({"keyword": product_keyword(message, tags), "max_price": budget})
-        return f"我先查了知识库和真实商品数据：\n{knowledge}\n\n相关商品：\n{product_result}", ["search_knowledge_base", "search_products"]
+        reply = f"我先查了知识库和真实商品数据：\n{knowledge}\n\n相关商品：\n{product_result}"
+        return with_next_step(reply, "你想按预算、使用场景，还是某个具体商品继续缩小范围？"), ["search_knowledge_base", "search_products"]
 
     if any(word in message for word in ["新品推荐", "猜你喜欢", "按我的偏好", "给我推荐", "推荐一个"]):
         tool_result = recommend_by_preference.invoke({"user_id": user_id, "max_price": budget})
-        return f"我按你的长期偏好找了一组真实商品：\n{tool_result}", ["recommend_by_preference", "search_products"]
+        return with_next_step(f"我按你的长期偏好找了一组真实商品：\n{tool_result}", "你更在意预算、静音还是连接方式？我可以继续帮你筛选。"), ["recommend_by_preference", "search_products"]
 
     keyword = product_keyword(message, tags)
     product_result = search_products.invoke({"keyword": keyword, "max_price": budget})
@@ -1049,9 +1352,114 @@ def offline_agent(user_id: int, tags: list[str], message: str) -> tuple[str, lis
         f"结合你的偏好（{', '.join(tags) or '暂未记录'}），我从真实商品里找到这些选择：\n"
         f"{product_result}\n\n"
         f"知识库补充：\n{knowledge}\n"
-        "你可以继续告诉我预算、使用场景或想要的手感，我再帮你缩小范围。"
+        "下一步：你可以继续告诉我预算、使用场景或想要的手感，我再帮你缩小范围。"
     )
     return reply, ["search_products", "search_knowledge_base"]
+
+
+def _task_step(key: str, label: str, status: str) -> AgentTaskStep:
+    return AgentTaskStep(key=key, label=label, status=status)
+
+
+def _purchase_plan_title(state: dict[str, Any]) -> str:
+    scenario = str(state.get("scenario") or "购物")
+    need = str(state.get("need") or "装备")
+    if scenario == "户外跑步" and need == "跑步装备":
+        return "户外跑步入门装备"
+    return f"{scenario}{need}"
+
+
+def _set_agent_task_for_turn(user_id: int, session_id: str, tools_used: list[str]) -> None:
+    """Expose only deterministic, user-meaningful Agent progress metadata."""
+    capture = active_ui_capture.get() or _new_ui_capture()
+    plan_state = purchase_plan_sessions.get(_purchase_plan_key(user_id, session_id))
+    pending_cart = capture.get("pending_cart")
+
+    if "add_to_cart" in tools_used:
+        _set_agent_task(AgentTask(
+            type="purchase_plan" if plan_state else "cart_confirmation",
+            title=_purchase_plan_title(plan_state) if plan_state else "购物车",
+            stage="completed",
+            steps=[
+                _task_step("need", "了解需求", "done"),
+                _task_step("products", "查询真实商品", "done"),
+                _task_step("decision", "选择并确认", "done"),
+            ],
+            summary="商品已加入购物车，可以前往结算。",
+            canExpand=bool(plan_state),
+        ))
+        return
+
+    if pending_cart:
+        _set_agent_task(AgentTask(
+            type="cart_confirmation",
+            title=_purchase_plan_title(plan_state) if plan_state else "确认加入购物车",
+            stage="awaiting_confirmation",
+            steps=[
+                _task_step("need", "了解需求", "done"),
+                _task_step("products", "查询真实商品", "done"),
+                _task_step("decision", "选择并确认", "active"),
+            ],
+            summary="请确认是否将选中的商品加入购物车。",
+            canExpand=bool(plan_state),
+        ))
+        return
+
+    if plan_state:
+        missing = _purchase_plan_missing_field(plan_state)
+        ready = plan_state.get("stage") == "ready"
+        steps = [
+            _task_step("need", "了解需求", "done" if plan_state.get("scenario") and plan_state.get("need") else "active"),
+            _task_step("budget", "确认预算", "done" if plan_state.get("budget") is not None else "active" if plan_state.get("scenario") else "pending"),
+            _task_step("products", "查询真实商品", "done" if ready else "pending"),
+            _task_step("decision", "选择并确认", "active" if ready else "pending"),
+        ]
+        summary = (
+            "已查询真实商品和库存，等待你选择下一步。"
+            if ready else _purchase_plan_question(plan_state, missing or "need")
+        )
+        _set_agent_task(AgentTask(
+            type="purchase_plan",
+            title=_purchase_plan_title(plan_state),
+            stage="ready" if ready else "clarifying",
+            steps=steps,
+            summary=summary,
+            canExpand=True,
+        ))
+        return
+
+    if "query_order_status" in tools_used:
+        _set_agent_task(AgentTask(
+            type="order_query",
+            title="最近订单",
+            stage="ready",
+            steps=[_task_step("orders", "查询订单状态", "done")],
+            summary="已查询当前账户的真实订单状态。",
+        ))
+    elif "compare_products" in tools_used:
+        _set_agent_task(AgentTask(
+            type="comparison",
+            title="商品对比",
+            stage="ready",
+            steps=[
+                _task_step("products", "查询真实商品", "done"),
+                _task_step("decision", "比较并选择", "active"),
+            ],
+            summary="已整理商品差异，可以继续比较或查看详情。",
+            canExpand=True,
+        ))
+    elif capture.get("cards_by_id"):
+        _set_agent_task(AgentTask(
+            type="product_search",
+            title="商品导购",
+            stage="ready",
+            steps=[
+                _task_step("products", "查询真实商品", "done"),
+                _task_step("decision", "筛选与选择", "active"),
+            ],
+            summary="已查询真实商品和库存，可继续按预算或场景筛选。",
+            canExpand=True,
+        ))
 
 
 def timing_payload(
@@ -1096,10 +1504,11 @@ def handle_chat(
 ) -> ChatResult:
     user_id = int(user_id)
     tool_user_token = active_tool_user_id.set(user_id)
+    ui_capture_token = active_ui_capture.set(_new_ui_capture())
     t0 = time.perf_counter()
     try:
         history = load_history(request.sessionId, user_id)
-        tags = preference_tags(user_id)
+        tags = [] if request.ignorePreferences else preference_tags(user_id)
         message = request.message.strip()
         t1 = time.perf_counter()
 
@@ -1112,6 +1521,9 @@ def handle_chat(
             try:
                 reply = confirm_pending_cart(user_id)
                 tools_used = ["add_to_cart"]
+                plan_state = purchase_plan_sessions.get(_purchase_plan_key(user_id, request.sessionId))
+                if plan_state and plan_state.get("stage") == "ready":
+                    _set_purchase_plan_actions(plan_state)
             except Exception as tool_exc:
                 reply = f"服务暂时无法加入购物车：{tool_exc}"
                 tools_used = []
@@ -1121,11 +1533,11 @@ def handle_chat(
             except Exception as tool_exc:
                 reply = f"服务暂时无法读取商品信息：{tool_exc}"
                 tools_used = []
-        elif is_purchase_plan_request(message):
+        elif _has_active_purchase_plan(user_id, request.sessionId, message):
             try:
-                reply, tools_used = offline_agent(user_id, tags, message)
+                reply, tools_used = advance_purchase_plan(user_id, request.sessionId, tags, message)
             except Exception as tool_exc:
-                reply = f"服务暂时无法生成购买方案：{tool_exc}"
+                reply = f"服务暂时无法完成购买方案：{tool_exc}"
                 tools_used = []
         else:
             try:
@@ -1139,18 +1551,22 @@ def handle_chat(
                 )
                 if not reply.strip():
                     logger.info("agent reply empty, falling back to deterministic tools")
-                    reply, tools_used = offline_agent(user_id, tags, message)
+                    reply, tools_used = offline_agent(user_id, tags, message, request.sessionId)
             except Exception as exc:
                 logger.info("langchain agent unavailable, using offline fallback, error=%s", exc)
                 try:
-                    reply, tools_used = offline_agent(user_id, tags, message)
+                    reply, tools_used = offline_agent(user_id, tags, message, request.sessionId)
                 except Exception as tool_exc:
                     reply = f"服务暂时无法完成工具查询：{tool_exc}"
                     tools_used = []
 
         t4 = time.perf_counter()
         preference_timing = AgentTiming()
-        new_tags = extract_preferences(user_id, history, message, reply, callbacks=[preference_timing])
+        # “本次不使用长期偏好”同时不读取、不写入偏好；这只影响当前会话，
+        # 不会删除用户已经持久化的长期记忆。
+        new_tags = [] if request.ignorePreferences else extract_preferences(
+            user_id, history, message, reply, callbacks=[preference_timing]
+        )
         t5 = time.perf_counter()
         upsert_preferences(user_id, new_tags)
         save_message(request.sessionId, user_id, "assistant", reply)
@@ -1159,15 +1575,23 @@ def handle_chat(
         timing = timing_payload(t0, t1, t4, t5, t6, agent_timing, preference_timing)
         log_timing(timing)
         logger.info("chat completed, user_id=%s, session_id=%s, tools=%s", user_id, request.sessionId, tools_used)
-        return ChatResult(reply=reply, toolsUsed=tools_used, sessionId=request.sessionId, timing=timing)
+        _set_agent_task_for_turn(user_id, request.sessionId, tools_used)
+        return ChatResult(
+            reply=reply,
+            toolsUsed=tools_used,
+            sessionId=request.sessionId,
+            timing=timing,
+            ui=_build_ui_metadata(message, tools_used),
+        )
     finally:
+        active_ui_capture.reset(ui_capture_token)
         active_tool_user_id.reset(tool_user_token)
 
 
 @app.post("/agent/chat", response_model=ChatResponse)
 def chat(request: ChatRequest, user: AuthenticatedUser = Depends(current_user)) -> ChatResponse:
     result = handle_chat(request, user.id)
-    return ChatResponse(reply=result.reply, toolsUsed=result.toolsUsed, sessionId=result.sessionId)
+    return ChatResponse(reply=result.reply, toolsUsed=result.toolsUsed, sessionId=result.sessionId, ui=result.ui)
 
 
 @app.post("/agent/chat/stream")
@@ -1186,6 +1610,7 @@ async def chat_stream(request: ChatRequest, user: AuthenticatedUser = Depends(cu
                     "toolsUsed": result.toolsUsed,
                     "sessionId": result.sessionId,
                     "timing": result.timing,
+                    "ui": result.ui.model_dump(),
                 })
             except Exception as exc:
                 logger.exception("stream chat failed")

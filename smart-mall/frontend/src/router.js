@@ -12,6 +12,7 @@ import FavoritesView from './views/FavoritesView.vue'
 import ProfileView from './views/ProfileView.vue'
 import CouponView from './views/CouponView.vue'
 import AdminView from './views/AdminView.vue'
+import AiGuideView from './views/AiGuideView.vue'
 
 const routes = [
   { path: '/', component: ProductListView },
@@ -25,6 +26,7 @@ const routes = [
   { path: '/favorites', component: FavoritesView, meta: { auth: true } },
   { path: '/coupons', component: CouponView, meta: { auth: true } },
   { path: '/profile', component: ProfileView, meta: { auth: true } },
+  { path: '/ai-guide', component: AiGuideView, meta: { auth: true } },
   { path: '/admin', component: AdminView, meta: { auth: true, admin: true } }
 ]
 
