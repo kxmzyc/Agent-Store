@@ -1,0 +1,478 @@
+{
+  "schema": "openai.presentation.layout/v4",
+  "unit": "px",
+  "slide": {
+    "aid": "sl/c29l5i",
+    "id": "c29l5i",
+    "slide": 15,
+    "layoutId": "e00f4ff1-2795-47f7-bc34-04330f58abb7",
+    "layoutName": "Title Slide",
+    "layoutType": "title",
+    "masterLayoutId": "3c3672f2-6cbd-476b-bf16-fe31beabc642",
+    "masterLayoutName": "Master",
+    "backgroundColor": "#F5F6F8",
+    "frame": {
+      "left": 0,
+      "top": 0,
+      "width": 1280,
+      "height": 720
+    }
+  },
+  "theme": {
+    "colorSchemeName": "ChatGPT",
+    "colors": {
+      "accent1": "#156082",
+      "accent2": "#E97132",
+      "accent3": "#196B24",
+      "accent4": "#0F9ED5",
+      "accent5": "#A02B93",
+      "accent6": "#4EA72E",
+      "bg1": "#FFFFFF",
+      "bg2": "#000000",
+      "tx1": "#1F1F1F",
+      "tx2": "#FFFFFF",
+      "dk1": "#000000",
+      "lt1": "#FFFFFF",
+      "dk2": "#0E2841",
+      "lt2": "#E8E8E8",
+      "hlink": "#467886",
+      "folHlink": "#96607D"
+    },
+    "typefaces": [
+      "Consolas",
+      "Microsoft YaHei"
+    ]
+  },
+  "inheritedLayers": [
+    {
+      "scope": "layout",
+      "id": "e00f4ff1-2795-47f7-bc34-04330f58abb7",
+      "name": "Title Slide",
+      "type": "title",
+      "parentLayoutId": "3c3672f2-6cbd-476b-bf16-fe31beabc642",
+      "elements": []
+    },
+    {
+      "scope": "master",
+      "id": "3c3672f2-6cbd-476b-bf16-fe31beabc642",
+      "name": "Master",
+      "type": "master",
+      "elements": []
+    }
+  ],
+  "elements": [
+    {
+      "order": 1,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/032lszqt",
+      "id": "1",
+      "bbox": [
+        72,
+        50,
+        520,
+        28
+      ],
+      "geometry": "rect",
+      "text": "REAL UI 03",
+      "textPreview": "REAL UI 03",
+      "resolvedFontSize": 14,
+      "resolvedTextStyle": {
+        "fontSize": 14,
+        "typeface": "Microsoft YaHei",
+        "color": "#2B45D8",
+        "bold": true,
+        "alignment": "left",
+        "insets": {
+          "top": 4.8,
+          "right": 9.6,
+          "bottom": 4.8,
+          "left": 9.6
+        }
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "REAL UI 03"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "REAL UI 03",
+          "resolvedTextStyle": {
+            "fontSize": 14,
+            "typeface": "Microsoft YaHei",
+            "color": "#2B45D8",
+            "bold": true,
+            "alignment": "left"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "REAL UI 03",
+              "fontSize": 14,
+              "typeface": "Microsoft YaHei",
+              "color": "#2B45D8",
+              "bold": true,
+              "alignment": "left"
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 2,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/bi9s36hc",
+      "id": "2",
+      "bbox": [
+        72,
+        82,
+        1000,
+        56
+      ],
+      "geometry": "rect",
+      "text": "管理后台把运营数据、订单和售后放在同一工作台",
+      "textPreview": "管理后台把运营数据、订单和售后放在同一工作台",
+      "resolvedFontSize": 36,
+      "resolvedTextStyle": {
+        "fontSize": 36,
+        "typeface": "Microsoft YaHei",
+        "color": "#111318",
+        "bold": true,
+        "alignment": "left",
+        "insets": {
+          "top": 4.8,
+          "right": 9.6,
+          "bottom": 4.8,
+          "left": 9.6
+        }
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "管理后台把运营数据、订单和售后放在同一工作台"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "管理后台把运营数据、订单和售后放在同一工作台",
+          "resolvedTextStyle": {
+            "fontSize": 36,
+            "typeface": "Microsoft YaHei",
+            "color": "#111318",
+            "bold": true,
+            "alignment": "left"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "管理后台把运营数据、订单和售后放在同一工作台",
+              "fontSize": 36,
+              "typeface": "Microsoft YaHei",
+              "color": "#111318",
+              "bold": true,
+              "alignment": "left"
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 3,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/ixczed8v",
+      "id": "3",
+      "bbox": [
+        62,
+        146,
+        556,
+        322
+      ],
+      "geometry": "roundRect",
+      "fillColor": "#FFFFFF",
+      "lineColor": "#E3E6EB",
+      "lineWidth": 1
+    },
+    {
+      "order": 4,
+      "kind": "image",
+      "scope": "slide",
+      "aid": "im/0z61032l",
+      "id": "4",
+      "bbox": [
+        72,
+        156,
+        536,
+        302
+      ],
+      "geometry": "roundRect",
+      "alt": "管理员数据看板截图",
+      "contentType": "image/jpeg",
+      "imageFit": "cover",
+      "imageMask": {
+        "geometry": "roundRect",
+        "adjustmentList": [
+          {
+            "name": "adj",
+            "formula": "val 662"
+          }
+        ]
+      },
+      "asset": {
+        "assetId": "e8e3667e-18e4-4848-9d6e-ad3749d8dfb3",
+        "contentType": "image/jpeg",
+        "byteLength": 71415
+      }
+    },
+    {
+      "order": 5,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/0fepkzup",
+      "id": "5",
+      "bbox": [
+        656,
+        146,
+        556,
+        322
+      ],
+      "geometry": "roundRect",
+      "fillColor": "#FFFFFF",
+      "lineColor": "#E3E6EB",
+      "lineWidth": 1
+    },
+    {
+      "order": 6,
+      "kind": "image",
+      "scope": "slide",
+      "aid": "im/itgfmlkj",
+      "id": "6",
+      "bbox": [
+        666,
+        156,
+        536,
+        302
+      ],
+      "geometry": "roundRect",
+      "alt": "管理员售后管理截图",
+      "contentType": "image/jpeg",
+      "imageFit": "cover",
+      "imageMask": {
+        "geometry": "roundRect",
+        "adjustmentList": [
+          {
+            "name": "adj",
+            "formula": "val 662"
+          }
+        ]
+      },
+      "asset": {
+        "assetId": "e871ff73-9b94-42b6-ab99-4a5ce4cf9da6",
+        "contentType": "image/jpeg",
+        "byteLength": 37415
+      }
+    },
+    {
+      "order": 7,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/i9s36hcr",
+      "id": "7",
+      "bbox": [
+        120,
+        520,
+        1040,
+        30
+      ],
+      "geometry": "rect",
+      "text": "后台不是单独做一个 CRUD 表格，而是把低库存、热销、最近订单、售后、日志等答辩可讲的运营闭环集中展示。",
+      "textPreview": "后台不是单独做一个 CRUD 表格，而是把低库存、热销、最近订单、售后、日志等答辩可讲的运营闭环集中展示。",
+      "resolvedFontSize": 19,
+      "resolvedTextStyle": {
+        "fontSize": 19,
+        "typeface": "Microsoft YaHei",
+        "color": "#111318",
+        "alignment": "center",
+        "insets": {
+          "top": 4.8,
+          "right": 9.6,
+          "bottom": 4.8,
+          "left": 9.6
+        }
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "后台不是单独做一个 CRUD 表格，而是把低库存、热销、最近订单、售后、日志等答辩可讲的运营闭环集中展示。"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "后台不是单独做一个 CRUD 表格，而是把低库存、热销、最近订单、售后、日志等答辩可讲的运营闭环集中展示。",
+          "resolvedTextStyle": {
+            "fontSize": 19,
+            "typeface": "Microsoft YaHei",
+            "color": "#111318",
+            "alignment": "center"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "后台不是单独做一个 CRUD 表格，而是把低库存、热销、最近订单、售后、日志等答辩可讲的运营闭环集中展示。",
+              "fontSize": 19,
+              "typeface": "Microsoft YaHei",
+              "color": "#111318",
+              "alignment": "center"
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 8,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/t47y1kre",
+      "id": "8",
+      "bbox": [
+        72,
+        676,
+        420,
+        22
+      ],
+      "geometry": "rect",
+      "text": "Smart Mall 智能商城答辩",
+      "textPreview": "Smart Mall 智能商城答辩",
+      "resolvedFontSize": 12,
+      "resolvedTextStyle": {
+        "fontSize": 12,
+        "typeface": "Microsoft YaHei",
+        "color": "#6B7280",
+        "alignment": "left",
+        "insets": {
+          "top": 4.8,
+          "right": 9.6,
+          "bottom": 4.8,
+          "left": 9.6
+        }
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "Smart Mall 智能商城答辩"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "Smart Mall 智能商城答辩",
+          "resolvedTextStyle": {
+            "fontSize": 12,
+            "typeface": "Microsoft YaHei",
+            "color": "#6B7280",
+            "alignment": "left"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "Smart Mall 智能商城答辩",
+              "fontSize": 12,
+              "typeface": "Microsoft YaHei",
+              "color": "#6B7280",
+              "alignment": "left"
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 9,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/0je9cvix",
+      "id": "9",
+      "bbox": [
+        1168,
+        672,
+        44,
+        26
+      ],
+      "geometry": "rect",
+      "text": "15",
+      "textPreview": "15",
+      "resolvedFontSize": 15,
+      "resolvedTextStyle": {
+        "fontSize": 15,
+        "typeface": "Consolas",
+        "color": "#111318",
+        "alignment": "right",
+        "insets": {
+          "top": 4.8,
+          "right": 9.6,
+          "bottom": 4.8,
+          "left": 9.6
+        }
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "15"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "15",
+          "resolvedTextStyle": {
+            "fontSize": 15,
+            "typeface": "Consolas",
+            "color": "#111318",
+            "alignment": "right"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "15",
+              "fontSize": 15,
+              "typeface": "Consolas",
+              "color": "#111318",
+              "alignment": "right"
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    }
+  ],
+  "composeRuns": []
+}

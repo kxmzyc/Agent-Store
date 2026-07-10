@@ -1,0 +1,572 @@
+{
+  "schema": "openai.presentation.layout/v4",
+  "unit": "px",
+  "slide": {
+    "aid": "sl/m0bja8",
+    "id": "m0bja8",
+    "slide": 14,
+    "layoutId": "e00f4ff1-2795-47f7-bc34-04330f58abb7",
+    "layoutName": "Title Slide",
+    "layoutType": "title",
+    "masterLayoutId": "3c3672f2-6cbd-476b-bf16-fe31beabc642",
+    "masterLayoutName": "Master",
+    "backgroundColor": "#F5F6F8",
+    "frame": {
+      "left": 0,
+      "top": 0,
+      "width": 1280,
+      "height": 720
+    }
+  },
+  "theme": {
+    "colorSchemeName": "ChatGPT",
+    "colors": {
+      "accent1": "#156082",
+      "accent2": "#E97132",
+      "accent3": "#196B24",
+      "accent4": "#0F9ED5",
+      "accent5": "#A02B93",
+      "accent6": "#4EA72E",
+      "bg1": "#FFFFFF",
+      "bg2": "#000000",
+      "tx1": "#1F1F1F",
+      "tx2": "#FFFFFF",
+      "dk1": "#000000",
+      "lt1": "#FFFFFF",
+      "dk2": "#0E2841",
+      "lt2": "#E8E8E8",
+      "hlink": "#467886",
+      "folHlink": "#96607D"
+    },
+    "typefaces": [
+      "Consolas",
+      "Microsoft YaHei"
+    ]
+  },
+  "inheritedLayers": [
+    {
+      "scope": "layout",
+      "id": "e00f4ff1-2795-47f7-bc34-04330f58abb7",
+      "name": "Title Slide",
+      "type": "title",
+      "parentLayoutId": "3c3672f2-6cbd-476b-bf16-fe31beabc642",
+      "elements": []
+    },
+    {
+      "scope": "master",
+      "id": "3c3672f2-6cbd-476b-bf16-fe31beabc642",
+      "name": "Master",
+      "type": "master",
+      "elements": []
+    }
+  ],
+  "elements": [
+    {
+      "order": 1,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/ed8v6psf",
+      "id": "1",
+      "bbox": [
+        72,
+        50,
+        520,
+        28
+      ],
+      "geometry": "rect",
+      "text": "REAL UI 02",
+      "textPreview": "REAL UI 02",
+      "resolvedFontSize": 14,
+      "resolvedTextStyle": {
+        "fontSize": 14,
+        "typeface": "Microsoft YaHei",
+        "color": "#2B45D8",
+        "bold": true,
+        "alignment": "left",
+        "insets": {
+          "top": 4.8,
+          "right": 9.6,
+          "bottom": 4.8,
+          "left": 9.6
+        }
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "REAL UI 02"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "REAL UI 02",
+          "resolvedTextStyle": {
+            "fontSize": 14,
+            "typeface": "Microsoft YaHei",
+            "color": "#2B45D8",
+            "bold": true,
+            "alignment": "left"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "REAL UI 02",
+              "fontSize": 14,
+              "typeface": "Microsoft YaHei",
+              "color": "#2B45D8",
+              "bold": true,
+              "alignment": "left"
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 2,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/p4r65wju",
+      "id": "2",
+      "bbox": [
+        72,
+        82,
+        1000,
+        56
+      ],
+      "geometry": "rect",
+      "text": "购物车和订单页展示了交易链路的前台闭环",
+      "textPreview": "购物车和订单页展示了交易链路的前台闭环",
+      "resolvedFontSize": 36,
+      "resolvedTextStyle": {
+        "fontSize": 36,
+        "typeface": "Microsoft YaHei",
+        "color": "#111318",
+        "bold": true,
+        "alignment": "left",
+        "insets": {
+          "top": 4.8,
+          "right": 9.6,
+          "bottom": 4.8,
+          "left": 9.6
+        }
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "购物车和订单页展示了交易链路的前台闭环"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "购物车和订单页展示了交易链路的前台闭环",
+          "resolvedTextStyle": {
+            "fontSize": 36,
+            "typeface": "Microsoft YaHei",
+            "color": "#111318",
+            "bold": true,
+            "alignment": "left"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "购物车和订单页展示了交易链路的前台闭环",
+              "fontSize": 36,
+              "typeface": "Microsoft YaHei",
+              "color": "#111318",
+              "bold": true,
+              "alignment": "left"
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 3,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/wjudg7ad",
+      "id": "3",
+      "bbox": [
+        62,
+        146,
+        556,
+        322
+      ],
+      "geometry": "roundRect",
+      "fillColor": "#FFFFFF",
+      "lineColor": "#E3E6EB",
+      "lineWidth": 1
+    },
+    {
+      "order": 4,
+      "kind": "image",
+      "scope": "slide",
+      "aid": "im/adsji5sn",
+      "id": "4",
+      "bbox": [
+        72,
+        156,
+        536,
+        302
+      ],
+      "geometry": "roundRect",
+      "alt": "购物车截图",
+      "contentType": "image/jpeg",
+      "imageFit": "cover",
+      "imageMask": {
+        "geometry": "roundRect",
+        "adjustmentList": [
+          {
+            "name": "adj",
+            "formula": "val 662"
+          }
+        ]
+      },
+      "asset": {
+        "assetId": "c7832c18-d827-4d7b-afbd-75c9965cd53d",
+        "contentType": "image/jpeg",
+        "byteLength": 59708
+      }
+    },
+    {
+      "order": 5,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/i5sneloj",
+      "id": "5",
+      "bbox": [
+        656,
+        146,
+        556,
+        322
+      ],
+      "geometry": "roundRect",
+      "fillColor": "#FFFFFF",
+      "lineColor": "#E3E6EB",
+      "lineWidth": 1
+    },
+    {
+      "order": 6,
+      "kind": "image",
+      "scope": "slide",
+      "aid": "im/sji5snel",
+      "id": "6",
+      "bbox": [
+        666,
+        156,
+        536,
+        302
+      ],
+      "geometry": "roundRect",
+      "alt": "订单中心截图",
+      "contentType": "image/jpeg",
+      "imageFit": "cover",
+      "imageMask": {
+        "geometry": "roundRect",
+        "adjustmentList": [
+          {
+            "name": "adj",
+            "formula": "val 662"
+          }
+        ]
+      },
+      "asset": {
+        "assetId": "47ff3460-7704-443b-8541-14a7ccb72aeb",
+        "contentType": "image/jpeg",
+        "byteLength": 55955
+      }
+    },
+    {
+      "order": 7,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/0bi9s36h",
+      "id": "7",
+      "bbox": [
+        132,
+        527,
+        8,
+        8
+      ],
+      "geometry": "rect",
+      "fillColor": "#2B45D8",
+      "lineWidth": 0
+    },
+    {
+      "order": 8,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/7ed8bat4",
+      "id": "8",
+      "bbox": [
+        154,
+        520,
+        980,
+        38
+      ],
+      "geometry": "rect",
+      "text": "购物车实时计算已选商品金额，并在数量变更时校验库存。",
+      "textPreview": "购物车实时计算已选商品金额，并在数量变更时校验库存。",
+      "resolvedFontSize": 18,
+      "resolvedTextStyle": {
+        "fontSize": 18,
+        "typeface": "Microsoft YaHei",
+        "color": "#111318",
+        "alignment": "left",
+        "insets": {
+          "top": 4.8,
+          "right": 9.6,
+          "bottom": 4.8,
+          "left": 9.6
+        }
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "购物车实时计算已选商品金额，并在数量变更时校验库存。"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "购物车实时计算已选商品金额，并在数量变更时校验库存。",
+          "resolvedTextStyle": {
+            "fontSize": 18,
+            "typeface": "Microsoft YaHei",
+            "color": "#111318",
+            "alignment": "left"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "购物车实时计算已选商品金额，并在数量变更时校验库存。",
+              "fontSize": 18,
+              "typeface": "Microsoft YaHei",
+              "color": "#111318",
+              "alignment": "left"
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 9,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/itgfmlkj",
+      "id": "9",
+      "bbox": [
+        132,
+        569,
+        8,
+        8
+      ],
+      "geometry": "rect",
+      "fillColor": "#2B45D8",
+      "lineWidth": 0
+    },
+    {
+      "order": 10,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/cvixczed",
+      "id": "10",
+      "bbox": [
+        154,
+        562,
+        980,
+        38
+      ],
+      "geometry": "rect",
+      "text": "订单页支持按状态筛选、模拟支付、取消、再次购买和详情入口。",
+      "textPreview": "订单页支持按状态筛选、模拟支付、取消、再次购买和详情入口。",
+      "resolvedFontSize": 18,
+      "resolvedTextStyle": {
+        "fontSize": 18,
+        "typeface": "Microsoft YaHei",
+        "color": "#111318",
+        "alignment": "left",
+        "insets": {
+          "top": 4.8,
+          "right": 9.6,
+          "bottom": 4.8,
+          "left": 9.6
+        }
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "订单页支持按状态筛选、模拟支付、取消、再次购买和详情入口。"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "订单页支持按状态筛选、模拟支付、取消、再次购买和详情入口。",
+          "resolvedTextStyle": {
+            "fontSize": 18,
+            "typeface": "Microsoft YaHei",
+            "color": "#111318",
+            "alignment": "left"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "订单页支持按状态筛选、模拟支付、取消、再次购买和详情入口。",
+              "fontSize": 18,
+              "typeface": "Microsoft YaHei",
+              "color": "#111318",
+              "alignment": "left"
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 11,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/5gbq1ory",
+      "id": "11",
+      "bbox": [
+        72,
+        676,
+        420,
+        22
+      ],
+      "geometry": "rect",
+      "text": "Smart Mall 智能商城答辩",
+      "textPreview": "Smart Mall 智能商城答辩",
+      "resolvedFontSize": 12,
+      "resolvedTextStyle": {
+        "fontSize": 12,
+        "typeface": "Microsoft YaHei",
+        "color": "#6B7280",
+        "alignment": "left",
+        "insets": {
+          "top": 4.8,
+          "right": 9.6,
+          "bottom": 4.8,
+          "left": 9.6
+        }
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "Smart Mall 智能商城答辩"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "Smart Mall 智能商城答辩",
+          "resolvedTextStyle": {
+            "fontSize": 12,
+            "typeface": "Microsoft YaHei",
+            "color": "#6B7280",
+            "alignment": "left"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "Smart Mall 智能商城答辩",
+              "fontSize": 12,
+              "typeface": "Microsoft YaHei",
+              "color": "#6B7280",
+              "alignment": "left"
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 12,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/upwb2hwf",
+      "id": "12",
+      "bbox": [
+        1168,
+        672,
+        44,
+        26
+      ],
+      "geometry": "rect",
+      "text": "14",
+      "textPreview": "14",
+      "resolvedFontSize": 15,
+      "resolvedTextStyle": {
+        "fontSize": 15,
+        "typeface": "Consolas",
+        "color": "#111318",
+        "alignment": "right",
+        "insets": {
+          "top": 4.8,
+          "right": 9.6,
+          "bottom": 4.8,
+          "left": 9.6
+        }
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "14"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "14",
+          "resolvedTextStyle": {
+            "fontSize": 15,
+            "typeface": "Consolas",
+            "color": "#111318",
+            "alignment": "right"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "14",
+              "fontSize": 15,
+              "typeface": "Consolas",
+              "color": "#111318",
+              "alignment": "right"
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    }
+  ],
+  "composeRuns": []
+}

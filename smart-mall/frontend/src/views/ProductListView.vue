@@ -103,12 +103,30 @@
           @input="showHotKeywords = !keyword.trim()"
           @blur="closeHotKeywords"
         />
-        <select v-model="sort" aria-label="商品排序" @change="loadProducts(1)">
-          <option value="sales_desc">销量优先</option>
-          <option value="price_asc">价格升序</option>
-          <option value="price_desc">价格降序</option>
-          <option value="new_desc">最新上架</option>
-        </select>
+        <div class="sort-menu">
+          <button
+            class="sort-trigger"
+            type="button"
+            aria-haspopup="listbox"
+            :aria-expanded="sortMenuOpen"
+            @click="sortMenuOpen = !sortMenuOpen"
+          >
+            <span>{{ selectedSortLabel }}</span>
+            <i class="sort-caret" aria-hidden="true"></i>
+          </button>
+          <div v-if="sortMenuOpen" class="sort-options" role="listbox" aria-label="商品排序">
+            <button
+              v-for="option in sortOptions"
+              :key="option.value"
+              type="button"
+              class="sort-option"
+              :class="{ active: sort === option.value }"
+              role="option"
+              :aria-selected="sort === option.value"
+              @click="selectSort(option.value)"
+            >{{ option.label }}</button>
+          </div>
+        </div>
         <button class="primary search-submit" type="submit">搜索</button>
       </form>
       <div v-if="showHotKeywords && !keyword.trim() && hotKeywords.length" class="hot-keyword-popover">
@@ -182,6 +200,13 @@ const showHotKeywords = ref(false)
 const keyword = ref('')
 const categoryId = ref(null)
 const sort = ref('sales_desc')
+const sortMenuOpen = ref(false)
+const sortOptions = [
+  { value: 'sales_desc', label: '销量优先' },
+  { value: 'price_asc', label: '价格升序' },
+  { value: 'price_desc', label: '价格降序' },
+  { value: 'new_desc', label: '最新上架' }
+]
 const page = ref(1)
 const size = 12
 const total = ref(0)
@@ -191,6 +216,7 @@ const loadError = ref('')
 const categoryTransition = ref(false)
 const toast = useToast()
 const visibleCategories = computed(() => categories.value.filter((category) => category.parentId == null))
+const selectedSortLabel = computed(() => sortOptions.find((option) => option.value === sort.value)?.label || '商品排序')
 const heroIndex = ref(0)
 const isCarouselPaused = ref(false)
 const heroProducts = computed(() => products.value.slice(0, Math.min(products.value.length, 5)))
@@ -248,6 +274,12 @@ function selectCategory(id) {
 
 function search() {
   searchMode.value = !!keyword.value.trim()
+  loadProducts(1)
+}
+
+function selectSort(value) {
+  sort.value = value
+  sortMenuOpen.value = false
   loadProducts(1)
 }
 

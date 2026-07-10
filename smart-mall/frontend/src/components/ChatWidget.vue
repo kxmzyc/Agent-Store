@@ -25,8 +25,8 @@
           <span class="typing-dots" aria-hidden="true"><i></i><i></i><i></i></span>
         </div>
         <div v-else class="message-content" v-html="renderMarkdown(m.content)"></div>
-        <div v-if="m.tools?.length" class="tool-badges">
-          <span v-for="tool in m.tools" :key="tool">{{ toolLabel(tool) }}</span>
+        <div v-if="displayedTools(m.tools).length" class="tool-badges" aria-label="本次已调用的功能">
+          <span v-for="tool in displayedTools(m.tools)" :key="tool">已调用：{{ toolLabel(tool) }}</span>
         </div>
       </div>
     </div>
@@ -208,5 +208,9 @@ function toolLabel(name) {
   if (name === 'add_to_cart') return '加入购物车'
   if (name === 'query_order_status') return '订单查询'
   return name
+}
+
+function displayedTools(tools) {
+  return [...new Set(tools || [])]
 }
 </script>

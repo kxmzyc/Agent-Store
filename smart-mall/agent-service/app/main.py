@@ -927,6 +927,9 @@ def product_keyword(message: str, tags: list[str]) -> str:
         ("鼠标", ["鼠标"]),
         ("充电器", ["充电器", "快充", "充电头"]),
         ("电脑", ["电脑", "笔记本"]),
+        ("手账", ["礼物", "送给", "女朋友", "女生", "同学", "手账", "计划本", "文创"]),
+        ("牙刷", ["牙刷", "实用礼物", "个护"]),
+        ("充电宝", ["充电宝", "外出", "通勤礼物"]),
     ]
     for keyword, words in keyword_rules:
         if any(word in message for word in words):

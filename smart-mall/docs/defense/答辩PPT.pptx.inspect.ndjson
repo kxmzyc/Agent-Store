@@ -1,0 +1,515 @@
+{"kind":"deck","id":"pr/06g56j","name":"Deck"}
+{"kind":"layout","layoutId":"3c3672f2-6cbd-476b-bf16-fe31beabc642","name":"Master","type":"master"}
+{"kind":"layout","layoutId":"e00f4ff1-2795-47f7-bc34-04330f58abb7","name":"Title Slide","type":"title"}
+{"kind":"slide","id":"sl/sle1z1","slide":1,"title":"SM","textShapes":13}
+{"kind":"shape","id":"sh/i9s36hcr","slide":1,"bbox":[72,74,64,64]}
+{"kind":"textbox","id":"sh/p0bi9s36","slide":1,"text":"SM","textPreview":"SM","textChars":2,"textLines":1,"bbox":[72,96,64,24]}
+{"kind":"textbox","id":"sh/0fepkzup","slide":1,"text":"SMART MALL","textPreview":"SMART MALL","textChars":10,"textLines":1,"bbox":[72,178,420,24]}
+{"kind":"textbox","id":"sh/bi9s36hc","slide":1,"text":"智能商城答辩","textPreview":"智能商城答辩","textChars":6,"textLines":1,"bbox":[72,218,860,80]}
+{"kind":"textbox","id":"sh/ixczed8v","slide":1,"text":"淘宝核心链路 + AI 导购助手，一个可演示的微型电商闭环。","textPreview":"淘宝核心链路 + AI 导购助手，一个可演示的微型电商闭环。","textChars":30,"textLines":1,"bbox":[76,326,740,38]}
+{"kind":"shape","id":"sh/tovahoza","slide":1,"bbox":[812,158,354,340]}
+{"kind":"shape","id":"sh/032lszqt","slide":1,"bbox":[846,198,286,118]}
+{"kind":"textbox","id":"sh/b6xkf6dc","slide":1,"text":"后端测试","textPreview":"后端测试","textChars":4,"textLines":1,"bbox":[868,218,242,20]}
+{"kind":"textbox","id":"sh/il0rqd4v","slide":1,"text":"20","textPreview":"20","textChars":2,"textLines":1,"bbox":[868,246,242,38]}
+{"kind":"textbox","id":"sh/ovahoza1","slide":1,"text":"JUnit / 集成测试全通过","textPreview":"JUnit / 集成测试全通过","textChars":15,"textLines":1,"bbox":[868,286,242,22]}
+{"kind":"shape","id":"sh/dg7adsji","slide":1,"bbox":[846,338,286,118]}
+{"kind":"textbox","id":"sh/6tovahoz","slide":1,"text":"知识库块","textPreview":"知识库块","textChars":4,"textLines":1,"bbox":[868,358,242,20]}
+{"kind":"textbox","id":"sh/vahoza1g","slide":1,"text":"88","textPreview":"88","textChars":2,"textLines":1,"bbox":[868,386,242,38]}
+{"kind":"textbox","id":"sh/onyd0z61","slide":1,"text":"product 60 / review 16 / faq 12","textPreview":"product 60 / review 16 / faq 12","textChars":31,"textLines":1,"bbox":[868,426,242,22]}
+{"kind":"textbox","id":"sh/d8v6psfi","slide":1,"text":"企业实训最终项目答辩 · 2026-07-09","textPreview":"企业实训最终项目答辩 · 2026-07-09","textChars":23,"textLines":1,"bbox":[76,640,540,24]}
+{"kind":"textbox","id":"sh/6hcrmhk3","slide":1,"text":"Smart Mall 智能商城答辩","textPreview":"Smart Mall 智能商城答辩","textChars":17,"textLines":1,"bbox":[72,676,420,22]}
+{"kind":"textbox","id":"sh/z25kb6xk","slide":1,"text":"01","textPreview":"01","textChars":2,"textLines":1,"bbox":[1168,672,44,26]}
+{"kind":"notes","id":"nt/sle1z1","slide":1,"text":""}
+{"kind":"slide","id":"sl/5pqrp0","slide":2,"title":"CONTENTS","textShapes":19}
+{"kind":"textbox","id":"sh/kb6xkf6d","slide":2,"text":"CONTENTS","textPreview":"CONTENTS","textChars":8,"textLines":1,"bbox":[72,50,520,28]}
+{"kind":"textbox","id":"sh/rqd4vmtw","slide":2,"text":"今天讲清楚一个闭环，而不是一堆页面","textPreview":"今天讲清楚一个闭环，而不是一堆页面","textChars":17,"textLines":1,"bbox":[72,82,1000,56]}
+{"kind":"textbox","id":"sh/25kb6xkf","slide":2,"text":"01","textPreview":"01","textChars":2,"textLines":1,"bbox":[88,176,80,42]}
+{"kind":"textbox","id":"sh/9knih4by","slide":2,"text":"项目定位","textPreview":"项目定位","textChars":4,"textLines":1,"bbox":[178,179,280,28]}
+{"kind":"textbox","id":"sh/kzupwb2h","slide":2,"text":"为什么是“淘宝 + AI 助手”的实训闭环","textPreview":"为什么是“淘宝 + AI 助手”的实训闭环","textChars":21,"textLines":1,"bbox":[460,183,650,24]}
+{"kind":"shape","id":"sh/re1w7mp0","slide":2,"bbox":[178,232,900,1]}
+{"kind":"textbox","id":"sh/2t83itgf","slide":2,"text":"02","textPreview":"02","textChars":2,"textLines":1,"bbox":[88,254,80,42]}
+{"kind":"textbox","id":"sh/9gr2p8nq","slide":2,"text":"架构与数据","textPreview":"架构与数据","textChars":5,"textLines":1,"bbox":[178,257,280,28]}
+{"kind":"textbox","id":"sh/gvy90je9","slide":2,"text":"前后端分离、独立 Agent、MySQL 边界","textPreview":"前后端分离、独立 Agent、MySQL 边界","textChars":23,"textLines":1,"bbox":[460,261,650,24]}
+{"kind":"shape","id":"sh/yd0z6103","slide":2,"bbox":[178,310,900,1]}
+{"kind":"textbox","id":"sh/rytsvu9k","slide":2,"text":"03","textPreview":"03","textChars":2,"textLines":1,"bbox":[88,332,80,42]}
+{"kind":"textbox","id":"sh/gfmlkjm1","slide":2,"text":"五个亮点","textPreview":"五个亮点","textChars":4,"textLines":1,"bbox":[178,335,280,28]}
+{"kind":"textbox","id":"sh/90je9cvi","slide":2,"text":"推荐闭环、RAG、多步工具、动效工程、并发事务","textPreview":"推荐闭环、RAG、多步工具、动效工程、并发事务","textChars":23,"textLines":1,"bbox":[460,339,650,24]}
+{"kind":"shape","id":"sh/y1kre1w7","slide":2,"bbox":[178,388,900,1]}
+{"kind":"textbox","id":"sh/rmhk3q5o","slide":2,"text":"04","textPreview":"04","textChars":2,"textLines":1,"bbox":[88,410,80,42]}
+{"kind":"textbox","id":"sh/g7adsji5","slide":2,"text":"真实界面","textPreview":"真实界面","textChars":4,"textLines":1,"bbox":[178,413,280,28]}
+{"kind":"textbox","id":"sh/9s36hcrm","slide":2,"text":"商品、聊天、购物车、订单、运营后台","textPreview":"商品、聊天、购物车、订单、运营后台","textChars":17,"textLines":1,"bbox":[460,417,650,24]}
+{"kind":"shape","id":"sh/yxobm58z","slide":2,"bbox":[178,466,900,1]}
+{"kind":"textbox","id":"sh/nih4byhg","slide":2,"text":"05","textPreview":"05","textChars":2,"textLines":1,"bbox":[88,488,80,42]}
+{"kind":"textbox","id":"sh/3m94fu18","slide":2,"text":"验证与复盘","textPreview":"验证与复盘","textChars":5,"textLines":1,"bbox":[178,491,280,28]}
+{"kind":"textbox","id":"sh/a5gbq1or","slide":2,"text":"测试、Docker、日志、已完成与待改进","textPreview":"测试、Docker、日志、已完成与待改进","textChars":20,"textLines":1,"bbox":[460,495,650,24]}
+{"kind":"shape","id":"sh/lszqtcj6","slide":2,"bbox":[178,544,900,1]}
+{"kind":"textbox","id":"sh/s72x4nap","slide":2,"text":"Smart Mall 智能商城答辩","textPreview":"Smart Mall 智能商城答辩","textChars":17,"textLines":1,"bbox":[72,676,420,22]}
+{"kind":"textbox","id":"sh/3ylc7u54","slide":2,"text":"02","textPreview":"02","textChars":2,"textLines":1,"bbox":[1168,672,44,26]}
+{"kind":"notes","id":"nt/5pqrp0","slide":2,"text":""}
+{"kind":"slide","id":"sl/ffvv0h","slide":3,"title":"PROJECT POSITIONING","textShapes":17}
+{"kind":"textbox","id":"sh/61032lsz","slide":3,"text":"PROJECT POSITIONING","textPreview":"PROJECT POSITIONING","textChars":19,"textLines":1,"bbox":[72,50,520,28]}
+{"kind":"textbox","id":"sh/dsji5sne","slide":3,"text":"项目目标是把电商主链路和 Agent 能力同时跑通","textPreview":"项目目标是把电商主链路和 Agent 能力同时跑通","textChars":25,"textLines":1,"bbox":[72,82,1000,56]}
+{"kind":"textbox","id":"sh/o7qpg3ex","slide":3,"text":"Smart Mall 面向企业实训答辩，不追求生产级大促架构，重点是五大模块可演示、技术栈落地、工程边界讲得清。","textPreview":"Smart Mall 面向企业实训答辩，不追求生产级大促架构，重点是五大模块可演示、技术栈落地、工程边界讲得清。","textChars":56,"textLines":1,"bbox":[74,158,1040,42]}
+{"kind":"shape","id":"sh/vy90je9c","slide":3,"bbox":[74,244,342,122]}
+{"kind":"textbox","id":"sh/6dcbulwv","slide":3,"text":"五大模块","textPreview":"五大模块","textChars":4,"textLines":1,"bbox":[94,264,302,22]}
+{"kind":"textbox","id":"sh/d4vmtwra","slide":3,"text":"5","textPreview":"5","textChars":1,"textLines":1,"bbox":[94,292,302,44]}
+{"kind":"textbox","id":"sh/oj2t83it","slide":3,"text":"用户 / 商品 / 订单 / 搜索 / AI 助手","textPreview":"用户 / 商品 / 订单 / 搜索 / AI 助手","textChars":25,"textLines":1,"bbox":[94,336,302,20]}
+{"kind":"shape","id":"sh/z25kb6xk","slide":3,"bbox":[470,244,342,122]}
+{"kind":"textbox","id":"sh/6hcrmhk3","slide":3,"text":"可部署单元","textPreview":"可部署单元","textChars":5,"textLines":1,"bbox":[490,264,302,22]}
+{"kind":"textbox","id":"sh/gr2p8nqx","slide":3,"text":"4","textPreview":"4","textChars":1,"textLines":1,"bbox":[490,292,302,44]}
+{"kind":"textbox","id":"sh/9cvixcze","slide":3,"text":"frontend / backend / agent / mysql","textPreview":"frontend / backend / agent / mysql","textChars":34,"textLines":1,"bbox":[490,336,302,20]}
+{"kind":"shape","id":"sh/ylc7u54z","slide":3,"bbox":[866,244,342,122]}
+{"kind":"textbox","id":"sh/r65wjudg","slide":3,"text":"验收主线","textPreview":"验收主线","textChars":4,"textLines":1,"bbox":[886,264,302,22]}
+{"kind":"textbox","id":"sh/g3ex0nux","slide":3,"text":"1","textPreview":"1","textChars":1,"textLines":1,"bbox":[886,292,302,44]}
+{"kind":"textbox","id":"sh/5o7qpg3e","slide":3,"text":"注册登录到下单再到 AI 推荐","textPreview":"注册登录到下单再到 AI 推荐","textChars":15,"textLines":1,"bbox":[886,336,302,20]}
+{"kind":"shape","id":"sh/yxobm58z","slide":3,"bbox":[110,427,8,8]}
+{"kind":"textbox","id":"sh/nih4byhg","slide":3,"text":"商城是业务载体，真正考核点是需求、架构、开发、测试、部署和答辩表达。","textPreview":"商城是业务载体，真正考核点是需求、架构、开发、测试、部署和答辩表达。","textChars":34,"textLines":1,"bbox":[132,420,980,42]}
+{"kind":"shape","id":"sh/g7adsji5","slide":3,"bbox":[110,473,8,8]}
+{"kind":"textbox","id":"sh/9s36hcrm","slide":3,"text":"Agent 独立成 Python 微服务，避免把 LangChain 逻辑塞进主业务后端。","textPreview":"Agent 独立成 Python 微服务，避免把 LangChain 逻辑塞进主业务后端。","textChars":45,"textLines":1,"bbox":[132,466,980,42]}
+{"kind":"shape","id":"sh/twra5gbq","slide":3,"bbox":[110,519,8,8]}
+{"kind":"textbox","id":"sh/4byhgn29","slide":3,"text":"所有演示都围绕真实商品、真实订单、真实数据库状态展开。","textPreview":"所有演示都围绕真实商品、真实订单、真实数据库状态展开。","textChars":27,"textLines":1,"bbox":[132,512,980,42]}
+{"kind":"textbox","id":"sh/bq1oryts","slide":3,"text":"Smart Mall 智能商城答辩","textPreview":"Smart Mall 智能商城答辩","textChars":17,"textLines":1,"bbox":[72,676,420,22]}
+{"kind":"textbox","id":"sh/m58z25kb","slide":3,"text":"03","textPreview":"03","textChars":2,"textLines":1,"bbox":[1168,672,44,26]}
+{"kind":"notes","id":"nt/ffvv0h","slide":3,"text":""}
+{"kind":"slide","id":"sl/cr1o83","slide":4,"title":"ARCHITECTURE","textShapes":16}
+{"kind":"textbox","id":"sh/eloj2t83","slide":4,"text":"ARCHITECTURE","textPreview":"ARCHITECTURE","textChars":12,"textLines":1,"bbox":[72,50,520,28]}
+{"kind":"textbox","id":"sh/lc7u54zi","slide":4,"text":"四层架构让业务系统和智能体边界清晰","textPreview":"四层架构让业务系统和智能体边界清晰","textChars":17,"textLines":1,"bbox":[72,82,1000,56]}
+{"kind":"shape","id":"sh/wra5gbq1","slide":4,"bbox":[92,260,210,92]}
+{"kind":"textbox","id":"sh/7u54zido","slide":4,"text":"Vue3 前端","textPreview":"Vue3 前端","textChars":7,"textLines":1,"bbox":[110,278,174,28]}
+{"kind":"textbox","id":"sh/ed8bat47","slide":4,"text":"Nginx 静态站点 / axios","textPreview":"Nginx 静态站点 / axios","textChars":18,"textLines":1,"bbox":[110,310,174,30]}
+{"kind":"shape","id":"sh/l0rqd4vm","slide":4,"bbox":[318,301,42,2]}
+{"kind":"textbox","id":"sh/wfyxobm5","slide":4,"text":">","textPreview":">","textChars":1,"textLines":1,"bbox":[358,290,18,24]}
+{"kind":"shape","id":"sh/7mp0bi9s","slide":4,"bbox":[388,260,230,92]}
+{"kind":"textbox","id":"sh/e1w7mp0b","slide":4,"text":"Spring Boot","textPreview":"Spring Boot","textChars":11,"textLines":1,"bbox":[406,278,194,28]}
+{"kind":"textbox","id":"sh/0rqd4vmt","slide":4,"text":"REST API / JWT / JPA","textPreview":"REST API / JWT / JPA","textChars":20,"textLines":1,"bbox":[406,310,194,30]}
+{"kind":"shape","id":"sh/tcj6tova","slide":4,"bbox":[636,301,42,2]}
+{"kind":"textbox","id":"sh/il0rqd4v","slide":4,"text":">","textPreview":">","textChars":1,"textLines":1,"bbox":[676,290,18,24]}
+{"kind":"shape","id":"sh/b6xkf6dc","slide":4,"bbox":[706,260,210,92]}
+{"kind":"textbox","id":"sh/0je9cvix","slide":4,"text":"MySQL 8","textPreview":"MySQL 8","textChars":7,"textLines":1,"bbox":[724,278,174,28]}
+{"kind":"textbox","id":"sh/t47y1kre","slide":4,"text":"主业务唯一数据源","textPreview":"主业务唯一数据源","textChars":8,"textLines":1,"bbox":[724,310,174,30]}
+{"kind":"shape","id":"sh/idonyd0z","slide":4,"bbox":[388,430,230,92]}
+{"kind":"textbox","id":"sh/byhgn29g","slide":4,"text":"FastAPI Agent","textPreview":"FastAPI Agent","textChars":13,"textLines":1,"bbox":[406,448,194,28]}
+{"kind":"textbox","id":"sh/0fepkzup","slide":4,"text":"LangChain / Tools / Memory","textPreview":"LangChain / Tools / Memory","textChars":26,"textLines":1,"bbox":[406,480,194,30]}
+{"kind":"shape","id":"sh/p0bi9s36","slide":4,"bbox":[504,352,2,74]}
+{"kind":"textbox","id":"sh/tsvu9kni","slide":4,"text":"工具调用通过 REST 回访主后端","textPreview":"工具调用通过 REST 回访主后端","textChars":17,"textLines":1,"bbox":[630,424,360,24]}
+{"kind":"textbox","id":"sh/47y1kre1","slide":4,"text":"Agent 只直连专属记忆表：agent_conversation / user_preference / knowledge_chunk","textPreview":"Agent 只直连专属记忆表：agent_conversation / user_preference / knowledge_chunk","textChars":69,"textLines":1,"bbox":[110,560,980,30]}
+{"kind":"textbox","id":"sh/bm58z25k","slide":4,"text":"Smart Mall 智能商城答辩","textPreview":"Smart Mall 智能商城答辩","textChars":17,"textLines":1,"bbox":[72,676,420,22]}
+{"kind":"textbox","id":"sh/m1cfa9w3","slide":4,"text":"04","textPreview":"04","textChars":2,"textLines":1,"bbox":[1168,672,44,26]}
+{"kind":"notes","id":"nt/cr1o83","slide":4,"text":""}
+{"kind":"slide","id":"sl/pqkyhu","slide":5,"title":"TECH STACK","textShapes":19}
+{"kind":"textbox","id":"sh/al87ed8b","slide":5,"text":"TECH STACK","textPreview":"TECH STACK","textChars":10,"textLines":1,"bbox":[72,50,520,28]}
+{"kind":"textbox","id":"sh/hcrmhk3q","slide":5,"text":"技术栈选择围绕课程要求收敛，没有引入重型治理组件","textPreview":"技术栈选择围绕课程要求收敛，没有引入重型治理组件","textChars":24,"textLines":1,"bbox":[72,82,1000,56]}
+{"kind":"shape","id":"sh/orytsvu9","slide":5,"bbox":[72,202,1080,1]}
+{"kind":"textbox","id":"sh/zupwb2hw","slide":5,"text":"前端","textPreview":"前端","textChars":2,"textLines":1,"bbox":[92,164,150,34]}
+{"kind":"textbox","id":"sh/a9w3m94f","slide":5,"text":"Vue3 + Vite + Vue Router + axios","textPreview":"Vue3 + Vite + Vue Router + axios","textChars":32,"textLines":1,"bbox":[260,164,470,34]}
+{"kind":"textbox","id":"sh/h0fepkzu","slide":5,"text":"组件化页面、路由守卫、统一请求拦截","textPreview":"组件化页面、路由守卫、统一请求拦截","textChars":17,"textLines":1,"bbox":[760,167,390,32]}
+{"kind":"shape","id":"sh/sfil0rqd","slide":5,"bbox":[72,286,1080,1]}
+{"kind":"textbox","id":"sh/zqtcj6to","slide":5,"text":"后端","textPreview":"后端","textChars":2,"textLines":1,"bbox":[92,248,150,34]}
+{"kind":"textbox","id":"sh/65wjudg7","slide":5,"text":"Spring Boot 3.3 + Security + JWT + JPA","textPreview":"Spring Boot 3.3 + Security + JWT + JPA","textChars":38,"textLines":1,"bbox":[260,248,470,34]}
+{"kind":"textbox","id":"sh/g3ex0nux","slide":5,"text":"RESTful API、权限控制、事务与领域服务","textPreview":"RESTful API、权限控制、事务与领域服务","textChars":24,"textLines":1,"bbox":[760,251,390,32]}
+{"kind":"shape","id":"sh/5o7qpg3e","slide":5,"bbox":[72,370,1080,1]}
+{"kind":"textbox","id":"sh/yxobm58z","slide":5,"text":"数据库","textPreview":"数据库","textChars":3,"textLines":1,"bbox":[92,332,150,34]}
+{"kind":"textbox","id":"sh/nih4byhg","slide":5,"text":"MySQL 8.0 + InnoDB + utf8mb4","textPreview":"MySQL 8.0 + InnoDB + utf8mb4","textChars":28,"textLines":1,"bbox":[260,332,470,34]}
+{"kind":"textbox","id":"sh/gr2p8nqx","slide":5,"text":"三范式建模、索引、乐观锁库存","textPreview":"三范式建模、索引、乐观锁库存","textChars":14,"textLines":1,"bbox":[760,335,390,32]}
+{"kind":"shape","id":"sh/9cvixcze","slide":5,"bbox":[72,454,1080,1]}
+{"kind":"textbox","id":"sh/ylc7u54z","slide":5,"text":"AI 服务","textPreview":"AI 服务","textChars":5,"textLines":1,"bbox":[92,416,150,34]}
+{"kind":"textbox","id":"sh/r65wjudg","slide":5,"text":"FastAPI + LangChain + SQLAlchemy + httpx","textPreview":"FastAPI + LangChain + SQLAlchemy + httpx","textChars":40,"textLines":1,"bbox":[260,416,470,34]}
+{"kind":"textbox","id":"sh/gfmlkjm1","slide":5,"text":"工具调用、短期/长期记忆、服务间认证","textPreview":"工具调用、短期/长期记忆、服务间认证","textChars":18,"textLines":1,"bbox":[760,419,390,32]}
+{"kind":"shape","id":"sh/90je9cvi","slide":5,"bbox":[72,538,1080,1]}
+{"kind":"textbox","id":"sh/t83itgfm","slide":5,"text":"部署测试","textPreview":"部署测试","textChars":4,"textLines":1,"bbox":[92,500,150,34]}
+{"kind":"textbox","id":"sh/4nap4r65","slide":5,"text":"Docker Compose + JUnit5 + 并发脚本","textPreview":"Docker Compose + JUnit5 + 并发脚本","textChars":30,"textLines":1,"bbox":[260,500,470,34]}
+{"kind":"textbox","id":"sh/b2hwfyxo","slide":5,"text":"四服务一键启动、回归和验收脚本","textPreview":"四服务一键启动、回归和验收脚本","textChars":15,"textLines":1,"bbox":[760,503,390,32]}
+{"kind":"textbox","id":"sh/mhk3q5o7","slide":5,"text":"Smart Mall 智能商城答辩","textPreview":"Smart Mall 智能商城答辩","textChars":17,"textLines":1,"bbox":[72,676,420,22]}
+{"kind":"textbox","id":"sh/twra5gbq","slide":5,"text":"05","textPreview":"05","textChars":2,"textLines":1,"bbox":[1168,672,44,26]}
+{"kind":"notes","id":"nt/pqkyhu","slide":5,"text":""}
+{"kind":"slide","id":"sl/up2777","slide":6,"title":"DATABASE DESIGN","textShapes":17}
+{"kind":"textbox","id":"sh/il0rqd4v","slide":6,"text":"DATABASE DESIGN","textPreview":"DATABASE DESIGN","textChars":15,"textLines":1,"bbox":[72,50,520,28]}
+{"kind":"textbox","id":"sh/tcj6tova","slide":6,"text":"数据库按业务事实拆表，订单快照只保存历史事实","textPreview":"数据库按业务事实拆表，订单快照只保存历史事实","textChars":22,"textLines":1,"bbox":[72,82,1000,56]}
+{"kind":"shape","id":"sh/0rqd4vmt","slide":6,"bbox":[72,174,196,236]}
+{"kind":"textbox","id":"sh/byhgn29g","slide":6,"text":"用户域","textPreview":"用户域","textChars":3,"textLines":1,"bbox":[90,198,160,30]}
+{"kind":"textbox","id":"sh/idonyd0z","slide":6,"text":"user\nshipping_address\nuser_preference","textPreview":"user | shipping_address | user_preference","textChars":37,"textLines":3,"bbox":[96,250,148,120]}
+{"kind":"shape","id":"sh/t47y1kre","slide":6,"bbox":[302,174,196,236]}
+{"kind":"textbox","id":"sh/0je9cvix","slide":6,"text":"商品域","textPreview":"商品域","textChars":3,"textLines":1,"bbox":[320,198,160,30]}
+{"kind":"textbox","id":"sh/bulwval8","slide":6,"text":"category\nproduct\nproduct_tag\nproduct_review","textPreview":"category | product | product_tag | product_review","textChars":43,"textLines":4,"bbox":[326,250,148,120]}
+{"kind":"shape","id":"sh/i9s36hcr","slide":6,"bbox":[532,174,196,236]}
+{"kind":"textbox","id":"sh/0fepkzup","slide":6,"text":"交易域","textPreview":"交易域","textChars":3,"textLines":1,"bbox":[550,198,160,30]}
+{"kind":"textbox","id":"sh/p0bi9s36","slide":6,"text":"cart\norder\norder_item\nafter_sale_request","textPreview":"cart | order | order_item | after_sale_request","textChars":40,"textLines":4,"bbox":[556,250,148,120]}
+{"kind":"shape","id":"sh/i9s36hcr","slide":6,"bbox":[762,174,196,236]}
+{"kind":"textbox","id":"sh/bulwval8","slide":6,"text":"运营与行为","textPreview":"运营与行为","textChars":5,"textLines":1,"bbox":[780,198,160,30]}
+{"kind":"textbox","id":"sh/032lszqt","slide":6,"text":"banner_slot\nsearch_keyword_log\nfavorite / view log","textPreview":"banner_slot | search_keyword_log | favorite / view log","textChars":50,"textLines":3,"bbox":[786,250,148,120]}
+{"kind":"shape","id":"sh/tovahoza","slide":6,"bbox":[992,174,196,236]}
+{"kind":"textbox","id":"sh/ixczed8v","slide":6,"text":"Agent 记忆","textPreview":"Agent 记忆","textChars":8,"textLines":1,"bbox":[1010,198,160,30]}
+{"kind":"textbox","id":"sh/bi9s36hc","slide":6,"text":"agent_conversation\nuser_preference\nknowledge_chunk","textPreview":"agent_conversation | user_preference | knowledge_chunk","textChars":50,"textLines":3,"bbox":[1016,250,148,120]}
+{"kind":"shape","id":"sh/0rqd4vmt","slide":6,"bbox":[114,479,8,8]}
+{"kind":"textbox","id":"sh/tcj6tova","slide":6,"text":"商品、购物车、订单主表、订单明细分离，避免展示字段在多个表里重复。","textPreview":"商品、购物车、订单主表、订单明细分离，避免展示字段在多个表里重复。","textChars":33,"textLines":1,"bbox":[136,472,980,38]}
+{"kind":"shape","id":"sh/x0nuxc3y","slide":6,"bbox":[114,521,8,8]}
+{"kind":"textbox","id":"sh/4fu18jqh","slide":6,"text":"order_item 的商品名和价格是下单时刻快照，用于历史订单，不属于随商品表可推导的当前字段。","textPreview":"order_item 的商品名和价格是下单时刻快照，用于历史订单，不属于随商品表可推导的当前字段。","textChars":49,"textLines":1,"bbox":[136,514,980,38]}
+{"kind":"shape","id":"sh/fu18jqh0","slide":6,"bbox":[114,563,8,8]}
+{"kind":"textbox","id":"sh/m94fu18j","slide":6,"text":"knowledge_chunk 是 Agent 轻量 RAG 的运行时知识表，当前共有 88 条块。","textPreview":"knowledge_chunk 是 Agent 轻量 RAG 的运行时知识表，当前共有 88 条块。","textChars":50,"textLines":1,"bbox":[136,556,980,38]}
+{"kind":"textbox","id":"sh/xobm58z2","slide":6,"text":"Smart Mall 智能商城答辩","textPreview":"Smart Mall 智能商城答辩","textChars":17,"textLines":1,"bbox":[72,676,420,22]}
+{"kind":"textbox","id":"sh/83itgfml","slide":6,"text":"06","textPreview":"06","textChars":2,"textLines":1,"bbox":[1168,672,44,26]}
+{"kind":"notes","id":"nt/up2777","slide":6,"text":""}
+{"kind":"slide","id":"sl/yr9mav","slide":7,"title":"FUNCTION MAP","textShapes":22}
+{"kind":"textbox","id":"sh/4zidonyd","slide":7,"text":"FUNCTION MAP","textPreview":"FUNCTION MAP","textChars":12,"textLines":1,"bbox":[72,50,520,28]}
+{"kind":"textbox","id":"sh/fepkzupw","slide":7,"text":"功能不是孤立堆叠，而是围绕购买链路组织","textPreview":"功能不是孤立堆叠，而是围绕购买链路组织","textChars":19,"textLines":1,"bbox":[72,82,1000,56]}
+{"kind":"shape","id":"sh/mtwra5gb","slide":7,"bbox":[96,174,318,88]}
+{"kind":"shape","id":"sh/xc3ylc7u","slide":7,"bbox":[114,196,8,42]}
+{"kind":"textbox","id":"sh/4r65wjud","slide":7,"text":"认证","textPreview":"认证","textChars":2,"textLines":1,"bbox":[138,192,240,28]}
+{"kind":"textbox","id":"sh/f6dcbulw","slide":7,"text":"注册 / 登录 / 刷新 Token","textPreview":"注册 / 登录 / 刷新 Token","textChars":18,"textLines":1,"bbox":[138,224,250,22]}
+{"kind":"shape","id":"sh/mlkjm1cf","slide":7,"bbox":[466,174,318,88]}
+{"kind":"shape","id":"sh/x0nuxc3y","slide":7,"bbox":[484,196,8,42]}
+{"kind":"textbox","id":"sh/4fu18jqh","slide":7,"text":"商品","textPreview":"商品","textChars":2,"textLines":1,"bbox":[508,192,240,28]}
+{"kind":"textbox","id":"sh/6dcbulwv","slide":7,"text":"分类 / CRUD / 标签 / 推荐位","textPreview":"分类 / CRUD / 标签 / 推荐位","textChars":20,"textLines":1,"bbox":[508,224,250,22]}
+{"kind":"shape","id":"sh/vy90je9c","slide":7,"bbox":[836,174,318,88]}
+{"kind":"shape","id":"sh/oj2t83it","slide":7,"bbox":[854,196,8,42]}
+{"kind":"textbox","id":"sh/d4vmtwra","slide":7,"text":"搜索","textPreview":"搜索","textChars":2,"textLines":1,"bbox":[878,192,240,28]}
+{"kind":"textbox","id":"sh/61032lsz","slide":7,"text":"关键词 / 排序 / 分页 / 热词","textPreview":"关键词 / 排序 / 分页 / 热词","textChars":18,"textLines":1,"bbox":[878,224,250,22]}
+{"kind":"shape","id":"sh/vmtwra5g","slide":7,"bbox":[96,298,318,88]}
+{"kind":"shape","id":"sh/o7qpg3ex","slide":7,"bbox":[114,320,8,42]}
+{"kind":"textbox","id":"sh/dsji5sne","slide":7,"text":"购物车","textPreview":"购物车","textChars":3,"textLines":1,"bbox":[138,316,240,28]}
+{"kind":"textbox","id":"sh/6tovahoz","slide":7,"text":"加购 / 数量校验 / 清空","textPreview":"加购 / 数量校验 / 清空","textChars":14,"textLines":1,"bbox":[138,348,250,22]}
+{"kind":"shape","id":"sh/vahoza1g","slide":7,"bbox":[466,298,318,88]}
+{"kind":"shape","id":"sh/r65wjudg","slide":7,"bbox":[484,320,8,42]}
+{"kind":"textbox","id":"sh/ylc7u54z","slide":7,"text":"订单","textPreview":"订单","textChars":2,"textLines":1,"bbox":[508,316,240,28]}
+{"kind":"textbox","id":"sh/9cvixcze","slide":7,"text":"下单 / 支付 / 发货 / 确认","textPreview":"下单 / 支付 / 发货 / 确认","textChars":17,"textLines":1,"bbox":[508,348,250,22]}
+{"kind":"shape","id":"sh/gr2p8nqx","slide":7,"bbox":[836,298,318,88]}
+{"kind":"shape","id":"sh/nih4byhg","slide":7,"bbox":[854,320,8,42]}
+{"kind":"textbox","id":"sh/yxobm58z","slide":7,"text":"售后","textPreview":"售后","textChars":2,"textLines":1,"bbox":[878,316,240,28]}
+{"kind":"textbox","id":"sh/5o7qpg3e","slide":7,"text":"退款申请 / 审核 / 回补库存","textPreview":"退款申请 / 审核 / 回补库存","textChars":16,"textLines":1,"bbox":[878,348,250,22]}
+{"kind":"shape","id":"sh/g3ex0nux","slide":7,"bbox":[96,422,318,88]}
+{"kind":"shape","id":"sh/rmhk3q5o","slide":7,"bbox":[114,444,8,42]}
+{"kind":"textbox","id":"sh/y1kre1w7","slide":7,"text":"用户体验","textPreview":"用户体验","textChars":4,"textLines":1,"bbox":[138,440,240,28]}
+{"kind":"textbox","id":"sh/sji5snel","slide":7,"text":"收藏 / 足迹 / 评价 / 积分券","textPreview":"收藏 / 足迹 / 评价 / 积分券","textChars":18,"textLines":1,"bbox":[138,472,250,22]}
+{"kind":"shape","id":"sh/h4byhgn2","slide":7,"bbox":[466,422,318,88]}
+{"kind":"shape","id":"sh/adsji5sn","slide":7,"bbox":[484,444,8,42]}
+{"kind":"textbox","id":"sh/3ylc7u54","slide":7,"text":"AI 助手","textPreview":"AI 助手","textChars":5,"textLines":1,"bbox":[508,440,240,28]}
+{"kind":"textbox","id":"sh/s72x4nap","slide":7,"text":"导购 / 查单 / 偏好记忆","textPreview":"导购 / 查单 / 偏好记忆","textChars":14,"textLines":1,"bbox":[508,472,250,22]}
+{"kind":"shape","id":"sh/lszqtcj6","slide":7,"bbox":[836,422,318,88]}
+{"kind":"shape","id":"sh/a5gbq1or","slide":7,"bbox":[854,444,8,42]}
+{"kind":"textbox","id":"sh/3m94fu18","slide":7,"text":"后台","textPreview":"后台","textChars":2,"textLines":1,"bbox":[878,440,240,28]}
+{"kind":"textbox","id":"sh/s36hcrmh","slide":7,"text":"数据看板 / 商品 / 订单 / 日志","textPreview":"数据看板 / 商品 / 订单 / 日志","textChars":19,"textLines":1,"bbox":[878,472,250,22]}
+{"kind":"textbox","id":"sh/hoza1gvy","slide":7,"text":"Smart Mall 智能商城答辩","textPreview":"Smart Mall 智能商城答辩","textChars":17,"textLines":1,"bbox":[72,676,420,22]}
+{"kind":"textbox","id":"sh/dcbulwva","slide":7,"text":"07","textPreview":"07","textChars":2,"textLines":1,"bbox":[1168,672,44,26]}
+{"kind":"notes","id":"nt/yr9mav","slide":7,"text":""}
+{"kind":"slide","id":"sl/s6p09f","slide":8,"title":"HIGHLIGHT 01","textShapes":24}
+{"kind":"textbox","id":"sh/c7u54zid","slide":8,"text":"HIGHLIGHT 01","textPreview":"HIGHLIGHT 01","textChars":12,"textLines":1,"bbox":[72,50,520,28]}
+{"kind":"textbox","id":"sh/jm1cfa9w","slide":8,"text":"个性化推荐形成从对话到首页的闭环","textPreview":"个性化推荐形成从对话到首页的闭环","textChars":16,"textLines":1,"bbox":[72,82,1000,56]}
+{"kind":"shape","id":"sh/u18jqh0f","slide":8,"bbox":[80,246,210,92]}
+{"kind":"textbox","id":"sh/1032lszq","slide":8,"text":"用户表达偏好","textPreview":"用户表达偏好","textChars":6,"textLines":1,"bbox":[98,264,174,28]}
+{"kind":"textbox","id":"sh/cfa9w3m9","slide":8,"text":"“我喜欢机械键盘”","textPreview":"“我喜欢机械键盘”","textChars":9,"textLines":1,"bbox":[98,296,174,30]}
+{"kind":"shape","id":"sh/judg7ads","slide":8,"bbox":[304,288,42,2]}
+{"kind":"textbox","id":"sh/u9knih4b","slide":8,"text":">","textPreview":">","textChars":1,"textLines":1,"bbox":[344,277,18,24]}
+{"kind":"shape","id":"sh/54zidony","slide":8,"bbox":[374,246,230,92]}
+{"kind":"textbox","id":"sh/cj6tovah","slide":8,"text":"Agent 提炼标签","textPreview":"Agent 提炼标签","textChars":10,"textLines":1,"bbox":[392,264,194,28]}
+{"kind":"textbox","id":"sh/ex0nuxc3","slide":8,"text":"规则 + LLM JSON 提炼","textPreview":"规则 + LLM JSON 提炼","textChars":16,"textLines":1,"bbox":[392,296,194,30]}
+{"kind":"shape","id":"sh/3itgfmlk","slide":8,"bbox":[618,288,42,2]}
+{"kind":"textbox","id":"sh/w3m94fu1","slide":8,"text":">","textPreview":">","textChars":1,"textLines":1,"bbox":[658,277,18,24]}
+{"kind":"shape","id":"sh/loj2t83i","slide":8,"bbox":[688,246,230,92]}
+{"kind":"textbox","id":"sh/e9cvixcz","slide":8,"text":"user_preference","textPreview":"user_preference","textChars":15,"textLines":1,"bbox":[706,264,194,28]}
+{"kind":"textbox","id":"sh/3q5o7qpg","slide":8,"text":"upsert 权重封顶 2.0","textPreview":"upsert 权重封顶 2.0","textChars":15,"textLines":1,"bbox":[706,296,194,30]}
+{"kind":"shape","id":"sh/wb2hwfyx","slide":8,"bbox":[930,288,42,2]}
+{"kind":"textbox","id":"sh/lwval87e","slide":8,"text":">","textPreview":">","textChars":1,"textLines":1,"bbox":[970,277,18,24]}
+{"kind":"shape","id":"sh/ahoza1gv","slide":8,"bbox":[1000,246,210,92]}
+{"kind":"textbox","id":"sh/32lszqtc","slide":8,"text":"推荐注入","textPreview":"推荐注入","textChars":4,"textLines":1,"bbox":[1018,264,174,28]}
+{"kind":"textbox","id":"sh/v6psfil0","slide":8,"text":"下次会话和首页优先考虑","textPreview":"下次会话和首页优先考虑","textChars":11,"textLines":1,"bbox":[1018,296,174,30]}
+{"kind":"shape","id":"sh/2lszqtcj","slide":8,"bbox":[178,430,280,118]}
+{"kind":"textbox","id":"sh/d8bat47y","slide":8,"text":"长期偏好读取","textPreview":"长期偏好读取","textChars":6,"textLines":1,"bbox":[198,450,240,22]}
+{"kind":"textbox","id":"sh/knih4byh","slide":8,"text":"Top 3","textPreview":"Top 3","textChars":5,"textLines":1,"bbox":[198,478,240,44]}
+{"kind":"textbox","id":"sh/vu9knih4","slide":8,"text":"system prompt 注入最高权重标签","textPreview":"system prompt 注入最高权重标签","textChars":22,"textLines":1,"bbox":[198,522,240,20]}
+{"kind":"shape","id":"sh/29gr2p8n","slide":8,"bbox":[500,430,280,118]}
+{"kind":"textbox","id":"sh/d0z61032","slide":8,"text":"权重策略","textPreview":"权重策略","textChars":4,"textLines":1,"bbox":[520,450,240,22]}
+{"kind":"textbox","id":"sh/kf6dcbul","slide":8,"text":"+0.1","textPreview":"+0.1","textChars":4,"textLines":1,"bbox":[520,478,240,44]}
+{"kind":"textbox","id":"sh/vixczed8","slide":8,"text":"重复偏好递增，最高 2.0","textPreview":"重复偏好递增，最高 2.0","textChars":13,"textLines":1,"bbox":[520,522,240,20]}
+{"kind":"shape","id":"sh/2x4nap4r","slide":8,"bbox":[822,430,280,118]}
+{"kind":"textbox","id":"sh/czed8v6p","slide":8,"text":"演示用户","textPreview":"演示用户","textChars":4,"textLines":1,"bbox":[842,450,240,22]}
+{"kind":"textbox","id":"sh/5kb6xkf6","slide":8,"text":"alice","textPreview":"alice","textChars":5,"textLines":1,"bbox":[842,478,240,44]}
+{"kind":"textbox","id":"sh/ytsvu9kn","slide":8,"text":"已存在机械键盘等偏好","textPreview":"已存在机械键盘等偏好","textChars":10,"textLines":1,"bbox":[842,522,240,20]}
+{"kind":"textbox","id":"sh/neloj2t8","slide":8,"text":"Smart Mall 智能商城答辩","textPreview":"Smart Mall 智能商城答辩","textChars":17,"textLines":1,"bbox":[72,676,420,22]}
+{"kind":"textbox","id":"sh/cbulwval","slide":8,"text":"08","textPreview":"08","textChars":2,"textLines":1,"bbox":[1168,672,44,26]}
+{"kind":"notes","id":"nt/s6p09f","slide":8,"text":""}
+{"kind":"slide","id":"sl/47qrm7","slide":9,"title":"HIGHLIGHT 02","textShapes":28}
+{"kind":"textbox","id":"sh/knih4byh","slide":9,"text":"HIGHLIGHT 02","textPreview":"HIGHLIGHT 02","textChars":12,"textLines":1,"bbox":[72,50,520,28]}
+{"kind":"textbox","id":"sh/v6psfil0","slide":9,"text":"轻量 RAG 让回答受真实商品知识约束","textPreview":"轻量 RAG 让回答受真实商品知识约束","textChars":19,"textLines":1,"bbox":[72,82,1000,56]}
+{"kind":"shape","id":"sh/2lszqtcj","slide":9,"bbox":[72,176,244,118]}
+{"kind":"textbox","id":"sh/d0z61032","slide":9,"text":"知识块总量","textPreview":"知识块总量","textChars":5,"textLines":1,"bbox":[92,196,204,22]}
+{"kind":"textbox","id":"sh/kf6dcbul","slide":9,"text":"88","textPreview":"88","textChars":2,"textLines":1,"bbox":[92,224,204,44]}
+{"kind":"textbox","id":"sh/vu9knih4","slide":9,"text":"当前 MySQL knowledge_chunk 查询","textPreview":"当前 MySQL knowledge_chunk 查询","textChars":27,"textLines":1,"bbox":[92,268,204,20]}
+{"kind":"shape","id":"sh/29gr2p8n","slide":9,"bbox":[344,176,244,118]}
+{"kind":"textbox","id":"sh/donyd0z6","slide":9,"text":"商品块","textPreview":"商品块","textChars":3,"textLines":1,"bbox":[364,196,204,22]}
+{"kind":"textbox","id":"sh/k3q5o7qp","slide":9,"text":"60","textPreview":"60","textChars":2,"textLines":1,"bbox":[364,224,204,44]}
+{"kind":"textbox","id":"sh/at47y1kr","slide":9,"text":"product source_type","textPreview":"product source_type","textChars":19,"textLines":1,"bbox":[364,268,204,20]}
+{"kind":"shape","id":"sh/3ex0nuxc","slide":9,"bbox":[616,176,244,118]}
+{"kind":"textbox","id":"sh/szqtcj6t","slide":9,"text":"评价块","textPreview":"评价块","textChars":3,"textLines":1,"bbox":[636,196,204,22]}
+{"kind":"textbox","id":"sh/lkjm1cfa","slide":9,"text":"16","textPreview":"16","textChars":2,"textLines":1,"bbox":[636,224,204,44]}
+{"kind":"textbox","id":"sh/ahoza1gv","slide":9,"text":"review source_type","textPreview":"review source_type","textChars":18,"textLines":1,"bbox":[636,268,204,20]}
+{"kind":"shape","id":"sh/32lszqtc","slide":9,"bbox":[888,176,244,118]}
+{"kind":"textbox","id":"sh/sneloj2t","slide":9,"text":"FAQ 块","textPreview":"FAQ 块","textChars":5,"textLines":1,"bbox":[908,196,204,22]}
+{"kind":"textbox","id":"sh/l87ed8ba","slide":9,"text":"12","textPreview":"12","textChars":2,"textLines":1,"bbox":[908,224,204,44]}
+{"kind":"textbox","id":"sh/e9cvixcz","slide":9,"text":"faq source_type","textPreview":"faq source_type","textChars":15,"textLines":1,"bbox":[908,268,204,20]}
+{"kind":"shape","id":"sh/3q5o7qpg","slide":9,"bbox":[104,392,190,82]}
+{"kind":"textbox","id":"sh/vmtwra5g","slide":9,"text":"商品描述","textPreview":"商品描述","textChars":4,"textLines":1,"bbox":[122,410,154,28]}
+{"kind":"textbox","id":"sh/61032lsz","slide":9,"text":"product","textPreview":"product","textChars":7,"textLines":1,"bbox":[122,442,154,30]}
+{"kind":"shape","id":"sh/dsji5sne","slide":9,"bbox":[306,425,34,2]}
+{"kind":"textbox","id":"sh/o7qpg3ex","slide":9,"text":">","textPreview":">","textChars":1,"textLines":1,"bbox":[338,414,18,24]}
+{"kind":"shape","id":"sh/vy90je9c","slide":9,"bbox":[354,392,190,82]}
+{"kind":"textbox","id":"sh/6dcbulwv","slide":9,"text":"评价与 FAQ","textPreview":"评价与 FAQ","textChars":7,"textLines":1,"bbox":[372,410,154,28]}
+{"kind":"textbox","id":"sh/d4vmtwra","slide":9,"text":"review / faq","textPreview":"review / faq","textChars":12,"textLines":1,"bbox":[372,442,154,30]}
+{"kind":"shape","id":"sh/oj2t83it","slide":9,"bbox":[558,425,34,2]}
+{"kind":"textbox","id":"sh/z25kb6xk","slide":9,"text":">","textPreview":">","textChars":1,"textLines":1,"bbox":[590,414,18,24]}
+{"kind":"shape","id":"sh/6hcrmhk3","slide":9,"bbox":[606,392,220,82]}
+{"kind":"textbox","id":"sh/gfmlkjm1","slide":9,"text":"knowledge_chunk","textPreview":"knowledge_chunk","textChars":15,"textLines":1,"bbox":[624,410,184,28]}
+{"kind":"textbox","id":"sh/90je9cvi","slide":9,"text":"轻量知识库表","textPreview":"轻量知识库表","textChars":6,"textLines":1,"bbox":[624,442,184,30]}
+{"kind":"shape","id":"sh/yd0z6103","slide":9,"bbox":[842,425,34,2]}
+{"kind":"textbox","id":"sh/rytsvu9k","slide":9,"text":">","textPreview":">","textChars":1,"textLines":1,"bbox":[874,414,18,24]}
+{"kind":"shape","id":"sh/g7adsji5","slide":9,"bbox":[892,392,240,82]}
+{"kind":"textbox","id":"sh/9s36hcrm","slide":9,"text":"search_knowledge_base","textPreview":"search_knowledge_base","textChars":21,"textLines":1,"bbox":[910,410,204,28]}
+{"kind":"textbox","id":"sh/y1kre1w7","slide":9,"text":"Agent 工具调用","textPreview":"Agent 工具调用","textChars":10,"textLines":1,"bbox":[910,442,204,30]}
+{"kind":"textbox","id":"sh/rmhk3q5o","slide":9,"text":"RAG 在这里不是向量数据库大工程，而是围绕商品、评价和 FAQ 的可演示轻量检索。","textPreview":"RAG 在这里不是向量数据库大工程，而是围绕商品、评价和 FAQ 的可演示轻量检索。","textChars":42,"textLines":1,"bbox":[124,548,980,30]}
+{"kind":"textbox","id":"sh/g3ex0nux","slide":9,"text":"Smart Mall 智能商城答辩","textPreview":"Smart Mall 智能商城答辩","textChars":17,"textLines":1,"bbox":[72,676,420,22]}
+{"kind":"textbox","id":"sh/5o7qpg3e","slide":9,"text":"09","textPreview":"09","textChars":2,"textLines":1,"bbox":[1168,672,44,26]}
+{"kind":"notes","id":"nt/47qrm7","slide":9,"text":""}
+{"kind":"slide","id":"sl/gziajw","slide":10,"title":"HIGHLIGHT 03","textShapes":30}
+{"kind":"textbox","id":"sh/mp0bi9s3","slide":10,"text":"HIGHLIGHT 03","textPreview":"HIGHLIGHT 03","textChars":12,"textLines":1,"bbox":[72,50,520,28]}
+{"kind":"textbox","id":"sh/tgfmlkjm","slide":10,"text":"多步工具编排让导购从问答变成行动计划","textPreview":"多步工具编排让导购从问答变成行动计划","textChars":18,"textLines":1,"bbox":[72,82,1000,56]}
+{"kind":"textbox","id":"sh/4vmtwra5","slide":10,"text":"1","textPreview":"1","textChars":1,"textLines":1,"bbox":[82,204,54,54]}
+{"kind":"shape","id":"sh/bm58z25k","slide":10,"bbox":[72,196,72,72]}
+{"kind":"textbox","id":"sh/m1cfa9w3","slide":10,"text":"1","textPreview":"1","textChars":1,"textLines":1,"bbox":[82,210,52,38]}
+{"kind":"textbox","id":"sh/tsvu9kni","slide":10,"text":"识别场景","textPreview":"识别场景","textChars":4,"textLines":1,"bbox":[58,302,170,28]}
+{"kind":"textbox","id":"sh/47y1kre1","slide":10,"text":"礼物、宿舍、预算、用途","textPreview":"礼物、宿舍、预算、用途","textChars":11,"textLines":1,"bbox":[40,336,208,50]}
+{"kind":"shape","id":"sh/bq1oryts","slide":10,"bbox":[162,233,60,2]}
+{"kind":"textbox","id":"sh/m58z25kb","slide":10,"text":">","textPreview":">","textChars":1,"textLines":1,"bbox":[220,222,18,24]}
+{"kind":"textbox","id":"sh/o7qpg3ex","slide":10,"text":"2","textPreview":"2","textChars":1,"textLines":1,"bbox":[312,204,54,54]}
+{"kind":"shape","id":"sh/dsji5sne","slide":10,"bbox":[302,196,72,72]}
+{"kind":"textbox","id":"sh/61032lsz","slide":10,"text":"2","textPreview":"2","textChars":1,"textLines":1,"bbox":[312,210,52,38]}
+{"kind":"textbox","id":"sh/vmtwra5g","slide":10,"text":"检索商品","textPreview":"检索商品","textChars":4,"textLines":1,"bbox":[288,302,170,28]}
+{"kind":"textbox","id":"sh/oj2t83it","slide":10,"text":"search_products / recommend_by_preference","textPreview":"search_products / recommend_by_preference","textChars":41,"textLines":1,"bbox":[270,336,208,50]}
+{"kind":"shape","id":"sh/d4vmtwra","slide":10,"bbox":[392,233,60,2]}
+{"kind":"textbox","id":"sh/6dcbulwv","slide":10,"text":">","textPreview":">","textChars":1,"textLines":1,"bbox":[450,222,18,24]}
+{"kind":"textbox","id":"sh/vy90je9c","slide":10,"text":"3","textPreview":"3","textChars":1,"textLines":1,"bbox":[542,204,54,54]}
+{"kind":"shape","id":"sh/onyd0z61","slide":10,"bbox":[532,196,72,72]}
+{"kind":"textbox","id":"sh/d8v6psfi","slide":10,"text":"3","textPreview":"3","textChars":1,"textLines":1,"bbox":[542,210,52,38]}
+{"kind":"textbox","id":"sh/1cfa9w3m","slide":10,"text":"补充知识","textPreview":"补充知识","textChars":4,"textLines":1,"bbox":[518,302,170,28]}
+{"kind":"textbox","id":"sh/crmhk3q5","slide":10,"text":"search_knowledge_base 读取评价和 FAQ","textPreview":"search_knowledge_base 读取评价和 FAQ","textChars":31,"textLines":1,"bbox":[500,336,208,50]}
+{"kind":"shape","id":"sh/j6tovaho","slide":10,"bbox":[622,233,60,2]}
+{"kind":"textbox","id":"sh/ulwval87","slide":10,"text":">","textPreview":">","textChars":1,"textLines":1,"bbox":[680,222,18,24]}
+{"kind":"textbox","id":"sh/1kre1w7m","slide":10,"text":"4","textPreview":"4","textChars":1,"textLines":1,"bbox":[772,204,54,54]}
+{"kind":"shape","id":"sh/c3ylc7u5","slide":10,"bbox":[762,196,72,72]}
+{"kind":"textbox","id":"sh/ji5snelo","slide":10,"text":"4","textPreview":"4","textChars":1,"textLines":1,"bbox":[772,210,52,38]}
+{"kind":"textbox","id":"sh/uxc3ylc7","slide":10,"text":"生成方案","textPreview":"生成方案","textChars":4,"textLines":1,"bbox":[748,302,170,28]}
+{"kind":"textbox","id":"sh/1w7mp0bi","slide":10,"text":"build_purchase_plan 输出清单","textPreview":"build_purchase_plan 输出清单","textChars":24,"textLines":1,"bbox":[730,336,208,50]}
+{"kind":"shape","id":"sh/8bat47y1","slide":10,"bbox":[852,233,60,2]}
+{"kind":"textbox","id":"sh/m58z25kb","slide":10,"text":">","textPreview":">","textChars":1,"textLines":1,"bbox":[910,222,18,24]}
+{"kind":"textbox","id":"sh/bq1oryts","slide":10,"text":"5","textPreview":"5","textChars":1,"textLines":1,"bbox":[1002,204,54,54]}
+{"kind":"shape","id":"sh/4byhgn29","slide":10,"bbox":[992,196,72,72]}
+{"kind":"textbox","id":"sh/twra5gbq","slide":10,"text":"5","textPreview":"5","textChars":1,"textLines":1,"bbox":[1002,210,52,38]}
+{"kind":"textbox","id":"sh/mhk3q5o7","slide":10,"text":"确认动作","textPreview":"确认动作","textChars":4,"textLines":1,"bbox":[978,302,170,28]}
+{"kind":"textbox","id":"sh/b2hwfyxo","slide":10,"text":"用户确认后 add_to_cart","textPreview":"用户确认后 add_to_cart","textChars":17,"textLines":1,"bbox":[960,336,208,50]}
+{"kind":"shape","id":"sh/4nap4r65","slide":10,"bbox":[190,472,900,82]}
+{"kind":"textbox","id":"sh/t83itgfm","slide":10,"text":"答辩话术","textPreview":"答辩话术","textChars":4,"textLines":1,"bbox":[226,494,120,26]}
+{"kind":"textbox","id":"sh/mp0bi9s3","slide":10,"text":"这不是一次“调用模型生成文案”，而是单 Agent 根据意图选择工具、读取真实数据，再把结果组织成购物建议。","textPreview":"这不是一次“调用模型生成文案”，而是单 Agent 根据意图选择工具、读取真实数据，再把结果组织成购物建议。","textChars":54,"textLines":1,"bbox":[360,493,660,32]}
+{"kind":"textbox","id":"sh/bat47y1k","slide":10,"text":"Smart Mall 智能商城答辩","textPreview":"Smart Mall 智能商城答辩","textChars":17,"textLines":1,"bbox":[72,676,420,22]}
+{"kind":"textbox","id":"sh/f6dcbulw","slide":10,"text":"10","textPreview":"10","textChars":2,"textLines":1,"bbox":[1168,672,44,26]}
+{"kind":"notes","id":"nt/gziajw","slide":10,"text":""}
+{"kind":"slide","id":"sl/vlaxfr","slide":11,"title":"HIGHLIGHT 04","textShapes":16}
+{"kind":"textbox","id":"sh/r65wjudg","slide":11,"text":"HIGHLIGHT 04","textPreview":"HIGHLIGHT 04","textChars":12,"textLines":1,"bbox":[72,50,520,28]}
+{"kind":"textbox","id":"sh/gr2p8nqx","slide":11,"text":"动效工程留下了可隔离、可复测的诊断入口","textPreview":"动效工程留下了可隔离、可复测的诊断入口","textChars":19,"textLines":1,"bbox":[72,82,1000,56]}
+{"kind":"shape","id":"sh/9cvixcze","slide":11,"bbox":[98,210,300,128]}
+{"kind":"textbox","id":"sh/yxobm58z","slide":11,"text":"诊断开关","textPreview":"诊断开关","textChars":4,"textLines":1,"bbox":[118,230,260,22]}
+{"kind":"textbox","id":"sh/nih4byhg","slide":11,"text":"42","textPreview":"42","textChars":2,"textLines":1,"bbox":[118,258,260,44]}
+{"kind":"textbox","id":"sh/g3ex0nux","slide":11,"text":"knownFx 效果项可单独开关","textPreview":"knownFx 效果项可单独开关","textChars":16,"textLines":1,"bbox":[118,302,260,20]}
+{"kind":"shape","id":"sh/5o7qpg3e","slide":11,"bbox":[490,210,300,128]}
+{"kind":"textbox","id":"sh/y1kre1w7","slide":11,"text":"构建校验","textPreview":"构建校验","textChars":4,"textLines":1,"bbox":[510,230,260,22]}
+{"kind":"textbox","id":"sh/rmhk3q5o","slide":11,"text":"2","textPreview":"2","textChars":1,"textLines":1,"bbox":[510,258,260,44]}
+{"kind":"textbox","id":"sh/fa9w3m94","slide":11,"text":"普通构建与 VITE_PERF_HUD 构建","textPreview":"普通构建与 VITE_PERF_HUD 构建","textChars":22,"textLines":1,"bbox":[510,302,260,20]}
+{"kind":"shape","id":"sh/qpg3ex0n","slide":11,"bbox":[882,210,300,128]}
+{"kind":"textbox","id":"sh/xczed8v6","slide":11,"text":"真实测量","textPreview":"真实测量","textChars":4,"textLines":1,"bbox":[902,230,260,22]}
+{"kind":"textbox","id":"sh/8v6psfil","slide":11,"text":"CDP","textPreview":"CDP","textChars":3,"textLines":1,"bbox":[902,258,260,44]}
+{"kind":"textbox","id":"sh/fyxobm58","slide":11,"text":"perf-real-browser.mjs 连接 Chrome","textPreview":"perf-real-browser.mjs 连接 Chrome","textChars":31,"textLines":1,"bbox":[902,302,260,20]}
+{"kind":"shape","id":"sh/qd4vmtwr","slide":11,"bbox":[126,427,8,8]}
+{"kind":"textbox","id":"sh/x4nap4r6","slide":11,"text":"性能页不把“好看”当结论，而是把每个动画拆成可关闭、可单测的开关。","textPreview":"性能页不把“好看”当结论，而是把每个动画拆成可关闭、可单测的开关。","textChars":33,"textLines":1,"bbox":[148,420,980,40]}
+{"kind":"shape","id":"sh/8jqh0fep","slide":11,"bbox":[126,471,8,8]}
+{"kind":"textbox","id":"sh/fmlkjm1c","slide":11,"text":"当前文档明确记录：本次未连接到 localhost:9222，因此不伪造 FPS 数字。","textPreview":"当前文档明确记录：本次未连接到 localhost:9222，因此不伪造 FPS 数字。","textChars":44,"textLines":1,"bbox":[148,464,980,40]}
+{"kind":"shape","id":"sh/q1orytsv","slide":11,"bbox":[126,515,8,8]}
+{"kind":"textbox","id":"sh/y1kre1w7","slide":11,"text":"这页重点展示工程方法：有诊断入口、有普通构建隔离、有人工复测步骤。","textPreview":"这页重点展示工程方法：有诊断入口、有普通构建隔离、有人工复测步骤。","textChars":33,"textLines":1,"bbox":[148,508,980,40]}
+{"kind":"textbox","id":"sh/rmhk3q5o","slide":11,"text":"Smart Mall 智能商城答辩","textPreview":"Smart Mall 智能商城答辩","textChars":17,"textLines":1,"bbox":[72,676,420,22]}
+{"kind":"textbox","id":"sh/g7adsji5","slide":11,"text":"11","textPreview":"11","textChars":2,"textLines":1,"bbox":[1168,672,44,26]}
+{"kind":"notes","id":"nt/vlaxfr","slide":11,"text":""}
+{"kind":"slide","id":"sl/tkdo0w","slide":12,"title":"HIGHLIGHT 05","textShapes":19}
+{"kind":"textbox","id":"sh/hcrmhk3q","slide":12,"text":"HIGHLIGHT 05","textPreview":"HIGHLIGHT 05","textChars":12,"textLines":1,"bbox":[72,50,520,28]}
+{"kind":"textbox","id":"sh/al87ed8b","slide":12,"text":"下单事务用乐观锁把 100 个请求压回 80 个成功","textPreview":"下单事务用乐观锁把 100 个请求压回 80 个成功","textChars":26,"textLines":1,"bbox":[72,82,1000,56]}
+{"kind":"shape","id":"sh/z61032ls","slide":12,"bbox":[72,178,542,212]}
+{"kind":"textbox","id":"sh/sfil0rqd","slide":12,"text":"核心 SQL","textPreview":"核心 SQL","textChars":6,"textLines":1,"bbox":[104,208,180,28]}
+{"kind":"textbox","id":"sh/h0fepkzu","slide":12,"text":"UPDATE product\nSET stock = stock - ?,\n    version = version + 1\nWHERE id = ?\n  AND stock >= ?\n  AND version = ?","textPreview":"UPDATE product | SET stock = stock - ?, |     version = version + 1 | WHERE id = ? |   AND stock >= ? |   AND version = ?","textChars":111,"textLines":6,"bbox":[104,250,470,120]}
+{"kind":"shape","id":"sh/a9w3m94f","slide":12,"bbox":[690,178,210,118]}
+{"kind":"textbox","id":"sh/zupwb2hw","slide":12,"text":"并发请求","textPreview":"并发请求","textChars":4,"textLines":1,"bbox":[710,198,170,22]}
+{"kind":"textbox","id":"sh/obm58z25","slide":12,"text":"100","textPreview":"100","textChars":3,"textLines":1,"bbox":[710,226,170,44]}
+{"kind":"textbox","id":"sh/hwfyxobm","slide":12,"text":"PowerShell 并发脚本","textPreview":"PowerShell 并发脚本","textChars":15,"textLines":1,"bbox":[710,270,170,20]}
+{"kind":"shape","id":"sh/t83itgfm","slide":12,"bbox":[930,178,210,118]}
+{"kind":"textbox","id":"sh/4nap4r65","slide":12,"text":"成功订单","textPreview":"成功订单","textChars":4,"textLines":1,"bbox":[950,198,170,22]}
+{"kind":"textbox","id":"sh/b2hwfyxo","slide":12,"text":"80","textPreview":"80","textChars":2,"textLines":1,"bbox":[950,226,170,44]}
+{"kind":"textbox","id":"sh/mhk3q5o7","slide":12,"text":"库存 80 件刚好售完","textPreview":"库存 80 件刚好售完","textChars":11,"textLines":1,"bbox":[950,270,170,20]}
+{"kind":"shape","id":"sh/twra5gbq","slide":12,"bbox":[690,324,210,118]}
+{"kind":"textbox","id":"sh/4byhgn29","slide":12,"text":"失败请求","textPreview":"失败请求","textChars":4,"textLines":1,"bbox":[710,344,170,22]}
+{"kind":"textbox","id":"sh/bq1oryts","slide":12,"text":"20","textPreview":"20","textChars":2,"textLines":1,"bbox":[710,372,170,44]}
+{"kind":"textbox","id":"sh/m58z25kb","slide":12,"text":"库存不足或版本冲突","textPreview":"库存不足或版本冲突","textChars":9,"textLines":1,"bbox":[710,416,170,20]}
+{"kind":"shape","id":"sh/tsvu9kni","slide":12,"bbox":[930,324,210,118]}
+{"kind":"textbox","id":"sh/47y1kre1","slide":12,"text":"最终库存","textPreview":"最终库存","textChars":4,"textLines":1,"bbox":[950,344,170,22]}
+{"kind":"textbox","id":"sh/g3ex0nux","slide":12,"text":"0","textPreview":"0","textChars":1,"textLines":1,"bbox":[950,372,170,44]}
+{"kind":"textbox","id":"sh/5o7qpg3e","slide":12,"text":"stock=0, version=80","textPreview":"stock=0, version=80","textChars":19,"textLines":1,"bbox":[950,416,170,20]}
+{"kind":"textbox","id":"sh/yxobm58z","slide":12,"text":"验证结果: success=80 failed=20；数据库最终 stock=0、sales_count=80、version=80。","textPreview":"验证结果: success=80 failed=20；数据库最终 stock=0、sales_count=80、version=80。","textChars":67,"textLines":1,"bbox":[116,510,990,30]}
+{"kind":"textbox","id":"sh/nih4byhg","slide":12,"text":"Smart Mall 智能商城答辩","textPreview":"Smart Mall 智能商城答辩","textChars":17,"textLines":1,"bbox":[72,676,420,22]}
+{"kind":"textbox","id":"sh/gr2p8nqx","slide":12,"text":"12","textPreview":"12","textChars":2,"textLines":1,"bbox":[1168,672,44,26]}
+{"kind":"notes","id":"nt/tkdo0w","slide":12,"text":""}
+{"kind":"slide","id":"sl/74fttw","slide":13,"title":"REAL UI 01","textShapes":5}
+{"kind":"textbox","id":"sh/idonyd0z","slide":13,"text":"REAL UI 01","textPreview":"REAL UI 01","textChars":10,"textLines":1,"bbox":[72,50,520,28]}
+{"kind":"textbox","id":"sh/t47y1kre","slide":13,"text":"商品中心和 AI 聊天窗共用真实商品、订单数据","textPreview":"商品中心和 AI 聊天窗共用真实商品、订单数据","textChars":23,"textLines":1,"bbox":[72,82,1000,56]}
+{"kind":"shape","id":"sh/0je9cvix","slide":13,"bbox":[62,150,556,322]}
+{"kind":"shape","id":"sh/il0rqd4v","slide":13,"bbox":[656,150,556,322]}
+{"kind":"textbox","id":"sh/0rqd4vmt","slide":13,"text":"左侧是首页商品推荐和分类入口；右侧聊天窗展示了 query_order_status 工具调用后的真实订单状态。","textPreview":"左侧是首页商品推荐和分类入口；右侧聊天窗展示了 query_order_status 工具调用后的真实订单状态。","textChars":56,"textLines":1,"bbox":[130,526,1020,28]}
+{"kind":"textbox","id":"sh/bi9s36hc","slide":13,"text":"Smart Mall 智能商城答辩","textPreview":"Smart Mall 智能商城答辩","textChars":17,"textLines":1,"bbox":[72,676,420,22]}
+{"kind":"textbox","id":"sh/ixczed8v","slide":13,"text":"13","textPreview":"13","textChars":2,"textLines":1,"bbox":[1168,672,44,26]}
+{"kind":"image","id":"im/ulwval87","slide":13,"name":"","geometry":"roundRect","alt":"商品中心登录态截图","bbox":[72,160,536,302]}
+{"kind":"image","id":"im/crmhk3q5","slide":13,"name":"","geometry":"roundRect","alt":"AI 查询订单截图","bbox":[666,160,536,302]}
+{"kind":"notes","id":"nt/74fttw","slide":13,"text":""}
+{"kind":"slide","id":"sl/m0bja8","slide":14,"title":"REAL UI 02","textShapes":6}
+{"kind":"textbox","id":"sh/ed8v6psf","slide":14,"text":"REAL UI 02","textPreview":"REAL UI 02","textChars":10,"textLines":1,"bbox":[72,50,520,28]}
+{"kind":"textbox","id":"sh/p4r65wju","slide":14,"text":"购物车和订单页展示了交易链路的前台闭环","textPreview":"购物车和订单页展示了交易链路的前台闭环","textChars":19,"textLines":1,"bbox":[72,82,1000,56]}
+{"kind":"shape","id":"sh/wjudg7ad","slide":14,"bbox":[62,146,556,322]}
+{"kind":"shape","id":"sh/i5sneloj","slide":14,"bbox":[656,146,556,322]}
+{"kind":"shape","id":"sh/0bi9s36h","slide":14,"bbox":[132,527,8,8]}
+{"kind":"textbox","id":"sh/7ed8bat4","slide":14,"text":"购物车实时计算已选商品金额，并在数量变更时校验库存。","textPreview":"购物车实时计算已选商品金额，并在数量变更时校验库存。","textChars":26,"textLines":1,"bbox":[154,520,980,38]}
+{"kind":"shape","id":"sh/itgfmlkj","slide":14,"bbox":[132,569,8,8]}
+{"kind":"textbox","id":"sh/cvixczed","slide":14,"text":"订单页支持按状态筛选、模拟支付、取消、再次购买和详情入口。","textPreview":"订单页支持按状态筛选、模拟支付、取消、再次购买和详情入口。","textChars":29,"textLines":1,"bbox":[154,562,980,38]}
+{"kind":"textbox","id":"sh/5gbq1ory","slide":14,"text":"Smart Mall 智能商城答辩","textPreview":"Smart Mall 智能商城答辩","textChars":17,"textLines":1,"bbox":[72,676,420,22]}
+{"kind":"textbox","id":"sh/upwb2hwf","slide":14,"text":"14","textPreview":"14","textChars":2,"textLines":1,"bbox":[1168,672,44,26]}
+{"kind":"image","id":"im/adsji5sn","slide":14,"name":"","geometry":"roundRect","alt":"购物车截图","bbox":[72,156,536,302]}
+{"kind":"image","id":"im/sji5snel","slide":14,"name":"","geometry":"roundRect","alt":"订单中心截图","bbox":[666,156,536,302]}
+{"kind":"notes","id":"nt/m0bja8","slide":14,"text":""}
+{"kind":"slide","id":"sl/c29l5i","slide":15,"title":"REAL UI 03","textShapes":5}
+{"kind":"textbox","id":"sh/032lszqt","slide":15,"text":"REAL UI 03","textPreview":"REAL UI 03","textChars":10,"textLines":1,"bbox":[72,50,520,28]}
+{"kind":"textbox","id":"sh/bi9s36hc","slide":15,"text":"管理后台把运营数据、订单和售后放在同一工作台","textPreview":"管理后台把运营数据、订单和售后放在同一工作台","textChars":22,"textLines":1,"bbox":[72,82,1000,56]}
+{"kind":"shape","id":"sh/ixczed8v","slide":15,"bbox":[62,146,556,322]}
+{"kind":"shape","id":"sh/0fepkzup","slide":15,"bbox":[656,146,556,322]}
+{"kind":"textbox","id":"sh/i9s36hcr","slide":15,"text":"后台不是单独做一个 CRUD 表格，而是把低库存、热销、最近订单、售后、日志等答辩可讲的运营闭环集中展示。","textPreview":"后台不是单独做一个 CRUD 表格，而是把低库存、热销、最近订单、售后、日志等答辩可讲的运营闭环集中展示。","textChars":53,"textLines":1,"bbox":[120,520,1040,30]}
+{"kind":"textbox","id":"sh/t47y1kre","slide":15,"text":"Smart Mall 智能商城答辩","textPreview":"Smart Mall 智能商城答辩","textChars":17,"textLines":1,"bbox":[72,676,420,22]}
+{"kind":"textbox","id":"sh/0je9cvix","slide":15,"text":"15","textPreview":"15","textChars":2,"textLines":1,"bbox":[1168,672,44,26]}
+{"kind":"image","id":"im/0z61032l","slide":15,"name":"","geometry":"roundRect","alt":"管理员数据看板截图","bbox":[72,156,536,302]}
+{"kind":"image","id":"im/itgfmlkj","slide":15,"name":"","geometry":"roundRect","alt":"管理员售后管理截图","bbox":[666,156,536,302]}
+{"kind":"notes","id":"nt/c29l5i","slide":15,"text":""}
+{"kind":"slide","id":"sl/sgw59m","slide":16,"title":"VALIDATION","textShapes":18}
+{"kind":"textbox","id":"sh/ixczed8v","slide":16,"text":"VALIDATION","textPreview":"VALIDATION","textChars":10,"textLines":1,"bbox":[72,50,520,28]}
+{"kind":"textbox","id":"sh/tovahoza","slide":16,"text":"验证结果能支持现场演示，也暴露了需要收口的测试断言","textPreview":"验证结果能支持现场演示，也暴露了需要收口的测试断言","textChars":25,"textLines":1,"bbox":[72,82,1000,56]}
+{"kind":"shape","id":"sh/032lszqt","slide":16,"bbox":[72,174,260,118]}
+{"kind":"textbox","id":"sh/bulwval8","slide":16,"text":"后端测试","textPreview":"后端测试","textChars":4,"textLines":1,"bbox":[92,194,220,22]}
+{"kind":"textbox","id":"sh/i9s36hcr","slide":16,"text":"20/20","textPreview":"20/20","textChars":5,"textLines":1,"bbox":[92,222,220,44]}
+{"kind":"textbox","id":"sh/p0bi9s36","slide":16,"text":"mvn.cmd test BUILD SUCCESS","textPreview":"mvn.cmd test BUILD SUCCESS","textChars":26,"textLines":1,"bbox":[92,266,220,20]}
+{"kind":"shape","id":"sh/0fepkzup","slide":16,"bbox":[370,174,260,118]}
+{"kind":"textbox","id":"sh/byhgn29g","slide":16,"text":"并发库存","textPreview":"并发库存","textChars":4,"textLines":1,"bbox":[390,194,220,22]}
+{"kind":"textbox","id":"sh/idonyd0z","slide":16,"text":"80/100","textPreview":"80/100","textChars":6,"textLines":1,"bbox":[390,222,220,44]}
+{"kind":"textbox","id":"sh/c7u54zid","slide":16,"text":"库存 80 件，成功 80 单","textPreview":"库存 80 件，成功 80 单","textChars":15,"textLines":1,"bbox":[390,266,220,20]}
+{"kind":"shape","id":"sh/1orytsvu","slide":16,"bbox":[668,174,260,118]}
+{"kind":"textbox","id":"sh/u18jqh0f","slide":16,"text":"知识库","textPreview":"知识库","textChars":3,"textLines":1,"bbox":[688,194,220,22]}
+{"kind":"textbox","id":"sh/jm1cfa9w","slide":16,"text":"88","textPreview":"88","textChars":2,"textLines":1,"bbox":[688,222,220,44]}
+{"kind":"textbox","id":"sh/cfa9w3m9","slide":16,"text":"product/review/faq 运行态统计","textPreview":"product/review/faq 运行态统计","textChars":24,"textLines":1,"bbox":[688,266,220,20]}
+{"kind":"shape","id":"sh/1032lszq","slide":16,"bbox":[946,174,240,118]}
+{"kind":"textbox","id":"sh/u9knih4b","slide":16,"text":"Docker","textPreview":"Docker","textChars":6,"textLines":1,"bbox":[966,194,200,22]}
+{"kind":"textbox","id":"sh/judg7ads","slide":16,"text":"OK","textPreview":"OK","textChars":2,"textLines":1,"bbox":[966,222,200,44]}
+{"kind":"textbox","id":"sh/cj6tovah","slide":16,"text":"compose up -d --build","textPreview":"compose up -d --build","textChars":21,"textLines":1,"bbox":[966,266,200,20]}
+{"kind":"shape","id":"sh/54zidony","slide":16,"bbox":[96,370,1030,124]}
+{"kind":"textbox","id":"sh/9s36hcrm","slide":16,"text":"Agent 烟测的真实状态","textPreview":"Agent 烟测的真实状态","textChars":13,"textLines":1,"bbox":[132,394,260,28]}
+{"kind":"textbox","id":"sh/g7adsji5","slide":16,"text":"健康检查通过且 UI 实测 query_order_status 成功；严格脚本当前失败在 compare_products 断言，实际返回使用 get_product_detail + search_knowledge_base 完成对比。","textPreview":"健康检查通过且 UI 实测 query_order_status 成功；严格脚本当前失败在 compare_products 断言，实际返回使用 get_product_detail + search_knowledge_base 完成对比。","textChars":121,"textLines":1,"bbox":[132,432,920,36]}
+{"kind":"textbox","id":"sh/rmhk3q5o","slide":16,"text":"Smart Mall 智能商城答辩","textPreview":"Smart Mall 智能商城答辩","textChars":17,"textLines":1,"bbox":[72,676,420,22]}
+{"kind":"textbox","id":"sh/y1kre1w7","slide":16,"text":"16","textPreview":"16","textChars":2,"textLines":1,"bbox":[1168,672,44,26]}
+{"kind":"notes","id":"nt/sgw59m","slide":16,"text":""}
+{"kind":"slide","id":"sl/a0u9u9","slide":17,"title":"DEPLOYMENT","textShapes":18}
+{"kind":"textbox","id":"sh/dsji5sne","slide":17,"text":"DEPLOYMENT","textPreview":"DEPLOYMENT","textChars":10,"textLines":1,"bbox":[72,50,520,28]}
+{"kind":"textbox","id":"sh/61032lsz","slide":17,"text":"Docker Compose 让四个服务按同一套环境启动","textPreview":"Docker Compose 让四个服务按同一套环境启动","textChars":28,"textLines":1,"bbox":[72,82,1000,56]}
+{"kind":"shape","id":"sh/vmtwra5g","slide":17,"bbox":[96,236,210,104]}
+{"kind":"textbox","id":"sh/oj2t83it","slide":17,"text":"mysql","textPreview":"mysql","textChars":5,"textLines":1,"bbox":[114,254,174,28]}
+{"kind":"textbox","id":"sh/d4vmtwra","slide":17,"text":"3307 -> 3306\nseed.sql 初始化","textPreview":"3307 -> 3306 | seed.sql 初始化","textChars":25,"textLines":2,"bbox":[114,286,174,30]}
+{"kind":"shape","id":"sh/6dcbulwv","slide":17,"bbox":[362,236,210,104]}
+{"kind":"textbox","id":"sh/vy90je9c","slide":17,"text":"backend","textPreview":"backend","textChars":7,"textLines":1,"bbox":[380,254,174,28]}
+{"kind":"textbox","id":"sh/onyd0z61","slide":17,"text":"8081 -> 8080\nSpring Boot API","textPreview":"8081 -> 8080 | Spring Boot API","textChars":28,"textLines":2,"bbox":[380,286,174,30]}
+{"kind":"shape","id":"sh/d8v6psfi","slide":17,"bbox":[628,236,210,104]}
+{"kind":"textbox","id":"sh/twra5gbq","slide":17,"text":"agent-service","textPreview":"agent-service","textChars":13,"textLines":1,"bbox":[646,254,174,28]}
+{"kind":"textbox","id":"sh/4byhgn29","slide":17,"text":"8000\nFastAPI / LangChain","textPreview":"8000 | FastAPI / LangChain","textChars":24,"textLines":2,"bbox":[646,286,174,30]}
+{"kind":"shape","id":"sh/bq1oryts","slide":17,"bbox":[894,236,210,104]}
+{"kind":"textbox","id":"sh/m58z25kb","slide":17,"text":"frontend","textPreview":"frontend","textChars":8,"textLines":1,"bbox":[912,254,174,28]}
+{"kind":"textbox","id":"sh/t83itgfm","slide":17,"text":"80\nNginx 静态站点","textPreview":"80 | Nginx 静态站点","textChars":13,"textLines":2,"bbox":[912,286,174,30]}
+{"kind":"shape","id":"sh/4nap4r65","slide":17,"bbox":[306,287,42,2]}
+{"kind":"textbox","id":"sh/b2hwfyxo","slide":17,"text":">","textPreview":">","textChars":1,"textLines":1,"bbox":[346,276,18,24]}
+{"kind":"shape","id":"sh/mhk3q5o7","slide":17,"bbox":[572,287,42,2]}
+{"kind":"textbox","id":"sh/tgfmlkjm","slide":17,"text":">","textPreview":">","textChars":1,"textLines":1,"bbox":[612,276,18,24]}
+{"kind":"shape","id":"sh/4vmtwra5","slide":17,"bbox":[838,287,42,2]}
+{"kind":"textbox","id":"sh/gr2p8nqx","slide":17,"text":">","textPreview":">","textChars":1,"textLines":1,"bbox":[878,276,18,24]}
+{"kind":"shape","id":"sh/9cvixcze","slide":17,"bbox":[126,437,8,8]}
+{"kind":"textbox","id":"sh/ylc7u54z","slide":17,"text":"后端日志持久化到 backend_logs volume，关键下单和状态流转使用 INFO 日志。","textPreview":"后端日志持久化到 backend_logs volume，关键下单和状态流转使用 INFO 日志。","textChars":49,"textLines":1,"bbox":[148,430,980,38]}
+{"kind":"shape","id":"sh/r65wjudg","slide":17,"bbox":[126,479,8,8]}
+{"kind":"textbox","id":"sh/g3ex0nux","slide":17,"text":"Agent 日志记录工具调用、LLM 状态和 timing breakdown，现场可配合 docker compose logs 展示。","textPreview":"Agent 日志记录工具调用、LLM 状态和 timing breakdown，现场可配合 docker compose logs 展示。","textChars":69,"textLines":1,"bbox":[148,472,980,38]}
+{"kind":"shape","id":"sh/5o7qpg3e","slide":17,"bbox":[126,521,8,8]}
+{"kind":"textbox","id":"sh/yxobm58z","slide":17,"text":"本次 docker compose up -d --build 已成功重建并启动四个服务。","textPreview":"本次 docker compose up -d --build 已成功重建并启动四个服务。","textChars":45,"textLines":1,"bbox":[148,514,980,38]}
+{"kind":"textbox","id":"sh/nih4byhg","slide":17,"text":"Smart Mall 智能商城答辩","textPreview":"Smart Mall 智能商城答辩","textChars":17,"textLines":1,"bbox":[72,676,420,22]}
+{"kind":"textbox","id":"sh/g7adsji5","slide":17,"text":"17","textPreview":"17","textChars":2,"textLines":1,"bbox":[1168,672,44,26]}
+{"kind":"notes","id":"nt/a0u9u9","slide":17,"text":""}
+{"kind":"slide","id":"sl/uzf0y1","slide":18,"title":"CURRENT STATE","textShapes":14}
+{"kind":"textbox","id":"sh/rqd4vmtw","slide":18,"text":"CURRENT STATE","textPreview":"CURRENT STATE","textChars":13,"textLines":1,"bbox":[72,50,520,28]}
+{"kind":"textbox","id":"sh/kb6xkf6d","slide":18,"text":"已完成的主链路足够演示，待改进项也要讲诚实","textPreview":"已完成的主链路足够演示，待改进项也要讲诚实","textChars":21,"textLines":1,"bbox":[72,82,1000,56]}
+{"kind":"shape","id":"sh/9w3m94fu","slide":18,"bbox":[88,168,520,390]}
+{"kind":"shape","id":"sh/2t83itgf","slide":18,"bbox":[672,168,520,390]}
+{"kind":"textbox","id":"sh/re1w7mp0","slide":18,"text":"已完成","textPreview":"已完成","textChars":3,"textLines":1,"bbox":[122,198,180,32]}
+{"kind":"textbox","id":"sh/kzupwb2h","slide":18,"text":"待改进","textPreview":"待改进","textChars":3,"textLines":1,"bbox":[706,198,180,32]}
+{"kind":"shape","id":"sh/9knih4by","slide":18,"bbox":[124,261,8,8]}
+{"kind":"textbox","id":"sh/2p8nqxs7","slide":18,"text":"五大模块主链路可演示","textPreview":"五大模块主链路可演示","textChars":10,"textLines":1,"bbox":[146,254,410,44]}
+{"kind":"shape","id":"sh/ra5gbq1o","slide":18,"bbox":[124,309,8,8]}
+{"kind":"textbox","id":"sh/3m94fu18","slide":18,"text":"Agent 工具、记忆、RAG 知识库已接入","textPreview":"Agent 工具、记忆、RAG 知识库已接入","textChars":22,"textLines":1,"bbox":[146,302,410,44]}
+{"kind":"shape","id":"sh/a5gbq1or","slide":18,"bbox":[124,357,8,8]}
+{"kind":"textbox","id":"sh/lszqtcj6","slide":18,"text":"Docker Compose 四服务启动成功","textPreview":"Docker Compose 四服务启动成功","textChars":22,"textLines":1,"bbox":[146,350,410,44]}
+{"kind":"shape","id":"sh/s72x4nap","slide":18,"bbox":[124,405,8,8]}
+{"kind":"textbox","id":"sh/3ylc7u54","slide":18,"text":"后端 20 个测试全通过，并发扣库存通过","textPreview":"后端 20 个测试全通过，并发扣库存通过","textChars":20,"textLines":1,"bbox":[146,398,410,44]}
+{"kind":"shape","id":"sh/adsji5sn","slide":18,"bbox":[708,261,8,8]}
+{"kind":"textbox","id":"sh/h4byhgn2","slide":18,"text":"Agent 工具路由仍需让脚本断言更稳定","textPreview":"Agent 工具路由仍需让脚本断言更稳定","textChars":20,"textLines":1,"bbox":[730,254,410,44]}
+{"kind":"shape","id":"sh/sji5snel","slide":18,"bbox":[708,309,8,8]}
+{"kind":"textbox","id":"sh/za1gvy90","slide":18,"text":"搜索当前代码使用 LIKE，全文索引是升级预留","textPreview":"搜索当前代码使用 LIKE，全文索引是升级预留","textChars":23,"textLines":1,"bbox":[730,302,410,44]}
+{"kind":"shape","id":"sh/ap4r65wj","slide":18,"bbox":[708,357,8,8]}
+{"kind":"textbox","id":"sh/yd0z6103","slide":18,"text":"前端性能已有诊断脚本，FPS 数字仍需人工 CDP 实测","textPreview":"前端性能已有诊断脚本，FPS 数字仍需人工 CDP 实测","textChars":28,"textLines":1,"bbox":[730,350,410,44]}
+{"kind":"shape","id":"sh/rytsvu9k","slide":18,"bbox":[708,405,8,8]}
+{"kind":"textbox","id":"sh/gfmlkjm1","slide":18,"text":"Git 分支/PR 协作证据较弱，需答辩时如实说明","textPreview":"Git 分支/PR 协作证据较弱，需答辩时如实说明","textChars":25,"textLines":1,"bbox":[730,398,410,44]}
+{"kind":"textbox","id":"sh/90je9cvi","slide":18,"text":"Smart Mall 智能商城答辩","textPreview":"Smart Mall 智能商城答辩","textChars":17,"textLines":1,"bbox":[72,676,420,22]}
+{"kind":"textbox","id":"sh/y1kre1w7","slide":18,"text":"18","textPreview":"18","textChars":2,"textLines":1,"bbox":[1168,672,44,26]}
+{"kind":"notes","id":"nt/uzf0y1","slide":18,"text":""}
+{"kind":"slide","id":"sl/sxhu5k","slide":19,"title":"TEAM & AI WORKFLOW","textShapes":20}
+{"kind":"textbox","id":"sh/ap4r65wj","slide":19,"text":"TEAM & AI WORKFLOW","textPreview":"TEAM & AI WORKFLOW","textChars":18,"textLines":1,"bbox":[72,50,520,28]}
+{"kind":"textbox","id":"sh/hgn29gr2","slide":19,"text":"分工按模块拆解，集成按演示链路收束","textPreview":"分工按模块拆解，集成按演示链路收束","textChars":17,"textLines":1,"bbox":[72,82,1000,56]}
+{"kind":"shape","id":"sh/svu9knih","slide":19,"bbox":[86,214,1050,1]}
+{"kind":"textbox","id":"sh/zidonyd0","slide":19,"text":"用户与认证","textPreview":"用户与认证","textChars":5,"textLines":1,"bbox":[120,166,260,32]}
+{"kind":"textbox","id":"sh/a1gvy90j","slide":19,"text":"注册登录 / JWT / 个人中心","textPreview":"注册登录 / JWT / 个人中心","textChars":17,"textLines":1,"bbox":[420,170,430,26]}
+{"kind":"textbox","id":"sh/hoza1gvy","slide":19,"text":"模块职责","textPreview":"模块职责","textChars":4,"textLines":1,"bbox":[934,170,150,24]}
+{"kind":"shape","id":"sh/s36hcrmh","slide":19,"bbox":[86,292,1050,1]}
+{"kind":"textbox","id":"sh/3m94fu18","slide":19,"text":"商品与搜索","textPreview":"商品与搜索","textChars":5,"textLines":1,"bbox":[120,244,260,32]}
+{"kind":"textbox","id":"sh/a5gbq1or","slide":19,"text":"分类 / 商品 CRUD / 搜索分页","textPreview":"分类 / 商品 CRUD / 搜索分页","textChars":19,"textLines":1,"bbox":[420,248,430,26]}
+{"kind":"textbox","id":"sh/kf6dcbul","slide":19,"text":"模块职责","textPreview":"模块职责","textChars":4,"textLines":1,"bbox":[934,248,150,24]}
+{"kind":"shape","id":"sh/d0z61032","slide":19,"bbox":[86,370,1050,1]}
+{"kind":"textbox","id":"sh/29gr2p8n","slide":19,"text":"订单与库存","textPreview":"订单与库存","textChars":5,"textLines":1,"bbox":[120,322,260,32]}
+{"kind":"textbox","id":"sh/vu9knih4","slide":19,"text":"购物车 / 下单事务 / 状态机","textPreview":"购物车 / 下单事务 / 状态机","textChars":16,"textLines":1,"bbox":[420,326,430,26]}
+{"kind":"textbox","id":"sh/knih4byh","slide":19,"text":"模块职责","textPreview":"模块职责","textChars":4,"textLines":1,"bbox":[934,326,150,24]}
+{"kind":"shape","id":"sh/d8bat47y","slide":19,"bbox":[86,448,1050,1]}
+{"kind":"textbox","id":"sh/2lszqtcj","slide":19,"text":"AI 助手","textPreview":"AI 助手","textChars":5,"textLines":1,"bbox":[120,400,260,32]}
+{"kind":"textbox","id":"sh/v6psfil0","slide":19,"text":"LangChain 工具 / 记忆 / RAG","textPreview":"LangChain 工具 / 记忆 / RAG","textChars":23,"textLines":1,"bbox":[420,404,430,26]}
+{"kind":"textbox","id":"sh/kre1w7mp","slide":19,"text":"答辩重点","textPreview":"答辩重点","textChars":4,"textLines":1,"bbox":[934,404,150,24]}
+{"kind":"shape","id":"sh/dcbulwva","slide":19,"bbox":[86,526,1050,1]}
+{"kind":"textbox","id":"sh/h0fepkzu","slide":19,"text":"文档与答辩","textPreview":"文档与答辩","textChars":5,"textLines":1,"bbox":[120,478,260,32]}
+{"kind":"textbox","id":"sh/sfil0rqd","slide":19,"text":"ER / API / 架构 / PPT / QA","textPreview":"ER / API / 架构 / PPT / QA","textChars":24,"textLines":1,"bbox":[420,482,430,26]}
+{"kind":"textbox","id":"sh/zupwb2hw","slide":19,"text":"模块职责","textPreview":"模块职责","textChars":4,"textLines":1,"bbox":[934,482,150,24]}
+{"kind":"textbox","id":"sh/a9w3m94f","slide":19,"text":"AI 辅助开发的价值在于加速产出，但最终用测试、日志和源码审计兜底，而不是相信生成结果天然正确。","textPreview":"AI 辅助开发的价值在于加速产出，但最终用测试、日志和源码审计兜底，而不是相信生成结果天然正确。","textChars":48,"textLines":1,"bbox":[128,596,980,30]}
+{"kind":"textbox","id":"sh/hcrmhk3q","slide":19,"text":"Smart Mall 智能商城答辩","textPreview":"Smart Mall 智能商城答辩","textChars":17,"textLines":1,"bbox":[72,676,420,22]}
+{"kind":"textbox","id":"sh/orytsvu9","slide":19,"text":"19","textPreview":"19","textChars":2,"textLines":1,"bbox":[1168,672,44,26]}
+{"kind":"notes","id":"nt/sxhu5k","slide":19,"text":""}
+{"kind":"slide","id":"sl/645qkj","slide":20,"title":"CLOSING","textShapes":6}
+{"kind":"textbox","id":"sh/p8nqxs72","slide":20,"text":"CLOSING","textPreview":"CLOSING","textChars":7,"textLines":1,"bbox":[72,96,260,24]}
+{"kind":"textbox","id":"sh/ih4byhgn","slide":20,"text":"我们交付的是一个能讲清楚、跑得起来、\n查得到证据的智能商城闭环","textPreview":"我们交付的是一个能讲清楚、跑得起来、 | 查得到证据的智能商城闭环","textChars":31,"textLines":2,"bbox":[72,154,1040,130]}
+{"kind":"textbox","id":"sh/72x4nap4","slide":20,"text":"核心演示顺序：登录 -> 搜索商品 -> 加购下单 -> 订单状态 -> AI 查单/推荐 -> 后台运营 -> 日志与验证。","textPreview":"核心演示顺序：登录 -> 搜索商品 -> 加购下单 -> 订单状态 -> AI 查单/推荐 -> 后台运营 -> 日志与验证。","textChars":63,"textLines":1,"bbox":[78,340,980,34]}
+{"kind":"shape","id":"sh/0z61032l","slide":20,"bbox":[76,456,1050,88]}
+{"kind":"textbox","id":"sh/pkzupwb2","slide":20,"text":"欢迎提问：架构边界、Agent 工具调用、并发事务、Docker 部署和测试证据都可以展开。","textPreview":"欢迎提问：架构边界、Agent 工具调用、并发事务、Docker 部署和测试证据都可以展开。","textChars":46,"textLines":1,"bbox":[112,486,980,32]}
+{"kind":"textbox","id":"sh/itgfmlkj","slide":20,"text":"Smart Mall 智能商城答辩","textPreview":"Smart Mall 智能商城答辩","textChars":17,"textLines":1,"bbox":[72,676,420,22]}
+{"kind":"textbox","id":"sh/7ed8bat4","slide":20,"text":"20","textPreview":"20","textChars":2,"textLines":1,"bbox":[1168,672,44,26]}
+{"kind":"notes","id":"nt/645qkj","slide":20,"text":""}
