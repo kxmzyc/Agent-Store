@@ -9,6 +9,7 @@ import io.restassured.http.ContentType;
 import java.time.LocalDateTime;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -87,6 +88,16 @@ class BusinessFlowHttpIntegrationTest {
     given().auth().oauth2(userToken).contentType(ContentType.JSON).body(productRequest)
         .post("/api/products").then().statusCode(403);
 
+    Map<String, Object> negativePriceRequest = productRequest(category.id, "HTTP invalid price " + suffix, 3);
+    negativePriceRequest.put("price", "-1.00");
+    given().auth().oauth2(adminToken).contentType(ContentType.JSON).body(negativePriceRequest)
+        .post("/api/products").then().statusCode(400);
+
+    Map<String, Object> negativeStockRequest = productRequest(category.id, "HTTP invalid stock " + suffix, 3);
+    negativeStockRequest.put("stock", -1);
+    given().auth().oauth2(adminToken).contentType(ContentType.JSON).body(negativeStockRequest)
+        .post("/api/products").then().statusCode(400);
+
     Long productId = number(given().auth().oauth2(adminToken).contentType(ContentType.JSON).body(productRequest)
         .post("/api/products").then().statusCode(201).body("name", equalTo(productRequest.get("name")))
         .extract().path("id"));
@@ -161,7 +172,7 @@ class BusinessFlowHttpIntegrationTest {
   }
 
   private Map<String, Object> productRequest(Long categoryId, String name, int stock) {
-    return Map.of(
+    return new HashMap<>(Map.of(
         "categoryId", categoryId,
         "name", name,
         "description", "HTTP integration product",
@@ -169,7 +180,7 @@ class BusinessFlowHttpIntegrationTest {
         "stock", stock,
         "imageUrl", "",
         "status", 1,
-        "tagIds", List.of());
+        "tagIds", List.of()));
   }
 
   private Long number(Object value) {

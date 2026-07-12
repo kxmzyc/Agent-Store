@@ -37,7 +37,8 @@ public class ApiSupport {
 
   public record CategoryResponse(Long id, String name, Long parentId, Integer sortOrder, List<CategoryResponse> children) {}
   public record ProductRequest(@NotNull Long categoryId, @NotBlank String name, String description,
-                               @NotNull BigDecimal price, @NotNull Integer stock, String imageUrl, Integer status,
+                               @NotNull @Positive(message = "价格必须大于0") BigDecimal price,
+                               @NotNull @PositiveOrZero(message = "库存不能为负数") Integer stock, String imageUrl, Integer status,
                                List<Long> tagIds) {}
   public record TagResponse(Long id, String name) {
     public static TagResponse from(ProductTag tag) {

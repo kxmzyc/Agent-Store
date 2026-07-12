@@ -150,9 +150,13 @@
             </select>
           </label>
           <label>描述 <textarea v-model="form.description" /></label>
-          <label>价格 <input v-model.number="form.price" type="number" min="0" step="0.01" required /></label>
+          <label>价格 <input v-model.number="form.price" type="number" min="0.01" step="0.01" required /></label>
           <label>库存 <input v-model.number="form.stock" type="number" min="0" required /></label>
-          <label>图片 URL <input v-model="form.imageUrl" /></label>
+          <label>上传图片
+            <input type="file" accept="image/jpeg,image/png,image/gif,image/webp" :disabled="uploadingImage" @change="uploadImage" />
+            <small v-if="uploadingImage">图片上传中...</small>
+          </label>
+          <label>图片 URL（可手动填写） <input v-model="form.imageUrl" /></label>
           <label>商品标签
             <select v-model="form.tagIds" multiple size="3">
               <option v-for="tag in allTags" :key="tag.id" :value="tag.id">{{ tag.name }}</option>
@@ -551,6 +555,7 @@ const orderChartRef = ref(null)
 const categoryChartRef = ref(null)
 const editing = ref(false)
 const form = reactive(blank())
+const uploadingImage = ref(false)
 const toast = useToast()
 const productFilters = reactive({ keyword: '', categoryId: null, status: 'all' })
 const feedbackReplies = reactive({})
@@ -734,6 +739,24 @@ async function save() {
     await refreshAdminData()
   } catch (e) {
     toast.show(errorMessage(e))
+  }
+}
+
+async function uploadImage(event) {
+  const file = event.target.files?.[0]
+  if (!file) return
+  const payload = new FormData()
+  payload.append('file', file)
+  uploadingImage.value = true
+  try {
+    const { data } = await api.post('/products/upload-image', payload)
+    form.imageUrl = data.imageUrl
+    toast.show('图片已上传')
+  } catch (e) {
+    toast.show(errorMessage(e))
+  } finally {
+    uploadingImage.value = false
+    event.target.value = ''
   }
 }
 

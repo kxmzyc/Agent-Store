@@ -4,12 +4,14 @@ import com.example.smartmall.api.ApiSupport.AfterSaleApplyRequest;
 import com.example.smartmall.api.ApiSupport.AfterSaleHandleRequest;
 import com.example.smartmall.api.BizException;
 import com.example.smartmall.domain.Coupon;
+import com.example.smartmall.domain.PointRecord;
 import com.example.smartmall.domain.Product;
 import com.example.smartmall.domain.User;
 import com.example.smartmall.domain.UserCoupon;
 import com.example.smartmall.repo.AfterSaleRequestRepository;
 import com.example.smartmall.repo.CouponRepository;
 import com.example.smartmall.repo.OrderRepository;
+import com.example.smartmall.repo.PointRecordRepository;
 import com.example.smartmall.repo.ProductRepository;
 import com.example.smartmall.repo.UserCouponRepository;
 import com.example.smartmall.repo.UserRepository;
@@ -18,7 +20,13 @@ import com.example.smartmall.service.OrderService;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -39,6 +47,7 @@ class AfterSaleServiceIntegrationTest {
   @Autowired AfterSaleRequestRepository afterSales;
   @Autowired CouponRepository coupons;
   @Autowired UserCouponRepository userCoupons;
+  @Autowired PointRecordRepository pointRecords;
   @Autowired PasswordEncoder passwordEncoder;
 
   @Test
@@ -139,6 +148,98 @@ class AfterSaleServiceIntegrationTest {
         .hasMessageContaining("已有售后记录");
     assertThat(afterSales.findAll().stream().filter(request -> request.orderId.equals(created.orderId())).count())
         .isEqualTo(1);
+  }
+
+  @Test
+  void completedOrderRefundReversesAwardedPointsOnlyOnce() {
+    User user = user("completed_refund_points_user");
+    Product product = product("Completed Refund Points Product", "120.00", 2);
+    var created = orderService.createDirect(user.id, product.id, 1, "test address", null, false);
+    orderService.pay(user.id, created.orderId());
+    orderService.ship(created.orderId());
+    orderService.confirm(user.id, created.orderId());
+
+    assertThat(users.findById(user.id).orElseThrow().points).isEqualTo(120);
+    var applied = afterSaleService.apply(user.id, created.orderId(), new AfterSaleApplyRequest(1, "refund points"));
+    afterSaleService.approve(applied.id(), new AfterSaleHandleRequest("approved"));
+
+    String reversalReason = "退款订单 " + created.orderNo() + " 积分回滚";
+    List<PointRecord> reversals = pointRecords.findByUserIdAndReason(user.id, reversalReason);
+    assertThat(users.findById(user.id).orElseThrow().points).isZero();
+    assertThat(reversals).singleElement().extracting(record -> record.delta).isEqualTo(-120);
+    assertThatThrownBy(() -> afterSaleService.approve(applied.id(), new AfterSaleHandleRequest("duplicate")))
+        .isInstanceOf(BizException.class);
+    assertThat(pointRecords.findByUserIdAndReason(user.id, reversalReason)).hasSize(1);
+  }
+
+  @Test
+  void completedOrderRefundNeverMakesPointsNegative() {
+    User user = user("completed_refund_low_points_user");
+    Product product = product("Completed Refund Low Points Product", "100.00", 2);
+    var created = orderService.createDirect(user.id, product.id, 1, "test address", null, false);
+    orderService.pay(user.id, created.orderId());
+    orderService.ship(created.orderId());
+    orderService.confirm(user.id, created.orderId());
+
+    User afterSpendingPoints = users.findById(user.id).orElseThrow();
+    afterSpendingPoints.points = 25;
+    users.save(afterSpendingPoints);
+    var applied = afterSaleService.apply(user.id, created.orderId(), new AfterSaleApplyRequest(1, "refund remaining points"));
+    afterSaleService.approve(applied.id(), new AfterSaleHandleRequest("approved"));
+
+    List<PointRecord> reversals = pointRecords.findByUserIdAndReason(user.id,
+        "退款订单 " + created.orderNo() + " 积分回滚");
+    assertThat(users.findById(user.id).orElseThrow().points).isZero();
+    assertThat(reversals).singleElement().extracting(record -> record.delta).isEqualTo(-25);
+  }
+
+  @Test
+  void concurrentApprovalsApplyRefundAndPointReversalOnlyOnce() throws Exception {
+    User user = user("concurrent_refund_user");
+    Product product = product("Concurrent Refund Product", "100.00", 1);
+    var created = orderService.createDirect(user.id, product.id, 1, "test address", null, false);
+    orderService.pay(user.id, created.orderId());
+    orderService.ship(created.orderId());
+    orderService.confirm(user.id, created.orderId());
+    var applied = afterSaleService.apply(user.id, created.orderId(), new AfterSaleApplyRequest(2, "concurrent refund"));
+
+    CountDownLatch ready = new CountDownLatch(2);
+    CountDownLatch start = new CountDownLatch(1);
+    ExecutorService executor = Executors.newFixedThreadPool(2);
+    try {
+      var approvals = List.of(
+          executor.submit(() -> approveAfter(start, ready, applied.id())),
+          executor.submit(() -> approveAfter(start, ready, applied.id())));
+      assertThat(ready.await(5, TimeUnit.SECONDS)).isTrue();
+      start.countDown();
+
+      int successes = 0;
+      int rejected = 0;
+      for (var approval : approvals) {
+        try {
+          approval.get(10, TimeUnit.SECONDS);
+          successes++;
+        } catch (ExecutionException exception) {
+          assertThat(exception.getCause()).isInstanceOf(BizException.class);
+          rejected++;
+        }
+      }
+
+      assertThat(successes).isEqualTo(1);
+      assertThat(rejected).isEqualTo(1);
+      assertThat(products.findById(product.id).orElseThrow().stock).isEqualTo(1);
+      assertThat(users.findById(user.id).orElseThrow().points).isZero();
+      assertThat(pointRecords.findByUserIdAndReason(user.id,
+          "退款订单 " + created.orderNo() + " 积分回滚")).hasSize(1);
+    } finally {
+      executor.shutdownNow();
+    }
+  }
+
+  private Object approveAfter(CountDownLatch start, CountDownLatch ready, Long requestId) throws Exception {
+    ready.countDown();
+    assertThat(start.await(5, TimeUnit.SECONDS)).isTrue();
+    return afterSaleService.approve(requestId, new AfterSaleHandleRequest("concurrent approval"));
   }
 
   private User user(String prefix) {

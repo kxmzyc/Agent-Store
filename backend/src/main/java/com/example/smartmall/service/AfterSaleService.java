@@ -23,15 +23,17 @@ public class AfterSaleService {
   private final OrderItemRepository orderItems;
   private final ProductRepository products;
   private final UserCouponRepository userCoupons;
+  private final PointService pointService;
 
   public AfterSaleService(AfterSaleRequestRepository afterSales, OrderRepository orders,
                           OrderItemRepository orderItems, ProductRepository products,
-                          UserCouponRepository userCoupons) {
+                          UserCouponRepository userCoupons, PointService pointService) {
     this.afterSales = afterSales;
     this.orders = orders;
     this.orderItems = orderItems;
     this.products = products;
     this.userCoupons = userCoupons;
+    this.pointService = pointService;
   }
 
   @Transactional
@@ -72,7 +74,8 @@ public class AfterSaleService {
 
   @Transactional
   public AfterSaleResponse approve(Long id, AfterSaleHandleRequest request) {
-    AfterSaleRequest entity = afterSales.findById(id).orElseThrow(() -> BizException.notFound("售后申请不存在"));
+    AfterSaleRequest entity = afterSales.findByIdForUpdate(id)
+        .orElseThrow(() -> BizException.notFound("售后申请不存在"));
     requirePending(entity);
     Order order = orders.findById(entity.orderId).orElseThrow(() -> BizException.notFound("订单不存在"));
 
@@ -85,6 +88,9 @@ public class AfterSaleService {
       coupon.status = 0;
       coupon.usedOrderId = null;
       userCoupons.save(coupon);
+    }
+    if ("COMPLETED".equals(order.status)) {
+      pointService.reverseCompletedOrderAward(order.userId, order.totalAmount, order.orderNo);
     }
 
     order.status = "REFUNDED";
@@ -99,7 +105,8 @@ public class AfterSaleService {
 
   @Transactional
   public AfterSaleResponse reject(Long id, AfterSaleHandleRequest request) {
-    AfterSaleRequest entity = afterSales.findById(id).orElseThrow(() -> BizException.notFound("售后申请不存在"));
+    AfterSaleRequest entity = afterSales.findByIdForUpdate(id)
+        .orElseThrow(() -> BizException.notFound("售后申请不存在"));
     requirePending(entity);
     entity.status = 2;
     entity.handledAt = LocalDateTime.now();
