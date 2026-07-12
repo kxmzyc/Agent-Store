@@ -1072,6 +1072,19 @@ def extract_product_id(message: str) -> int | None:
     return None
 
 
+def extract_compare_product_ids(message: str) -> list[int]:
+    """Extract only explicit product IDs so budgets and other numbers are ignored."""
+    if not any(word in message for word in ["对比", "比较", "哪个好"]):
+        return []
+    matches = re.findall(r"(?:商品\s*)?(?:ID|编号)\s*[:：]?\s*(\d+)", message, re.IGNORECASE)
+    ids: list[int] = []
+    for value in matches:
+        product_id = int(value)
+        if product_id not in ids:
+            ids.append(product_id)
+    return ids[:4]
+
+
 def extract_quantity(message: str) -> int:
     match = re.search(r"(\d+)\s*(?:件|个|台|把|份)", message)
     if match:
@@ -1313,6 +1326,15 @@ def with_next_step(reply: str, suggestion: str) -> str:
     return f"{reply.rstrip()}\n\n下一步：{suggestion}"
 
 
+def deterministic_compare(message: str) -> tuple[str, list[str]]:
+    product_ids = extract_compare_product_ids(message)
+    if len(product_ids) < 2:
+        raise ValueError("至少需要两个明确的商品 ID 才能进行对比")
+    tool_result = compare_products.invoke({"product_ids": product_ids})
+    reply = f"我查到这些真实商品信息，方便你对比：\n{tool_result}"
+    return with_next_step(reply, "你更在意预算、静音，还是性能？我可以据此帮你选一款。"), ["compare_products"]
+
+
 def offline_agent(user_id: int, tags: list[str], message: str, session_id: str) -> tuple[str, list[str]]:
     pending_key = memory_key(user_id, "__pending_cart__")
     if is_confirmation(message) and pending_key in pending_cart_actions:
@@ -1332,11 +1354,8 @@ def offline_agent(user_id: int, tags: list[str], message: str, session_id: str) 
         return "我是智能商城导购助手，主要帮你查商品、做推荐、查订单和解释商城规则，这类问题我不能可靠回答。", []
 
     budget = extract_budget(message)
-    if any(word in message for word in ["对比", "比较", "哪个好"]):
-        ids = [int(value) for value in re.findall(r"\d+", message)[:4]]
-        if len(ids) >= 2:
-            tool_result = compare_products.invoke({"product_ids": ids})
-            return with_next_step(f"我查到这些真实商品信息，方便你对比：\n{tool_result}", "你更在意预算、静音，还是性能？我可以据此帮你选一款。"), ["compare_products"]
+    if len(extract_compare_product_ids(message)) >= 2:
+        return deterministic_compare(message)
 
     if any(word in message for word in ["详情", "详细", "具体参数", "介绍一下"]):
         product_id = extract_product_id(message)
@@ -1547,6 +1566,13 @@ def handle_chat(
                 reply, tools_used = advance_purchase_plan(user_id, request.sessionId, tags, message)
             except Exception as tool_exc:
                 reply = f"服务暂时无法完成购买方案：{tool_exc}"
+                tools_used = []
+        elif len(extract_compare_product_ids(message)) >= 2:
+            try:
+                logger.info("using deterministic compare route, user_id=%s, message=%s", user_id, message)
+                reply, tools_used = deterministic_compare(message)
+            except Exception as tool_exc:
+                reply = f"服务暂时无法完成商品对比：{tool_exc}"
                 tools_used = []
         else:
             try:

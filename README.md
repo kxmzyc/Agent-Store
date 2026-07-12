@@ -183,18 +183,65 @@ $chatBody = @{
   sessionId = [guid]::NewGuid().ToString()
   message = '有没有适合敲代码的键盘，预算500'
 } | ConvertTo-Json
+$chatBodyBytes = [System.Text.Encoding]::UTF8.GetBytes($chatBody)
 
 Invoke-RestMethod `
   -Method Post `
   -Uri http://127.0.0.1:8000/agent/chat `
   -Headers $headers `
-  -ContentType 'application/json' `
-  -Body $chatBody
+  -ContentType 'application/json; charset=utf-8' `
+  -Body $chatBodyBytes
 ```
 
 返回值中的 `toolsUsed` 可以用来确认 Agent 是否实际调用了商品或订单工具。开启一个新 `sessionId` 后再次询问推荐内容，可以观察长期偏好记忆效果。
 
-## 8. 常用验证命令
+## 8. 发布前运行验证（推送 GitHub 前必做）
+
+每次准备向 GitHub 推送代码时，先在项目根目录执行一次完整的运行验证。目标不是只确认镜像能构建，而是确认四个容器能启动、健康检查能通过，并且登录和商品接口可以完成一次真实请求。任意一步失败都不要推送，先查看日志并修复后重新执行。
+
+```powershell
+# 1. 构建并启动完整运行环境
+docker compose up -d --build
+
+# 2. 确认四个服务都处于 healthy/running
+docker compose ps
+
+# 3. 检查前端、主后端和 Agent 的 HTTP 健康状态
+$checks = @(
+  @{ Name = 'frontend'; Url = 'http://127.0.0.1/' },
+  @{ Name = 'backend'; Url = 'http://127.0.0.1:8081/health' },
+  @{ Name = 'agent'; Url = 'http://127.0.0.1:8000/health' }
+)
+foreach ($check in $checks) {
+  $response = Invoke-WebRequest -Uri $check.Url -UseBasicParsing
+  if ($response.StatusCode -ne 200) {
+    throw "$($check.Name) health check failed: $($response.StatusCode)"
+  }
+  Write-Host "$($check.Name): OK"
+}
+
+# 4. 登录并请求商品列表，验证 JWT、后端和数据库链路
+$loginBody = @{ username = 'alice'; password = '123456' } | ConvertTo-Json
+$login = Invoke-RestMethod `
+  -Method Post `
+  -Uri http://127.0.0.1:8081/api/auth/login `
+  -ContentType 'application/json' `
+  -Body $loginBody
+if (-not $login.accessToken) { throw 'login did not return accessToken' }
+$headers = @{ Authorization = "Bearer $($login.accessToken)" }
+$products = Invoke-RestMethod `
+  -Uri 'http://127.0.0.1:8081/api/products?page=1&size=1' `
+  -Headers $headers
+if ($null -eq $products.list) { throw 'product API did not return list' }
+Write-Host 'login and product API: OK'
+
+# 5. 查看最近日志；确认没有启动级 ERROR
+docker compose logs --tail=100 backend agent-service
+```
+
+验证通过后再执行 `git add`、`git commit` 和 `git push`。如果只想停止容器而保留数据库数据，使用 `docker compose down`；不要在发布验证后使用 `down -v`，否则会删除本地测试数据。服务启动失败时先执行 `docker compose logs -f mysql backend agent-service`，修复后从第 1 步重新开始。
+
+## 9. 常用验证命令
 
 以下命令在对应目录执行，适合提交前或答辩前自检：
 
@@ -224,7 +271,7 @@ docker compose logs -f backend
 docker compose logs -f agent-service
 ```
 
-## 9. 数据库初始化与重置
+## 10. 数据库初始化与重置
 
 `database/schema.sql` 和 `database/seed.sql` 通过只读挂载进入 MySQL 的 `/docker-entrypoint-initdb.d/`，MySQL 官方镜像只在数据目录为空时执行它们。普通重启不要删除数据卷：
 
@@ -239,7 +286,7 @@ docker compose down -v
 docker compose up -d --build
 ```
 
-## 10. 本地开发（可选）
+## 11. 本地开发（可选）
 
 Docker 运行稳定后，可以按服务单独调试。后端和 Agent 仍需要连接 MySQL，并设置与 `.env` 等价的环境变量；本地 Python 进程不会自动读取 `.env` 文件。
 
@@ -262,7 +309,7 @@ python start_agent_local.py
 
 前端开发服务器会把 `/api` 和 `/agent` 代理到本机的 8081、8000 端口。若只调试前端，直接使用 Docker 中的后端和 Agent 即可。
 
-## 11. 关键接口
+## 12. 关键接口
 
 | 模块 | 方法 | 路径 | 说明 |
 | --- | --- | --- | --- |
@@ -281,7 +328,7 @@ python start_agent_local.py
 
 除游客可访问的商品浏览接口外，用户资料、购物车、订单和 Agent 接口都需要 `Authorization: Bearer <accessToken>`。管理员商品维护接口还需要 ADMIN 角色。
 
-## 12. 配置说明
+## 13. 配置说明
 
 | 变量 | 必填 | 用途 |
 | --- | --- | --- |
@@ -295,7 +342,7 @@ python start_agent_local.py
 
 Compose 会根据上述变量自动生成容器内的 `DATABASE_URL` 和 `BACKEND_BASE`。`.env` 已加入忽略规则，任何真实密钥都不应出现在提交、Issue 或日志中。
 
-## 13. 故障排查
+## 14. 故障排查
 
 - **提示变量缺失**：确认当前目录是项目根目录，并确认 `.env` 文件存在且变量名没有拼写错误。
 - **端口被占用**：停止占用 80、8000、8081 或 3307 的程序，或者修改 Compose 的宿主机端口映射；容器内部端口不要修改。
@@ -304,7 +351,7 @@ Compose 会根据上述变量自动生成容器内的 `DATABASE_URL` 和 `BACKEN
 - **Agent 提示未配置模型**：这是允许的离线模式；若需要真实模型回答，填写 `LLM_API_KEY`（必要时同时填写 `LLM_BASE_URL`）并重建 Agent 容器。
 - **前端接口 401**：重新登录并检查浏览器 `localStorage` 中的访问令牌；不要把用户 JWT 写入 Agent 服务的固定配置。
 
-## 14. 技术栈与许可证
+## 15. 技术栈与许可证
 
 - 前端：HTML/CSS/JavaScript、Vue 3、Vue Router、Axios、Vite、Nginx
 - 主后端：Java 17、Spring Boot 3.3、Spring Security、JPA、JWT、Swagger、MySQL 8
