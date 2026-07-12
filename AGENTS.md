@@ -64,7 +64,7 @@
 **目录结构（在项目根目录下创建）：**
 
 ```
-smart-mall/
+Agent-Store/
 ├── frontend/                 # Vue3项目
 ├── backend/                   # Spring Boot项目
 ├── agent-service/             # FastAPI + LangChain项目
@@ -583,4 +583,3 @@ volumes:
 5. 单元测试 + 集成测试代码，附运行说明
 6. 答辩PPT
 7. README.md（项目简介、本地启动步骤、团队分工说明）
-

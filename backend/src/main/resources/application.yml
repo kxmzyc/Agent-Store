@@ -1,0 +1,40 @@
+server:
+  port: 8080
+  servlet:
+    encoding:
+      charset: UTF-8
+      force: true
+
+spring:
+  datasource:
+    url: ${SPRING_DATASOURCE_URL}
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
+  jpa:
+    hibernate:
+      ddl-auto: none
+    open-in-view: false
+    properties:
+      hibernate:
+        format_sql: true
+  jackson:
+    property-naming-strategy: LOWER_CAMEL_CASE
+  http:
+    encoding:
+      charset: UTF-8
+      force: true
+  web:
+    resources:
+      chain:
+        cache: false
+
+app:
+  jwt-secret: ${JWT_SECRET}
+  internal-service-secret: ${INTERNAL_SERVICE_SECRET}
+  upload-dir: ${UPLOAD_DIR:uploads}
+
+logging:
+  file:
+    path: logs
+  level:
+    com.example.smartmall: INFO

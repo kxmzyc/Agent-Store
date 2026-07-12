@@ -1,0 +1,250 @@
+{
+  "sourceFile": "final/Agent-Store-智能商城-答辩PPT-最高分版.pptx",
+  "outputFile": "final/Agent-Store-智能商城-答辩PPT-自检完善版.pptx",
+  "pdfFile": "final/Agent-Store-智能商城-答辩PPT-自检完善版.pdf",
+  "previewDir": "final/selfcheck_slide_previews",
+  "updates": [
+    {
+      "slide": 2,
+      "shapeId": 13,
+      "text": "推荐闭环、RAG、结构化 Agent、性能诊断、并发事务",
+      "fontSize": 12.5
+    },
+    {
+      "slide": 3,
+      "shapeId": 3,
+      "text": "Agent-Store 用 15 个实训工作日完成五大模块、技术栈落地与工程闭环，不追求生产级大促架构。",
+      "fontSize": 14.5
+    },
+    {
+      "slide": 4,
+      "shapeId": 21,
+      "text": "身份链：用户 JWT → /api/user/profile 校验身份 → 内部服务密钥 → 受限订单/购物车接口\n数据边界：Agent 只直连 agent_conversation / user_preference / knowledge_chunk",
+      "fontSize": 11.5,
+      "top": 401,
+      "height": 44
+    },
+    {
+      "slide": 6,
+      "shapeId": 5,
+      "text": "user\nshipping_address\npoint_record",
+      "fontSize": 10.5,
+      "verticalAnchor": 3
+    },
+    {
+      "slide": 6,
+      "shapeId": 8,
+      "text": "category\nproduct\nproduct_tag\nproduct_review",
+      "fontSize": 10.5,
+      "verticalAnchor": 3
+    },
+    {
+      "slide": 6,
+      "shapeId": 11,
+      "text": "cart\norder\norder_item\nafter_sale_request",
+      "fontSize": 9.75,
+      "verticalAnchor": 3
+    },
+    {
+      "slide": 6,
+      "shapeId": 14,
+      "text": "banner_slot\nsearch_keyword_log\nproduct_favorite\nproduct_view_log",
+      "fontSize": 9.25,
+      "verticalAnchor": 3
+    },
+    {
+      "slide": 6,
+      "shapeId": 17,
+      "text": "agent_conversation\nuser_preference\nknowledge_chunk",
+      "fontSize": 9.5,
+      "verticalAnchor": 3
+    },
+    {
+      "slide": 7,
+      "shapeId": 2,
+      "text": "五大核心模块全部可验收，增强能力围绕交易闭环",
+      "fontSize": 27
+    },
+    {
+      "slide": 7,
+      "match": "注册 / 登录 / 刷新 Token",
+      "text": "必验收｜401 / JWT / BCrypt / 刷新",
+      "fontSize": 10.5
+    },
+    {
+      "slide": 7,
+      "match": "分类 / CRUD / 标签 / 推荐位",
+      "text": "必验收｜分类 / CRUD / 库存",
+      "fontSize": 10.5
+    },
+    {
+      "slide": 7,
+      "match": "关键词 / 排序 / 分页 / 热词",
+      "text": "必验收｜关键词 / 排序 / 分页",
+      "fontSize": 10.5
+    },
+    {
+      "slide": 7,
+      "match": "加购 / 数量校验 / 清空",
+      "text": "订单模块｜加购 / 数量 / 勾选结算",
+      "fontSize": 10.5
+    },
+    {
+      "slide": 7,
+      "match": "下单 / 支付 / 发货 / 确认",
+      "text": "必验收｜事务 / 状态机 / 回补",
+      "fontSize": 10.5
+    },
+    {
+      "slide": 7,
+      "match": "退款申请 / 审核 / 回补库存",
+      "text": "增强｜申请 / 审核 / 库存回补",
+      "fontSize": 10.5
+    },
+    {
+      "slide": 7,
+      "match": "收藏 / 足迹 / 评价 / 积分券",
+      "text": "增强｜收藏 / 足迹 / 评价 / 优惠",
+      "fontSize": 10.5
+    },
+    {
+      "slide": 7,
+      "match": "导购 / 查单 / 偏好记忆",
+      "text": "必验收｜8 工具 / 双层记忆 / UI",
+      "fontSize": 10.5
+    },
+    {
+      "slide": 7,
+      "match": "数据看板 / 商品 / 订单 / 日志",
+      "text": "增强｜看板 / 商品 / 订单 / 日志",
+      "fontSize": 10.5
+    },
+    {
+      "slide": 9,
+      "shapeId": 30,
+      "text": "knowledge_chunk",
+      "fontSize": 12.5
+    },
+    {
+      "slide": 9,
+      "shapeId": 31,
+      "text": "轻量知识表",
+      "fontSize": 9.5
+    },
+    {
+      "slide": 9,
+      "shapeId": 35,
+      "text": "知识检索工具",
+      "fontSize": 15
+    },
+    {
+      "slide": 9,
+      "shapeId": 36,
+      "text": "search_knowledge_base",
+      "fontSize": 8.75
+    },
+    {
+      "slide": 12,
+      "shapeId": 5,
+      "text": "UPDATE product\nSET stock = stock - ?,\n    sales_count = sales_count + ?,\n    version = version + 1\nWHERE id = ?\n  AND stock >= ?\n  AND version = ?",
+      "fontSize": 10.5,
+      "height": 102
+    },
+    {
+      "slide": 12,
+      "shapeId": 22,
+      "text": "最近一次验收结果：success=80 failed=20；数据库最终 stock=0、sales_count=80、version=80。",
+      "fontSize": 15
+    },
+    {
+      "slide": 16,
+      "shapeId": 12,
+      "text": "前端构建",
+      "fontSize": 11.25
+    },
+    {
+      "slide": 16,
+      "shapeId": 13,
+      "text": "OK",
+      "fontSize": 24
+    },
+    {
+      "slide": 16,
+      "shapeId": 14,
+      "text": "Vite production build passed",
+      "fontSize": 9.5
+    },
+    {
+      "slide": 16,
+      "shapeId": 20,
+      "text": "Agent 烟测 PASS",
+      "fontSize": 19
+    },
+    {
+      "slide": 16,
+      "shapeId": 21,
+      "text": "2026-07-10：商品检索、详情、对比、订单查询、长期记忆、购买方案、SSE、确认加购与非购物拒答全部通过；商品卡字段逐项核对后端真实数据。",
+      "fontSize": 13.5
+    },
+    {
+      "slide": 17,
+      "shapeId": 2,
+      "text": "Docker Compose 统一编排四服务并收敛启动依赖",
+      "fontSize": 27
+    },
+    {
+      "slide": 18,
+      "shapeId": 14,
+      "text": "后端 20/20、Agent 烟测通过；并发结果已留证",
+      "fontSize": 13
+    },
+    {
+      "slide": 19,
+      "shapeId": 2,
+      "text": "按工作包组织交付，AI 辅助过程也可核查",
+      "fontSize": 28
+    },
+    {
+      "slide": 19,
+      "shapeId": 23,
+      "text": "Claude Code/Codex 参与需求拆解、代码生成、缺陷排查和文档审计；最终以提交记录、源码、测试与日志验收，过程记录见 docs/ai-development-record.md。",
+      "fontSize": 12.5
+    },
+    {
+      "slide": 20,
+      "match": "核心演示顺序：登录 -> 搜索商品 -> 加购下单 -> 订单状态 -> AI 查单/推荐 -> 后台运营 -> 日志与验证。",
+      "text": "核心演示顺序：登录 → 搜索商品 → 加购下单 → 订单状态 → AI 购买方案/查单 → 后台运营 → 日志与验证。",
+      "fontSize": 16
+    }
+  ],
+  "notes": [
+    {
+      "slide": 2,
+      "text": "先向老师交代叙事结构，并指出页面底部已经把六项评分标准显式映射：完整度和功能看模块与实景，技术突破看五个亮点，个人答辩看架构、Agent 和事务原理，PPT 与材料完整度由整套交付物证明。"
+    },
+    {
+      "slide": 7,
+      "text": "这一页先讲五大必验收能力：认证、商品、搜索、订单、AI。购物车属于订单模块；售后、用户体验和后台是增强能力。认证强调 401、JWT 和 BCrypt；订单强调事务、状态机和取消回补；AI 强调八个工具、双层记忆和结构化输出。"
+    },
+    {
+      "slide": 12,
+      "text": "扣库存 SQL 与当前真实仓库一致：在同一条原子更新里扣库存、增加销量和版本号，并同时检查 stock 与 version。页面展示的是最近一次并发验收留证结果；答辩前应在清洁测试数据下再次执行脚本并保留终端输出和数据库查询截图。"
+    },
+    {
+      "slide": 16,
+      "text": "2026-07-10 重新执行结果：Maven 20 个测试全部通过，Vite 生产构建通过，最新版 Agent 端到端烟测通过；Docker 四服务正常运行。前端构建仍有大 chunk 警告，这一局限在第18页如实说明。"
+    },
+    {
+      "slide": 19,
+      "text": "这一页不虚构成员姓名。现场应按真实团队情况补充每位成员、模块和分支证据。现有可核查的 AI 辅助开发记录包括 docs/ai-development-record.md、提交历史、缺陷清单、测试日志和 docs/defense 材料；AI 加速产出，人负责边界设计与最终验收。"
+    }
+  ],
+  "scoreLabels": [
+    "项目完整度\n7·13–19",
+    "功能完整度\n7·12–15",
+    "技术突破\n8–12",
+    "个人答辩\n4·10·12",
+    "PPT 质量\n全篇",
+    "材料完整度\n16–19"
+  ]
+}

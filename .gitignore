@@ -1,0 +1,16 @@
+node_modules/
+target/
+.env
+__pycache__/
+.pytest_cache/
+dist/
+logs/
+backend/logs/
+*.log
+.idea/
+.vscode/
+docs/defense/qa/
+docs/defense/**/slide_previews/
+docs/defense/**/selfcheck_slide_previews/
+docs/defense/**/*montage*.png
+docs/defense/**/*.inspect.ndjson

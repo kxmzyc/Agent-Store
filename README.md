@@ -1,42 +1,77 @@
-# Agent Store
+# Agent-Store
 
-本仓库当前交付项目是 [Smart Mall 智能商城](smart-mall/README.md)：一个面向企业实训答辩的“淘宝 + AI 助手”微型电商系统。
+Agent-Store is a teaching e-commerce application that combines a Vue 3 storefront, a Spring Boot business API, MySQL, and a FastAPI/LangChain shopping assistant.
 
-项目源码、Docker 编排、验收脚本和答辩材料都在 `smart-mall/` 目录内。完整启动步骤、测试账号、接口说明和验收清单见 [smart-mall/README.md](smart-mall/README.md)。
+## Layout
 
-## 快速启动
-
-Windows 最快方式（首次启动先生成 `.env`）：
-
-```powershell
-cd smart-mall
-if (-not (Test-Path .env)) { Copy-Item .env.example .env }
-.\open-project.cmd
+```text
+Agent-Store/
+|- frontend/       Vue 3 application
+|- backend/        Spring Boot REST API
+|- agent-service/  FastAPI and LangChain agent
+|- docs/           Delivery, API, database, and defense documentation
+|- scripts/        Smoke and concurrency acceptance scripts
+|- docker-compose.yml
+|- .env.example
+`- README.md
 ```
 
-命令行方式：
+## Start
 
 ```powershell
-cd smart-mall
 if (-not (Test-Path .env)) { Copy-Item .env.example .env }
+# Set MYSQL_ROOT_PASSWORD, JWT_SECRET, and INTERNAL_SERVICE_SECRET in .env.
 docker compose up -d --build
 docker compose ps
 ```
 
-启动后访问：
+Windows users can also run `./open-project.cmd` after configuring `.env`.
 
-| 服务 | 地址 |
+| Service | Address |
 |---|---|
-| 前端页面 | http://127.0.0.1/ |
-| 后端 Swagger | http://127.0.0.1:8081/swagger-ui/index.html |
+| Storefront | http://127.0.0.1/ |
+| Backend Swagger | http://127.0.0.1:8081/swagger-ui/index.html |
 | Agent API | http://127.0.0.1:8000 |
 | MySQL | 127.0.0.1:3307 |
 
-## 项目入口
+## Local Development
 
-- [完整 README](smart-mall/README.md)
-- [接口文档](smart-mall/docs/api-spec.md)
-- [架构说明](smart-mall/docs/architecture.md)
-- [ER 图](smart-mall/docs/er-diagram.md)
-- [缺陷记录](smart-mall/docs/bug-list.md)
-- [答辩准备记录](smart-mall/CODEX_DEFENSE_PREP.md)
+```powershell
+cd frontend
+npm run dev
+
+cd ../backend
+mvn spring-boot:run
+
+cd ../agent-service
+python start_agent_local.py
+```
+
+The local database schema is named `smart_mall`; it remains unchanged to preserve existing database configuration and data.
+
+## Verification
+
+```powershell
+cd backend
+mvn test
+
+cd ../frontend
+npm run build
+
+cd ..
+python scripts/agent_smoke.py --base-url http://127.0.0.1:8000 --backend-url http://127.0.0.1:8081
+python scripts/concurrent_order_test.py --base-url http://127.0.0.1:8081
+```
+
+## Documentation
+
+- [Architecture](docs/architecture.md)
+- [API specification](docs/api-spec.md)
+- [ER diagram](docs/er-diagram.md)
+- [Database design](docs/database-design.md)
+- [Bug list](docs/bug-list.md)
+- [Acceptance report](docs/acceptance-report.md)
+- [AI development record](docs/ai-development-record.md)
+- [Defense materials](docs/defense/)
+
+Generated logs, caches, PPT inspection files, and slide previews are excluded from version control. The final PPTX and PDF remain in `docs/defense/final/`.
