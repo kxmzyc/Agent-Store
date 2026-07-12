@@ -1,18 +1,36 @@
 node_modules/
 target/
+dist/
+
+# Local configuration and secrets
 .env
+.env.example
+*.local
+
+# Python, Java, frontend and runtime caches
 __pycache__/
 .pytest_cache/
-dist/
+*.pyc
 logs/
 backend/logs/
 *.log
-!docs/verification/
-!docs/verification/*.log
+
+# Non-runtime project materials intentionally kept out of the release mirror
+docs/
+outputs/
+tools/
 .idea/
 .vscode/
-docs/defense/qa/
-docs/defense/**/slide_previews/
-docs/defense/**/selfcheck_slide_previews/
-docs/defense/**/*montage*.png
-docs/defense/**/*.inspect.ndjson
+.claude/
+.codex/
+.agents/
+AGENTS.md
+backend/settings.xml
+
+# Generated visual and browser-check artifacts
+frontend/layout-check-*.png
+frontend/ui-*.png
+frontend/scripts/perf-real-browser.mjs
+*.xlsx
+*.pptx
+*.pdf
