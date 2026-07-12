@@ -1,0 +1,9 @@
+﻿Agent smoke passed. user_id=2
+product tools=['recommend_by_preference', 'search_products', 'compare_products']
+purchase plan flow=passed
+detail tools=['get_product_detail']
+compare tools=['get_product_detail', 'get_product_detail', 'compare_products', 'search_knowledge_base']
+order tools=['query_order_status']
+memory tools=['recommend_by_preference', 'search_knowledge_base', 'get_product_detail', 'get_product_detail', 'get_product_detail']
+cart tools=['add_to_cart']
+

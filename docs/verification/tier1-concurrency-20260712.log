@@ -1,0 +1,108 @@
+﻿{"baseUrl": "http://localhost:8081", "requests": 100, "stock": 80, "rounds": 3, "dataPolicy": "creates unique user and product per round; does not reset shared database"}
+{
+  "rounds": [
+    {
+      "round": 1,
+      "runId": "1783827178-1-e406c120bf",
+      "username": "race_1783827178-1-e406c120bf",
+      "productId": 61,
+      "requests": 100,
+      "initialStock": 80,
+      "success": 80,
+      "stockNotEnough": 20,
+      "unexpected": 0,
+      "uniqueOrderIds": 80,
+      "uniqueOrderNos": 80,
+      "finalStock": 0,
+      "finalSalesCount": 80,
+      "finalVersion": 80,
+      "matchingOrders": 80,
+      "matchingItemQuantity": 80,
+      "elapsedMs": 2599,
+      "unexpectedSamples": [],
+      "passed": true,
+      "expected": {
+        "success": 80,
+        "stockNotEnough": 20,
+        "unexpected": 0,
+        "uniqueOrderIds": 80,
+        "uniqueOrderNos": 80,
+        "finalStock": 0,
+        "finalSalesCount": 80,
+        "finalVersion": 80,
+        "matchingOrders": 80,
+        "matchingItemQuantity": 80
+      }
+    },
+    {
+      "round": 2,
+      "runId": "1783827181-2-8849cf3e66",
+      "username": "race_1783827181-2-8849cf3e66",
+      "productId": 62,
+      "requests": 100,
+      "initialStock": 80,
+      "success": 80,
+      "stockNotEnough": 20,
+      "unexpected": 0,
+      "uniqueOrderIds": 80,
+      "uniqueOrderNos": 80,
+      "finalStock": 0,
+      "finalSalesCount": 80,
+      "finalVersion": 80,
+      "matchingOrders": 80,
+      "matchingItemQuantity": 80,
+      "elapsedMs": 2718,
+      "unexpectedSamples": [],
+      "passed": true,
+      "expected": {
+        "success": 80,
+        "stockNotEnough": 20,
+        "unexpected": 0,
+        "uniqueOrderIds": 80,
+        "uniqueOrderNos": 80,
+        "finalStock": 0,
+        "finalSalesCount": 80,
+        "finalVersion": 80,
+        "matchingOrders": 80,
+        "matchingItemQuantity": 80
+      }
+    },
+    {
+      "round": 3,
+      "runId": "1783827185-3-edd5ecf11c",
+      "username": "race_1783827185-3-edd5ecf11c",
+      "productId": 63,
+      "requests": 100,
+      "initialStock": 80,
+      "success": 80,
+      "stockNotEnough": 20,
+      "unexpected": 0,
+      "uniqueOrderIds": 80,
+      "uniqueOrderNos": 80,
+      "finalStock": 0,
+      "finalSalesCount": 80,
+      "finalVersion": 80,
+      "matchingOrders": 80,
+      "matchingItemQuantity": 80,
+      "elapsedMs": 1783,
+      "unexpectedSamples": [],
+      "passed": true,
+      "expected": {
+        "success": 80,
+        "stockNotEnough": 20,
+        "unexpected": 0,
+        "uniqueOrderIds": 80,
+        "uniqueOrderNos": 80,
+        "finalStock": 0,
+        "finalSalesCount": 80,
+        "finalVersion": 80,
+        "matchingOrders": 80,
+        "matchingItemQuantity": 80
+      }
+    }
+  ]
+}
+round=1 runId=1783827178-1-e406c120bf success=80 stock_not_enough=20 unexpected=0 stock=0 sales=80 version=80 orders=80 itemQty=80 passed=True
+round=2 runId=1783827181-2-8849cf3e66 success=80 stock_not_enough=20 unexpected=0 stock=0 sales=80 version=80 orders=80 itemQty=80 passed=True
+round=3 runId=1783827185-3-edd5ecf11c success=80 stock_not_enough=20 unexpected=0 stock=0 sales=80 version=80 orders=80 itemQty=80 passed=True
+
