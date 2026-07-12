@@ -1,0 +1,13 @@
+Workbook: G:\claudeproject\Agent Store\outputs\019f552a-52fd-7f31-80fd-c36b3fe03a6f\Agent-Store-智能商城-软件测试交付包-20260712.xlsx
+Sheets: 6
+1. 测试计划 rows=47 cols=8
+2. 测试用例 rows=78 cols=14
+3. 环境与账号 rows=41 cols=8
+4. 缺陷登记 rows=40 cols=14
+5. 测试数据 rows=79 cols=10
+6. 测试报告 rows=41 cols=8
+Report total=74
+Report pass=54
+Report fail=17
+Report notExecuted=3
+Report passRate=76.1%

@@ -1,0 +1,993 @@
+{"kind":"deck","id":"pr/taixoc","name":"Deck"}
+{"kind":"layout","layoutId":"11a80f78-2dd1-47c7-9922-e1f23c9b1a0d","name":"Master","type":"master"}
+{"kind":"layout","layoutId":"4351ef46-7bc6-4e98-bd5a-0f04ad1c465d","name":"Title Slide","type":"title"}
+{"kind":"slide","id":"sl/zzbtia","slide":1,"title":"SMART MALL · SOFTWARE ENGINEERING DEFENSE","textShapes":8}
+{"kind":"shape","id":"sh/epgrqpoj","slide":1,"name":"shape-1","bbox":[0,0,780,720]}
+{"kind":"shape","id":"sh/1c7al47u","slide":1,"name":"shape-2","bbox":[780,0,500,720]}
+{"kind":"textbox","id":"sh/0ry9sz69","slide":1,"name":"text-3","text":"SMART MALL · SOFTWARE ENGINEERING DEFENSE","textPreview":"SMART MALL · SOFTWARE ENGINEERING DEFENSE","textChars":41,"textLines":1,"bbox":[64,34,430,24]}
+{"kind":"textbox","id":"sh/nepsnep0","slide":1,"name":"text-4","text":"Agent Store","textPreview":"Agent Store","textChars":11,"textLines":1,"bbox":[64,170,650,74]}
+{"kind":"textbox","id":"sh/mdgru9of","slide":1,"name":"text-5","text":"智能商城","textPreview":"智能商城","textChars":4,"textLines":1,"bbox":[64,250,650,86]}
+{"kind":"textbox","id":"sh/9grapo76","slide":1,"name":"text-6","text":"电商主链路 + 可调用工具的 AI 导购","textPreview":"电商主链路 + 可调用工具的 AI 导购","textChars":20,"textLines":1,"bbox":[68,360,600,44]}
+{"kind":"shape","id":"sh/ofy9wj6l","slide":1,"name":"shape-7","bbox":[68,438,176,30]}
+{"kind":"textbox","id":"sh/3i58bapw","slide":1,"name":"text-8","text":"12–15 MIN DEFENSE","textPreview":"12–15 MIN DEFENSE","textChars":17,"textLines":1,"bbox":[78,441,156,24]}
+{"kind":"textbox","id":"sh/2hwri58b","slide":1,"name":"text-9","text":"项目组 · 2026.07","textPreview":"项目组 · 2026.07","textChars":13,"textLines":1,"bbox":[68,646,300,24]}
+{"kind":"shape","id":"sh/gr21w7q5","slide":1,"name":"shape-10","bbox":[822,90,400,512]}
+{"kind":"shape","id":"sh/u5kjuh8f","slide":1,"name":"shape-11","bbox":[860,124,104,26]}
+{"kind":"textbox","id":"sh/v6tk329k","slide":1,"name":"text-12","text":"AI GUIDE","textPreview":"AI GUIDE","textChars":8,"textLines":1,"bbox":[870,127,84,20]}
+{"kind":"shape","id":"sh/4vm10rqh","slide":1,"name":"line-13","bbox":[822,626,384,0]}
+{"kind":"textbox","id":"sh/5wv29wr2","slide":1,"name":"text-14","text":"从真实商品数据，到可解释的 Agent 行为","textPreview":"从真实商品数据，到可解释的 Agent 行为","textChars":22,"textLines":1,"bbox":[828,642,382,28]}
+{"kind":"image","id":"im/apobu1ob","slide":1,"name":"","geometry":"roundRect","alt":"真实商城页面","bbox":[828,96,388,500]}
+{"kind":"notes","id":"nt/zzbtia","slide":1,"text":"开场只讲一个判断：我们交付的不是孤立页面，而是一条能运行、能解释、能验证的智能商城闭环。\n今天重点回答两个工程问题：订单如何保持一致，Agent 如何在权限边界内调用真实业务。\n封面截图来自项目实际前端构建；团队成员信息可以在 PowerPoint 中按真实情况补充。"}
+{"kind":"slide","id":"sl/lxx85e","slide":2,"title":"THE THESIS","textShapes":19}
+{"kind":"textbox","id":"sh/s3idof6h","slide":2,"name":"text-15","text":"THE THESIS","textPreview":"THE THESIS","textChars":10,"textLines":1,"bbox":[64,34,430,24]}
+{"kind":"textbox","id":"sh/729wfa5w","slide":2,"name":"text-16","text":"一条链路串起五大模块","textPreview":"一条链路串起五大模块","textChars":10,"textLines":1,"bbox":[64,70,1040,64]}
+{"kind":"textbox","id":"sh/610vm5or","slide":2,"name":"text-17","text":"核心功能、部署单元和验证证据都围绕同一条用户旅程组织。","textPreview":"核心功能、部署单元和验证证据都围绕同一条用户旅程组织。","textChars":27,"textLines":1,"bbox":[64,137,1020,40]}
+{"kind":"shape","id":"sh/507ed0n6","slide":2,"name":"line-18","bbox":[80,314,1122,0]}
+{"kind":"shape","id":"sh/kzydkv6l","slide":2,"name":"shape-19","bbox":[123,297,34,34]}
+{"kind":"textbox","id":"sh/jypcbq50","slide":2,"name":"text-20","text":"5","textPreview":"5","textChars":1,"textLines":1,"bbox":[76,356,128,74]}
+{"kind":"textbox","id":"sh/ixgvi5of","slide":2,"name":"text-21","text":"必验收模块","textPreview":"必验收模块","textChars":5,"textLines":1,"bbox":[40,438,200,28]}
+{"kind":"textbox","id":"sh/pwbep4na","slide":2,"name":"text-22","text":"用户 / 商品 / 订单 / 搜索 / AI","textPreview":"用户 / 商品 / 订单 / 搜索 / AI","textChars":22,"textLines":1,"bbox":[24,473,232,46]}
+{"kind":"shape","id":"sh/4v2dwzmp","slide":2,"name":"shape-23","bbox":[409,297,34,34]}
+{"kind":"textbox","id":"sh/ud0falsv","slide":2,"name":"text-24","text":"4","textPreview":"4","textChars":1,"textLines":1,"bbox":[362,356,128,74]}
+{"kind":"textbox","id":"sh/ve9gjq9g","slide":2,"name":"text-25","text":"Compose 服务","textPreview":"Compose 服务","textChars":10,"textLines":1,"bbox":[326,438,200,28]}
+{"kind":"textbox","id":"sh/wzixcvq1","slide":2,"name":"text-26","text":"frontend · backend · agent · mysql","textPreview":"frontend · backend · agent · mysql","textChars":34,"textLines":1,"bbox":[310,473,232,46]}
+{"kind":"shape","id":"sh/h0rylgrm","slide":2,"name":"shape-27","bbox":[695,297,34,34]}
+{"kind":"textbox","id":"sh/m9gf61sz","slide":2,"name":"text-28","text":"8","textPreview":"8","textChars":1,"textLines":1,"bbox":[648,356,128,74]}
+{"kind":"textbox","id":"sh/7apgf69k","slide":2,"name":"text-29","text":"Agent 工具","textPreview":"Agent 工具","textChars":8,"textLines":1,"bbox":[612,438,200,28]}
+{"kind":"textbox","id":"sh/8byx8ba5","slide":2,"name":"text-30","text":"读事实、做比较、算方案、受控写入","textPreview":"读事实、做比较、算方案、受控写入","textChars":16,"textLines":1,"bbox":[596,473,232,46]}
+{"kind":"shape","id":"sh/9cryhgra","slide":2,"name":"shape-31","bbox":[981,297,34,34]}
+{"kind":"textbox","id":"sh/65kzi583","slide":2,"name":"text-32","text":"30","textPreview":"30","textChars":2,"textLines":1,"bbox":[934,356,128,74]}
+{"kind":"textbox","id":"sh/r6tgba9o","slide":2,"name":"text-33","text":"后端测试","textPreview":"后端测试","textChars":4,"textLines":1,"bbox":[898,438,200,28]}
+{"kind":"textbox","id":"sh/nalc32p0","slide":2,"name":"text-34","text":"0 failures · 0 errors","textPreview":"0 failures · 0 errors","textChars":21,"textLines":1,"bbox":[882,473,232,46]}
+{"kind":"shape","id":"sh/2pcvax8f","slide":2,"name":"shape-35","bbox":[80,570,88,26]}
+{"kind":"textbox","id":"sh/pcnu5c76","slide":2,"name":"text-36","text":"核心结论","textPreview":"核心结论","textChars":4,"textLines":1,"bbox":[90,573,68,20]}
+{"kind":"textbox","id":"sh/obudc7ql","slide":2,"name":"text-37","text":"把“商城能用”和“Agent可信”放进同一套可演示闭环。","textPreview":"把“商城能用”和“Agent可信”放进同一套可演示闭环。","textChars":28,"textLines":1,"bbox":[182,566,820,34]}
+{"kind":"shape","id":"sh/be5c72pc","slide":2,"name":"line-38","bbox":[64,672,1152,0]}
+{"kind":"textbox","id":"sh/adwvex8r","slide":2,"name":"text-39","text":"Source: PROJECT_HANDOFF_CURRENT_STATUS.md · acceptance logs","textPreview":"Source: PROJECT_HANDOFF_CURRENT_STATUS.md · acceptance logs","textChars":59,"textLines":1,"bbox":[64,682,960,20]}
+{"kind":"textbox","id":"sh/xgnu9c72","slide":2,"name":"text-40","text":"02","textPreview":"02","textChars":2,"textLines":1,"bbox":[1180,681,36,20]}
+{"kind":"notes","id":"nt/lxx85e","slide":2,"text":"这页是整套 PPT 的主线，后面每一页都回到四个数字和五个模块。\n这里的 30 个测试是当前 surefire 报告总数，不是旧稿里的 20 或 27。\nAI 不是额外外挂，它共享同一条商品、订单和身份链路。"}
+{"kind":"slide","id":"sl/8v24zd","slide":3,"title":"SCOPE & TRADE-OFFS","textShapes":27}
+{"kind":"textbox","id":"sh/8vq18zyp","slide":3,"name":"text-41","text":"SCOPE & TRADE-OFFS","textPreview":"SCOPE & TRADE-OFFS","textChars":18,"textLines":1,"bbox":[64,34,430,24]}
+{"kind":"textbox","id":"sh/7ux0zux4","slide":3,"name":"text-42","text":"目标是“可演示闭环”，不是生产级双十一","textPreview":"目标是“可演示闭环”，不是生产级双十一","textChars":19,"textLines":1,"bbox":[64,70,1040,64]}
+{"kind":"textbox","id":"sh/6toj6pgj","slide":3,"name":"text-43","text":"15 个实训工作日里，优先完成可复现主链路，再把取舍讲清楚。","textPreview":"15 个实训工作日里，优先完成可复现主链路，再把取舍讲清楚。","textChars":30,"textLines":1,"bbox":[64,137,1020,40]}
+{"kind":"shape","id":"sh/lsfix4fy","slide":3,"name":"shape-44","bbox":[64,220,546,360]}
+{"kind":"shape","id":"sh/kr614zyd","slide":3,"name":"shape-45","bbox":[670,220,546,360]}
+{"kind":"shape","id":"sh/jqx0vuxs","slide":3,"name":"shape-46","bbox":[92,250,96,28]}
+{"kind":"textbox","id":"sh/ypoz2pg7","slide":3,"name":"text-47","text":"必须交付","textPreview":"必须交付","textChars":4,"textLines":1,"bbox":[102,253,76,22]}
+{"kind":"shape","id":"sh/x4fitkfm","slide":3,"name":"shape-48","bbox":[698,250,96,28]}
+{"kind":"textbox","id":"sh/w3mh0fyh","slide":3,"name":"text-49","text":"明确简化","textPreview":"明确简化","textChars":4,"textLines":1,"bbox":[708,253,76,22]}
+{"kind":"shape","id":"sh/210zq5s3","slide":3,"name":"shape-50","bbox":[98,314,10,10]}
+{"kind":"textbox","id":"sh/n290ja98","slide":3,"name":"text-51","text":"用户","textPreview":"用户","textChars":2,"textLines":1,"bbox":[120,308,446,26]}
+{"kind":"textbox","id":"sh/o3ihsfat","slide":3,"name":"text-52","text":"注册 / 登录 / JWT / 个人中心","textPreview":"注册 / 登录 / JWT / 个人中心","textChars":20,"textLines":1,"bbox":[120,337,446,28]}
+{"kind":"shape","id":"sh/p4rilkre","slide":3,"name":"shape-53","bbox":[98,362,10,10]}
+{"kind":"textbox","id":"sh/exgzm5sr","slide":3,"name":"text-54","text":"商品","textPreview":"商品","textChars":2,"textLines":1,"bbox":[120,356,446,26]}
+{"kind":"textbox","id":"sh/fyp0fq9c","slide":3,"name":"text-55","text":"分类 / CRUD / 库存 / 图片","textPreview":"分类 / CRUD / 库存 / 图片","textChars":19,"textLines":1,"bbox":[120,385,446,28]}
+{"kind":"shape","id":"sh/0zyhovax","slide":3,"name":"shape-56","bbox":[98,410,10,10]}
+{"kind":"textbox","id":"sh/107ih0ri","slide":3,"name":"text-57","text":"订单","textPreview":"订单","textChars":2,"textLines":1,"bbox":[120,404,446,26]}
+{"kind":"textbox","id":"sh/q9wzilsv","slide":3,"name":"text-58","text":"购物车 / 下单 / 状态 / 回补","textPreview":"购物车 / 下单 / 状态 / 回补","textChars":18,"textLines":1,"bbox":[120,433,446,28]}
+{"kind":"shape","id":"sh/rupgbq9g","slide":3,"name":"shape-59","bbox":[98,458,10,10]}
+{"kind":"textbox","id":"sh/velwjmp8","slide":3,"name":"text-60","text":"搜索","textPreview":"搜索","textChars":2,"textLines":1,"bbox":[120,452,446,26]}
+{"kind":"textbox","id":"sh/udcfqh8n","slide":3,"name":"text-61","text":"LIKE 模糊 / 排序 / 分页","textPreview":"LIKE 模糊 / 排序 / 分页","textChars":17,"textLines":1,"bbox":[120,481,446,28]}
+{"kind":"shape","id":"sh/h03elw7y","slide":3,"name":"shape-62","bbox":[98,506,10,10]}
+{"kind":"textbox","id":"sh/gfuxsrqd","slide":3,"name":"text-63","text":"AI","textPreview":"AI","textChars":2,"textLines":1,"bbox":[120,500,446,26]}
+{"kind":"textbox","id":"sh/325wn6p4","slide":3,"name":"text-64","text":"工具调用 / 长短期记忆 / 鉴权","textPreview":"工具调用 / 长短期记忆 / 鉴权","textChars":17,"textLines":1,"bbox":[120,529,446,28]}
+{"kind":"shape","id":"sh/i1cfu18j","slide":3,"name":"shape-65","bbox":[704,314,10,10]}
+{"kind":"textbox","id":"sh/54nepw7a","slide":3,"name":"text-66","text":"支付","textPreview":"支付","textChars":2,"textLines":1,"bbox":[726,308,446,26]}
+{"kind":"textbox","id":"sh/43exwrqp","slide":3,"name":"text-67","text":"模拟支付，不接第三方资质","textPreview":"模拟支付，不接第三方资质","textChars":12,"textLines":1,"bbox":[726,337,446,28]}
+{"kind":"shape","id":"sh/j61wb2p0","slide":3,"name":"shape-68","bbox":[704,362,10,10]}
+{"kind":"textbox","id":"sh/y5svix8f","slide":3,"name":"text-69","text":"检索","textPreview":"检索","textChars":2,"textLines":1,"bbox":[726,356,446,26]}
+{"kind":"textbox","id":"sh/obqts36x","slide":3,"name":"text-70","text":"轻量知识库，不引入向量数据库","textPreview":"轻量知识库，不引入向量数据库","textChars":14,"textLines":1,"bbox":[726,385,446,28]}
+{"kind":"shape","id":"sh/9czul8ni","slide":3,"name":"shape-71","bbox":[704,410,10,10]}
+{"kind":"textbox","id":"sh/mpobqto7","slide":3,"name":"text-72","text":"治理","textPreview":"治理","textChars":2,"textLines":1,"bbox":[726,404,446,26]}
+{"kind":"textbox","id":"sh/naxcjy5s","slide":3,"name":"text-73","text":"不做网关、注册中心、MQ","textPreview":"不做网关、注册中心、MQ","textChars":12,"textLines":1,"bbox":[726,433,446,28]}
+{"kind":"shape","id":"sh/0n6toj61","slide":3,"name":"shape-74","bbox":[704,458,10,10]}
+{"kind":"textbox","id":"sh/1ofuhonm","slide":3,"name":"text-75","text":"搜索","textPreview":"搜索","textChars":2,"textLines":1,"bbox":[726,452,446,26]}
+{"kind":"textbox","id":"sh/elobmtov","slide":3,"name":"text-76","text":"运行时 LIKE，ngram 索引未启用","textPreview":"运行时 LIKE，ngram 索引未启用","textChars":20,"textLines":1,"bbox":[726,481,446,28]}
+{"kind":"shape","id":"sh/fmxcfy5g","slide":3,"name":"shape-77","bbox":[704,506,10,10]}
+{"kind":"textbox","id":"sh/kjad0n65","slide":3,"name":"text-78","text":"证据","textPreview":"证据","textChars":2,"textLines":1,"bbox":[726,500,446,26]}
+{"kind":"textbox","id":"sh/lkjutsnq","slide":3,"name":"text-79","text":"独立 DB / PR / Claude 截图仍待补","textPreview":"独立 DB / PR / Claude 截图仍待补","textChars":25,"textLines":1,"bbox":[726,529,446,28]}
+{"kind":"shape","id":"sh/hcri5gz6","slide":3,"name":"line-80","bbox":[64,672,1152,0]}
+{"kind":"textbox","id":"sh/wbihwvil","slide":3,"name":"text-81","text":"Source: AGENTS.md · acceptance-report.md","textPreview":"Source: AGENTS.md · acceptance-report.md","textChars":40,"textLines":1,"bbox":[64,682,960,20]}
+{"kind":"textbox","id":"sh/va903qh0","slide":3,"name":"text-82","text":"03","textPreview":"03","textChars":2,"textLines":1,"bbox":[1180,681,36,20]}
+{"kind":"notes","id":"nt/8v24zd","slide":3,"text":"主动讲范围是一种工程判断：我们没有把模拟支付、LIKE 搜索包装成生产级能力。\n右栏的待补证会在第 28、29 页再次出现，说明项目对验收边界有自知之明。"}
+{"kind":"slide","id":"sl/j9rmhm","slide":4,"title":"USER JOURNEY","textShapes":32}
+{"kind":"textbox","id":"sh/3mdcv61o","slide":4,"name":"text-83","text":"USER JOURNEY","textPreview":"USER JOURNEY","textChars":12,"textLines":1,"bbox":[64,34,430,24]}
+{"kind":"textbox","id":"sh/47md4bit","slide":4,"name":"text-84","text":"用户从浏览到复购，AI嵌入交易而非旁观","textPreview":"用户从浏览到复购，AI嵌入交易而非旁观","textChars":19,"textLines":1,"bbox":[64,70,1040,64]}
+{"kind":"textbox","id":"sh/58vuxgje","slide":4,"name":"text-85","text":"每一步都有明确的服务承接，最后由偏好记忆把下一次推荐接回来。","textPreview":"每一步都有明确的服务承接，最后由偏好记忆把下一次推荐接回来。","textChars":30,"textLines":1,"bbox":[64,137,1020,40]}
+{"kind":"shape","id":"sh/q94v6l0z","slide":4,"name":"line-86","bbox":[90,297,1090,0]}
+{"kind":"shape","id":"sh/raxczq1k","slide":4,"name":"shape-87","bbox":[74,281,32,32]}
+{"kind":"shape","id":"sh/sb6d8vi5","slide":4,"name":"shape-88","bbox":[83,290,14,14]}
+{"kind":"textbox","id":"sh/dcfu10jq","slide":4,"name":"text-89","text":"01","textPreview":"01","textChars":2,"textLines":1,"bbox":[70,253,40,18]}
+{"kind":"textbox","id":"sh/6dkbuh0v","slide":4,"name":"text-90","text":"浏览","textPreview":"浏览","textChars":2,"textLines":1,"bbox":[18,325,144,26]}
+{"kind":"textbox","id":"sh/7etcnm1g","slide":4,"name":"text-91","text":"游客可看商品","textPreview":"游客可看商品","textChars":6,"textLines":1,"bbox":[6,353,168,38]}
+{"kind":"shape","id":"sh/rel4rih4","slide":4,"name":"shape-92","bbox":[229.71,281,32,32]}
+{"kind":"shape","id":"sh/qdcnyx0j","slide":4,"name":"shape-93","bbox":[238.71,290,14,14]}
+{"kind":"textbox","id":"sh/dgnmtsza","slide":4,"name":"text-94","text":"02","textPreview":"02","textChars":2,"textLines":1,"bbox":[225.71,253,40,18]}
+{"kind":"textbox","id":"sh/cfe50nip","slide":4,"name":"text-95","text":"登录","textPreview":"登录","textChars":2,"textLines":1,"bbox":[173.71,325,144,26]}
+{"kind":"textbox","id":"sh/3al4nihs","slide":4,"name":"text-96","text":"JWT 建立身份","textPreview":"JWT 建立身份","textChars":8,"textLines":1,"bbox":[161.71,353,168,38]}
+{"kind":"shape","id":"sh/29c3ud0n","slide":4,"name":"shape-97","bbox":[385.43,281,32,32]}
+{"kind":"shape","id":"sh/pc3mpszy","slide":4,"name":"shape-98","bbox":[394.43,290,14,14]}
+{"kind":"textbox","id":"sh/4bulwnid","slide":4,"name":"text-99","text":"03","textPreview":"03","textChars":2,"textLines":1,"bbox":[381.43,253,40,18]}
+{"kind":"textbox","id":"sh/fm14jyhw","slide":4,"name":"text-100","text":"搜索","textPreview":"搜索","textChars":2,"textLines":1,"bbox":[329.43,325,144,26]}
+{"kind":"textbox","id":"sh/uls3qd0b","slide":4,"name":"text-101","text":"关键词 + 分页","textPreview":"关键词 + 分页","textChars":8,"textLines":1,"bbox":[317.43,353,168,38]}
+{"kind":"shape","id":"sh/ihsn2tk3","slide":4,"name":"shape-102","bbox":[541.14,281,32,32]}
+{"kind":"shape","id":"sh/ji14vy1o","slide":4,"name":"shape-103","bbox":[550.14,290,14,14]}
+{"kind":"textbox","id":"sh/kja54329","slide":4,"name":"text-104","text":"04","textPreview":"04","textChars":2,"textLines":1,"bbox":[537.14,253,40,18]}
+{"kind":"textbox","id":"sh/5kj6x8ju","slide":4,"name":"text-105","text":"加购","textPreview":"加购","textChars":2,"textLines":1,"bbox":[485.14,325,144,26]}
+{"kind":"textbox","id":"sh/6lsn6dkf","slide":4,"name":"text-106","text":"库存即时校验","textPreview":"库存即时校验","textChars":6,"textLines":1,"bbox":[473.14,353,168,38]}
+{"kind":"shape","id":"sh/761ozi10","slide":4,"name":"shape-107","bbox":[696.86,281,32,32]}
+{"kind":"shape","id":"sh/s7a58n2l","slide":4,"name":"shape-108","bbox":[705.86,290,14,14]}
+{"kind":"textbox","id":"sh/t8361sjq","slide":4,"name":"text-109","text":"05","textPreview":"05","textChars":2,"textLines":1,"bbox":[692.86,253,40,18]}
+{"kind":"textbox","id":"sh/u9cnadkb","slide":4,"name":"text-110","text":"下单","textPreview":"下单","textChars":2,"textLines":1,"bbox":[640.86,325,144,26]}
+{"kind":"textbox","id":"sh/falo3i1w","slide":4,"name":"text-111","text":"事务 + CAS","textPreview":"事务 + CAS","textChars":8,"textLines":1,"bbox":[628.86,353,168,38]}
+{"kind":"shape","id":"sh/p4nq9c3y","slide":4,"name":"shape-112","bbox":[852.57,281,32,32]}
+{"kind":"shape","id":"sh/43ep0rmt","slide":4,"name":"shape-113","bbox":[861.57,290,14,14]}
+{"kind":"textbox","id":"sh/32587ml8","slide":4,"name":"text-114","text":"06","textPreview":"06","textChars":2,"textLines":1,"bbox":[848.57,253,40,18]}
+{"kind":"textbox","id":"sh/21w7yh4n","slide":4,"name":"text-115","text":"支付","textPreview":"支付","textChars":2,"textLines":1,"bbox":[796.57,325,144,26]}
+{"kind":"textbox","id":"sh/d87qdw3a","slide":4,"name":"text-116","text":"模拟状态机","textPreview":"模拟状态机","textChars":5,"textLines":1,"bbox":[784.57,353,168,38]}
+{"kind":"shape","id":"sh/c7e94rmp","slide":4,"name":"shape-117","bbox":[1008.29,281,32,32]}
+{"kind":"shape","id":"sh/r658bml4","slide":4,"name":"shape-118","bbox":[1017.29,290,14,14]}
+{"kind":"textbox","id":"sh/q5w72h4j","slide":4,"name":"text-119","text":"07","textPreview":"07","textChars":2,"textLines":1,"bbox":[1004.29,253,40,18]}
+{"kind":"textbox","id":"sh/1w7qhw36","slide":4,"name":"text-120","text":"问 Agent","textPreview":"问 Agent","textChars":7,"textLines":1,"bbox":[952.29,325,144,26]}
+{"kind":"textbox","id":"sh/0vy98bml","slide":4,"name":"text-121","text":"查单 / 推荐","textPreview":"查单 / 推荐","textChars":7,"textLines":1,"bbox":[940.29,353,168,38]}
+{"kind":"shape","id":"sh/wr2t0v6t","slide":4,"name":"shape-122","bbox":[1164,281,32,32]}
+{"kind":"shape","id":"sh/xsba90ne","slide":4,"name":"shape-123","bbox":[1173,290,14,14]}
+{"kind":"textbox","id":"sh/ap0by5o3","slide":4,"name":"text-124","text":"08","textPreview":"08","textChars":2,"textLines":1,"bbox":[1160,253,40,18]}
+{"kind":"textbox","id":"sh/vq9s7a5o","slide":4,"name":"text-125","text":"再回来","textPreview":"再回来","textChars":3,"textLines":1,"bbox":[1108,325,144,26]}
+{"kind":"textbox","id":"sh/83itwv6x","slide":4,"name":"text-126","text":"偏好跨会话","textPreview":"偏好跨会话","textChars":5,"textLines":1,"bbox":[1096,353,168,38]}
+{"kind":"shape","id":"sh/94ra50ni","slide":4,"name":"shape-127","bbox":[90,470,1090,110]}
+{"kind":"shape","id":"sh/m10bulor","slide":4,"name":"shape-128","bbox":[116,496,66,26]}
+{"kind":"textbox","id":"sh/n29s3q5c","slide":4,"name":"text-129","text":"闭环","textPreview":"闭环","textChars":2,"textLines":1,"bbox":[126,499,46,20]}
+{"kind":"textbox","id":"sh/szmt8z61","slide":4,"name":"text-130","text":"业务事实由 Spring Boot 维护；Agent 只负责理解、规划和解释。","textPreview":"业务事实由 Spring Boot 维护；Agent 只负责理解、规划和解释。","textChars":39,"textLines":1,"bbox":[204,488,840,32]}
+{"kind":"textbox","id":"sh/t0vuhknm","slide":4,"name":"text-131","text":"从“推荐什么”到“订单到哪了”，都能回到真实 API 和数据库记录。","textPreview":"从“推荐什么”到“订单到哪了”，都能回到真实 API 和数据库记录。","textChars":34,"textLines":1,"bbox":[204,526,840,26]}
+{"kind":"shape","id":"sh/3qh4nit0","slide":4,"name":"line-132","bbox":[64,672,1152,0]}
+{"kind":"textbox","id":"sh/258nudcf","slide":4,"name":"text-133","text":"Source: docs/architecture.md · frontend routes","textPreview":"Source: docs/architecture.md · frontend routes","textChars":46,"textLines":1,"bbox":[64,682,960,20]}
+{"kind":"textbox","id":"sh/pszmpsb6","slide":4,"name":"text-134","text":"04","textPreview":"04","textChars":2,"textLines":1,"bbox":[1180,681,36,20]}
+{"kind":"notes","id":"nt/j9rmhm","slide":4,"text":"这条旅程是答辩现场的推荐演示顺序，也是后续架构图的阅读方向。\n关键点是 AI 位于交易闭环中，而不是另起一个与业务无关的聊天页面。"}
+{"kind":"slide","id":"sl/o5vnpd","slide":5,"title":"ARCHITECTURE","textShapes":17}
+{"kind":"textbox","id":"sh/edwnexwf","slide":5,"name":"text-135","text":"ARCHITECTURE","textPreview":"ARCHITECTURE","textChars":12,"textLines":1,"bbox":[64,34,430,24]}
+{"kind":"textbox","id":"sh/1gn69cvq","slide":5,"name":"text-136","text":"四个服务分工，业务写入边界清晰","textPreview":"四个服务分工，业务写入边界清晰","textChars":15,"textLines":1,"bbox":[64,70,1040,64]}
+{"kind":"textbox","id":"sh/gfe5g7e5","slide":5,"name":"text-137","text":"浏览器只对接两个后端；业务表的写入权集中在主后端，Agent 的专属记忆表例外。","textPreview":"浏览器只对接两个后端；业务表的写入权集中在主后端，Agent 的专属记忆表例外。","textChars":40,"textLines":1,"bbox":[64,137,1020,40]}
+{"kind":"shape","id":"sh/3i5obmdw","slide":5,"name":"line-138","bbox":[260,334,158,0]}
+{"kind":"shape","id":"sh/2hwnihwb","slide":5,"name":"line-139","bbox":[618,334,130,0]}
+{"kind":"shape","id":"sh/p476dcv2","slide":5,"name":"line-140","bbox":[946,334,134,0]}
+{"kind":"shape","id":"sh/o3y5kreh","slide":5,"name":"line-141","bbox":[798,424,0,96]}
+{"kind":"shape","id":"sh/b6pofmds","slide":5,"name":"shape-142","bbox":[370,324,42,20]}
+{"kind":"shape","id":"sh/q5g7mhw7","slide":5,"name":"shape-143","bbox":[700,324,42,20]}
+{"kind":"shape","id":"sh/gnuxkryx","slide":5,"name":"shape-144","bbox":[1033,324,42,20]}
+{"kind":"shape","id":"sh/ho3etwzi","slide":5,"name":"shape-145","bbox":[788,476,20,42]}
+{"kind":"shape","id":"sh/ulcfihgr","slide":5,"name":"shape-146","bbox":[84,276,178,116]}
+{"kind":"textbox","id":"sh/fmlwrmhc","slide":5,"name":"text-147","text":"Vue3 / Nginx","textPreview":"Vue3 / Nginx","textChars":12,"textLines":1,"bbox":[98,292,150,30]}
+{"kind":"textbox","id":"sh/4rexoryt","slide":5,"name":"text-148","text":"用户界面\naxios + SSE","textPreview":"用户界面 | axios + SSE","textChars":16,"textLines":2,"bbox":[98,326,150,58]}
+{"kind":"shape","id":"sh/psnexwze","slide":5,"name":"shape-149","bbox":[84,276,5,116]}
+{"kind":"shape","id":"sh/2pwfm1g3","slide":5,"name":"shape-150","bbox":[418,276,200,116]}
+{"kind":"textbox","id":"sh/3q5wvmh8","slide":5,"name":"text-151","text":"Spring Boot","textPreview":"Spring Boot","textChars":11,"textLines":1,"bbox":[432,292,172,30]}
+{"kind":"textbox","id":"sh/cfexsby5","slide":5,"name":"text-152","text":"用户 · 商品 · 订单\n唯一业务写入口","textPreview":"用户 · 商品 · 订单 | 唯一业务写入口","textChars":20,"textLines":2,"bbox":[432,326,172,58]}
+{"kind":"shape","id":"sh/dgny1gfq","slide":5,"name":"shape-153","bbox":[418,276,5,116]}
+{"kind":"shape","id":"sh/lc3e5g7u","slide":5,"name":"shape-154","bbox":[748,276,200,116]}
+{"kind":"textbox","id":"sh/0buxcbq9","slide":5,"name":"text-155","text":"FastAPI + LangChain","textPreview":"FastAPI + LangChain","textChars":19,"textLines":1,"bbox":[762,292,172,30]}
+{"kind":"textbox","id":"sh/za1w36po","slide":5,"name":"text-156","text":"Agent 推理\n工具与记忆","textPreview":"Agent 推理 | 工具与记忆","textChars":14,"textLines":2,"bbox":[762,326,172,58]}
+{"kind":"shape","id":"sh/y9sfa183","slide":5,"name":"shape-157","bbox":[748,276,5,116]}
+{"kind":"shape","id":"sh/903e9g7q","slide":5,"name":"shape-158","bbox":[1080,276,136,116]}
+{"kind":"textbox","id":"sh/8zuxgbq5","slide":5,"name":"text-159","text":"MySQL 8","textPreview":"MySQL 8","textChars":7,"textLines":1,"bbox":[1094,292,108,30]}
+{"kind":"textbox","id":"sh/nylw76pk","slide":5,"name":"text-160","text":"业务表 + Agent 专属表","textPreview":"业务表 + Agent 专属表","textChars":15,"textLines":1,"bbox":[1094,326,108,58]}
+{"kind":"shape","id":"sh/mdcfe18f","slide":5,"name":"shape-161","bbox":[1080,276,5,116]}
+{"kind":"shape","id":"sh/p4jexwrm","slide":5,"name":"shape-162","bbox":[690,506,220,92]}
+{"kind":"textbox","id":"sh/o3qd4rq1","slide":5,"name":"text-163","text":"受限内部 REST","textPreview":"受限内部 REST","textChars":9,"textLines":1,"bbox":[704,522,192,30]}
+{"kind":"textbox","id":"sh/ux43itkn","slide":5,"name":"text-164","text":"X-Internal-Service\n+ shared secret","textPreview":"X-Internal-Service | + shared secret","textChars":34,"textLines":2,"bbox":[704,556,192,34]}
+{"kind":"shape","id":"sh/fydkry18","slide":5,"name":"shape-165","bbox":[690,506,5,92]}
+{"kind":"shape","id":"sh/gz6lk32t","slide":5,"name":"shape-166","bbox":[88,488,92,26]}
+{"kind":"textbox","id":"sh/h0f2t8je","slide":5,"name":"text-167","text":"信任边界","textPreview":"信任边界","textChars":4,"textLines":1,"bbox":[98,491,72,20]}
+{"kind":"textbox","id":"sh/21o3mtkj","slide":5,"name":"text-168","text":"Agent 不直连 user / product / order 业务表；它通过主后端受限接口拿事实。","textPreview":"Agent 不直连 user / product / order 业务表；它通过主后端受限接口拿事实。","textChars":51,"textLines":1,"bbox":[198,484,462,48]}
+{"kind":"shape","id":"sh/32xkvy14","slide":5,"name":"line-169","bbox":[64,672,1152,0]}
+{"kind":"textbox","id":"sh/436lo32p","slide":5,"name":"text-170","text":"Source: docs/architecture.md · docker-compose.yml","textPreview":"Source: docs/architecture.md · docker-compose.yml","textChars":49,"textLines":1,"bbox":[64,682,960,20]}
+{"kind":"textbox","id":"sh/p4f2x8ja","slide":5,"name":"text-171","text":"05","textPreview":"05","textChars":2,"textLines":1,"bbox":[1180,681,36,20]}
+{"kind":"notes","id":"nt/o5vnpd","slide":5,"text":"先讲边界再讲技术：主后端是业务事实的唯一写入口，Agent 是独立微服务。\n下方的内部 REST 只表达服务间授权，不等同于用户 JWT；第 20 页会展开。"}
+{"kind":"slide","id":"sl/ghognt","slide":6,"title":"TECH STACK → ACCEPTANCE","textShapes":29}
+{"kind":"textbox","id":"sh/3uhwna18","slide":6,"name":"text-172","text":"TECH STACK → ACCEPTANCE","textPreview":"TECH STACK → ACCEPTANCE","textChars":23,"textLines":1,"bbox":[64,34,430,24]}
+{"kind":"textbox","id":"sh/4vqxgfit","slide":6,"name":"text-173","text":"技术栈逐项对应课程验收","textPreview":"技术栈逐项对应课程验收","textChars":11,"textLines":1,"bbox":[64,70,1040,64]}
+{"kind":"textbox","id":"sh/pwzepkje","slide":6,"name":"text-174","text":"每一项技术都绑定一个能被现场复核的行为或证据。","textPreview":"每一项技术都绑定一个能被现场复核的行为或证据。","textChars":23,"textLines":1,"bbox":[64,137,1020,40]}
+{"kind":"shape","id":"sh/qx8fip0z","slide":6,"name":"line-175","bbox":[76,220,1128,0]}
+{"kind":"textbox","id":"sh/ryhwruhk","slide":6,"name":"text-176","text":"层","textPreview":"层","textChars":1,"textLines":1,"bbox":[90,184,100,28]}
+{"kind":"textbox","id":"sh/czaxkzi5","slide":6,"name":"text-177","text":"落地技术","textPreview":"落地技术","textChars":4,"textLines":1,"bbox":[240,184,350,28]}
+{"kind":"textbox","id":"sh/d0jet4za","slide":6,"name":"text-178","text":"答辩证据","textPreview":"答辩证据","textChars":4,"textLines":1,"bbox":[750,184,360,28]}
+{"kind":"shape","id":"sh/e1sfm90v","slide":6,"name":"line-179","bbox":[76,278,1128,0]}
+{"kind":"shape","id":"sh/z21wvuhg","slide":6,"name":"shape-180","bbox":[76,238,6,32]}
+{"kind":"textbox","id":"sh/725ojapw","slide":6,"name":"text-181","text":"前端","textPreview":"前端","textChars":2,"textLines":1,"bbox":[100,236,112,28]}
+{"kind":"textbox","id":"sh/61w7a5ob","slide":6,"name":"text-182","text":"Vue3 + Composition API + axios","textPreview":"Vue3 + Composition API + axios","textChars":30,"textLines":1,"bbox":[240,236,450,28]}
+{"kind":"textbox","id":"sh/t476lk72","slide":6,"name":"text-183","text":"组件化页面 / 401 刷新 / SSE","textPreview":"组件化页面 / 401 刷新 / SSE","textChars":20,"textLines":1,"bbox":[750,236,405,28]}
+{"kind":"shape","id":"sh/83epcf6h","slide":6,"name":"line-184","bbox":[76,333,1128,0]}
+{"kind":"shape","id":"sh/jy5ofqp0","slide":6,"name":"shape-185","bbox":[76,293,6,32]}
+{"kind":"textbox","id":"sh/ydw765of","slide":6,"name":"text-186","text":"后端","textPreview":"后端","textChars":2,"textLines":1,"bbox":[100,291,112,28]}
+{"kind":"textbox","id":"sh/l0n6h07q","slide":6,"name":"text-187","text":"Spring Boot + JPA + REST","textPreview":"Spring Boot + JPA + REST","textChars":24,"textLines":1,"bbox":[240,291,450,28]}
+{"kind":"textbox","id":"sh/kzep8v65","slide":6,"name":"text-188","text":"13 controllers / 77 mappings","textPreview":"13 controllers / 77 mappings","textChars":28,"textLines":1,"bbox":[750,291,405,28]}
+{"kind":"shape","id":"sh/3up8ru54","slide":6,"name":"line-189","bbox":[76,388,1128,0]}
+{"kind":"shape","id":"sh/i9g7ipoj","slide":6,"name":"shape-190","bbox":[76,348,6,32]}
+{"kind":"textbox","id":"sh/epkrat8r","slide":6,"name":"text-191","text":"认证","textPreview":"认证","textChars":2,"textLines":1,"bbox":[100,346,112,28]}
+{"kind":"textbox","id":"sh/zqtsjypc","slide":6,"name":"text-192","text":"JWT + BCrypt + Filter","textPreview":"JWT + BCrypt + Filter","textChars":21,"textLines":1,"bbox":[240,346,450,28]}
+{"kind":"textbox","id":"sh/0r29c3qx","slide":6,"name":"text-193","text":"未登录 401 · 普通用户 403","textPreview":"未登录 401 · 普通用户 403","textChars":18,"textLines":1,"bbox":[750,346,405,28]}
+{"kind":"shape","id":"sh/1sbal87i","slide":6,"name":"line-194","bbox":[76,443,1128,0]}
+{"kind":"shape","id":"sh/mtkred8n","slide":6,"name":"shape-195","bbox":[76,403,6,32]}
+{"kind":"textbox","id":"sh/nudsnyp8","slide":6,"name":"text-196","text":"事务","textPreview":"事务","textChars":2,"textLines":1,"bbox":[100,401,112,28]}
+{"kind":"textbox","id":"sh/ovm9g3qt","slide":6,"name":"text-197","text":"TransactionTemplate + CAS retry","textPreview":"TransactionTemplate + CAS retry","textChars":31,"textLines":1,"bbox":[240,401,450,28]}
+{"kind":"textbox","id":"sh/9wvap87e","slide":6,"name":"text-198","text":"100 抢 80：不超卖","textPreview":"100 抢 80：不超卖","textChars":12,"textLines":1,"bbox":[750,401,405,28]}
+{"kind":"shape","id":"sh/2x0r298j","slide":6,"name":"line-199","bbox":[76,498,1128,0]}
+{"kind":"shape","id":"sh/3y9sbe94","slide":6,"name":"shape-200","bbox":[76,458,6,32]}
+{"kind":"textbox","id":"sh/lsfuhcrm","slide":6,"name":"text-201","text":"数据","textPreview":"数据","textChars":2,"textLines":1,"bbox":[100,456,112,28]}
+{"kind":"textbox","id":"sh/kr6d87a1","slide":6,"name":"text-202","text":"MySQL 8 + 3NF + snapshots","textPreview":"MySQL 8 + 3NF + snapshots","textChars":25,"textLines":1,"bbox":[240,456,450,28]}
+{"kind":"textbox","id":"sh/jqxcf29g","slide":6,"name":"text-203","text":"24 表 / seed 60 商品","textPreview":"24 表 / seed 60 商品","textChars":17,"textLines":1,"bbox":[750,456,405,28]}
+{"kind":"shape","id":"sh/ypov6xsv","slide":6,"name":"line-204","bbox":[76,553,1128,0]}
+{"kind":"shape","id":"sh/tgzulwri","slide":6,"name":"shape-205","bbox":[76,513,6,32]}
+{"kind":"textbox","id":"sh/8fqdcrad","slide":6,"name":"text-206","text":"Agent","textPreview":"Agent","textChars":5,"textLines":1,"bbox":[100,511,112,28]}
+{"kind":"textbox","id":"sh/7ehcjm9s","slide":6,"name":"text-207","text":"FastAPI + LangChain tools/memory","textPreview":"FastAPI + LangChain tools/memory","textChars":32,"textLines":1,"bbox":[240,511,450,28]}
+{"kind":"textbox","id":"sh/6dovahs7","slide":6,"name":"text-208","text":"8 tools · 2 类 memory","textPreview":"8 tools · 2 类 memory","textChars":20,"textLines":1,"bbox":[750,511,405,28]}
+{"kind":"shape","id":"sh/9kvu9sbe","slide":6,"name":"line-209","bbox":[76,608,1128,0]}
+{"kind":"shape","id":"sh/ojmt0nat","slide":6,"name":"shape-210","bbox":[76,568,6,32]}
+{"kind":"textbox","id":"sh/sfuxovuh","slide":6,"name":"text-211","text":"部署","textPreview":"部署","textChars":2,"textLines":1,"bbox":[100,566,112,28]}
+{"kind":"textbox","id":"sh/dg3yh0b2","slide":6,"name":"text-212","text":"Docker Compose + logs","textPreview":"Docker Compose + logs","textChars":21,"textLines":1,"bbox":[240,566,450,28]}
+{"kind":"textbox","id":"sh/qdcfmlcb","slide":6,"name":"text-213","text":"四容器 / env secrets","textPreview":"四容器 / env secrets","textChars":17,"textLines":1,"bbox":[750,566,405,28]}
+{"kind":"shape","id":"sh/relgfqtw","slide":6,"name":"line-214","bbox":[64,672,1152,0]}
+{"kind":"textbox","id":"sh/4baxkvul","slide":6,"name":"text-215","text":"Source: README.md · source tree · verification logs","textPreview":"Source: README.md · source tree · verification logs","textChars":51,"textLines":1,"bbox":[64,682,960,20]}
+{"kind":"textbox","id":"sh/5cjyd0bq","slide":6,"name":"text-216","text":"06","textPreview":"06","textChars":2,"textLines":1,"bbox":[1180,681,36,20]}
+{"kind":"notes","id":"nt/ghognt","slide":6,"text":"这里不要逐字读表格，只点出三条最容易被追问的映射：JWT/BCrypt、CAS 事务、LangChain 工具与记忆。\n表格把技术栈转成可验收行为，避免停留在我们用了某某框架。"}
+{"kind":"slide","id":"sl/kiwcub","slide":7,"title":"DATA DESIGN","textShapes":17}
+{"kind":"textbox","id":"sh/tsrah0f6","slide":7,"name":"text-217","text":"DATA DESIGN","textPreview":"DATA DESIGN","textChars":11,"textLines":1,"bbox":[64,34,430,24]}
+{"kind":"textbox","id":"sh/6pgb6lwv","slide":7,"name":"text-218","text":"24张表支撑业务事实，快照保住历史订单","textPreview":"24张表支撑业务事实，快照保住历史订单","textChars":19,"textLines":1,"bbox":[64,70,1040,64]}
+{"kind":"textbox","id":"sh/7qpsfqxg","slide":7,"name":"text-219","text":"主业务按实体拆分；Agent 数据单独成域；非规范化只保留有业务语义的历史事实。","textPreview":"主业务按实体拆分；Agent 数据单独成域；非规范化只保留有业务语义的历史事实。","textChars":40,"textLines":1,"bbox":[64,137,1020,40]}
+{"kind":"shape","id":"sh/gvitcvex","slide":7,"name":"shape-220","bbox":[72,238,200,226]}
+{"kind":"shape","id":"sh/1gral0fi","slide":7,"name":"shape-221","bbox":[72,238,200,8]}
+{"kind":"textbox","id":"sh/et0ba5wr","slide":7,"name":"text-222","text":"身份","textPreview":"身份","textChars":2,"textLines":1,"bbox":[92,266,160,30]}
+{"kind":"textbox","id":"sh/fu9sjaxc","slide":7,"name":"text-223","text":"user\nshipping_address\nuser_feedback","textPreview":"user | shipping_address | user_feedback","textChars":35,"textLines":3,"bbox":[92,316,160,116]}
+{"kind":"shape","id":"sh/wze90bet","slide":7,"name":"shape-224","bbox":[304,238,200,226]}
+{"kind":"shape","id":"sh/xk7a9gfe","slide":7,"name":"shape-225","bbox":[304,238,200,8]}
+{"kind":"textbox","id":"sh/9wzm1cri","slide":7,"name":"text-226","text":"商品","textPreview":"商品","textChars":2,"textLines":1,"bbox":[324,266,160,30]}
+{"kind":"textbox","id":"sh/8v6ls7qx","slide":7,"name":"text-227","text":"category\nproduct\ntag / banner\nsearch logs","textPreview":"category | product | tag / banner | search logs","textChars":41,"textLines":4,"bbox":[324,316,160,116]}
+{"kind":"shape","id":"sh/7ux4zm9c","slide":7,"name":"shape-228","bbox":[536,238,200,226]}
+{"kind":"shape","id":"sh/mto3qh87","slide":7,"name":"shape-229","bbox":[536,238,200,8]}
+{"kind":"textbox","id":"sh/hkzm5wru","slide":7,"name":"text-230","text":"交易","textPreview":"交易","textChars":2,"textLines":1,"bbox":[556,266,160,30]}
+{"kind":"textbox","id":"sh/wjqlwrq9","slide":7,"name":"text-231","text":"cart\norder\norder_item\nafter_sale","textPreview":"cart | order | order_item | after_sale","textChars":32,"textLines":4,"bbox":[556,316,160,116]}
+{"kind":"shape","id":"sh/vih43m9o","slide":7,"name":"shape-232","bbox":[768,238,200,226]}
+{"kind":"shape","id":"sh/uh83uh83","slide":7,"name":"shape-233","bbox":[768,238,200,8]}
+{"kind":"textbox","id":"sh/5ojmtwrq","slide":7,"name":"text-234","text":"Agent","textPreview":"Agent","textChars":5,"textLines":1,"bbox":[788,266,160,30]}
+{"kind":"textbox","id":"sh/4nal0bq5","slide":7,"name":"text-235","text":"agent_conversation\nuser_preference\nknowledge_chunk","textPreview":"agent_conversation | user_preference | knowledge_chunk","textChars":50,"textLines":3,"bbox":[788,316,160,116]}
+{"kind":"shape","id":"sh/4ri5wfyh","slide":7,"name":"shape-236","bbox":[1000,238,200,226]}
+{"kind":"shape","id":"sh/psr65kf2","slide":7,"name":"shape-237","bbox":[1000,238,200,8]}
+{"kind":"textbox","id":"sh/2pgnu5gb","slide":7,"name":"text-238","text":"运营","textPreview":"运营","textChars":2,"textLines":1,"bbox":[1020,266,160,30]}
+{"kind":"textbox","id":"sh/3qpo3axw","slide":7,"name":"text-239","text":"coupon / points\nfavorites / history\nadmin audit","textPreview":"coupon / points | favorites / history | admin audit","textChars":47,"textLines":3,"bbox":[1020,316,160,116]}
+{"kind":"shape","id":"sh/cvi50fyd","slide":7,"name":"line-240","bbox":[72,512,1128,0]}
+{"kind":"shape","id":"sh/dwr69kfy","slide":7,"name":"shape-241","bbox":[72,536,126,28]}
+{"kind":"textbox","id":"sh/qt0nypgn","slide":7,"name":"text-242","text":"3NF 例外解释","textPreview":"3NF 例外解释","textChars":8,"textLines":1,"bbox":[82,539,106,22]}
+{"kind":"textbox","id":"sh/ru9o7axs","slide":7,"name":"text-243","text":"order_item.product_name_snapshot / price_snapshot 是“下单时刻事实”，不是可由当前 product 推导的冗余。","textPreview":"order_item.product_name_snapshot / price_snapshot 是“下单时刻事实”，不是可由当前 product 推导的冗余。","textChars":81,"textLines":1,"bbox":[220,531,900,38]}
+{"kind":"shape","id":"sh/sze5ovy9","slide":7,"name":"line-244","bbox":[64,672,1152,0]}
+{"kind":"textbox","id":"sh/t076x0fu","slide":7,"name":"text-245","text":"Source: docs/schema.sql · docs/er-diagram.md","textPreview":"Source: docs/schema.sql · docs/er-diagram.md","textChars":44,"textLines":1,"bbox":[64,682,960,20]}
+{"kind":"textbox","id":"sh/vqx0jilo","slide":7,"name":"text-246","text":"07","textPreview":"07","textChars":2,"textLines":1,"bbox":[1180,681,36,20]}
+{"kind":"notes","id":"nt/kiwcub","slide":7,"text":"老师常问快照是不是违反三范式。回答要落在时间语义：商品改名、改价后，历史订单仍要显示下单当时的事实。\nAgent 的 memory 表与业务表分域，是微服务边界的数据库体现。"}
+{"kind":"slide","id":"sl/s7qz8t","slide":8,"title":"MODULE 01 · USER","textShapes":18}
+{"kind":"textbox","id":"sh/pgnep0n2","slide":8,"name":"text-247","text":"MODULE 01 · USER","textPreview":"MODULE 01 · USER","textChars":16,"textLines":1,"bbox":[64,34,430,24]}
+{"kind":"textbox","id":"sh/2dcvul4b","slide":8,"name":"text-248","text":"认证只解析一次，权限在请求入口收口","textPreview":"认证只解析一次，权限在请求入口收口","textChars":17,"textLines":1,"bbox":[64,70,1040,64]}
+{"kind":"textbox","id":"sh/3e5wnq5w","slide":8,"name":"text-249","text":"JWT 过滤器把身份放进安全上下文；业务 Controller 不重复解析 token。","textPreview":"JWT 过滤器把身份放进安全上下文；业务 Controller 不重复解析 token。","textChars":44,"textLines":1,"bbox":[64,137,1020,40]}
+{"kind":"shape","id":"sh/cjex0fmd","slide":8,"name":"line-250","bbox":[96,334,1004,0]}
+{"kind":"shape","id":"sh/dknet0ny","slide":8,"name":"shape-251","bbox":[84,276,170,116]}
+{"kind":"textbox","id":"sh/qhwfy54n","slide":8,"name":"text-252","text":"Request","textPreview":"Request","textChars":7,"textLines":1,"bbox":[98,292,142,30]}
+{"kind":"textbox","id":"sh/bi5wra5s","slide":8,"name":"text-253","text":"Bearer access token","textPreview":"Bearer access token","textChars":19,"textLines":1,"bbox":[98,326,142,58]}
+{"kind":"shape","id":"sh/snudobm9","slide":8,"name":"shape-254","bbox":[84,276,5,116]}
+{"kind":"shape","id":"sh/to3ehgnu","slide":8,"name":"shape-255","bbox":[310,276,220,116]}
+{"kind":"textbox","id":"sh/pg3ql4vm","slide":8,"name":"text-256","text":"JwtAuthenticationFilter","textPreview":"JwtAuthenticationFilter","textChars":23,"textLines":1,"bbox":[324,292,192,30]}
+{"kind":"textbox","id":"sh/ofu9szu1","slide":8,"name":"text-257","text":"校验签名 / type / expiry","textPreview":"校验签名 / type / expiry","textChars":20,"textLines":1,"bbox":[324,326,192,58]}
+{"kind":"shape","id":"sh/nel8judg","slide":8,"name":"shape-258","bbox":[310,276,5,116]}
+{"kind":"shape","id":"sh/2dcrqpcv","slide":8,"name":"shape-259","bbox":[592,276,200,116]}
+{"kind":"textbox","id":"sh/x4nqpovy","slide":8,"name":"text-260","text":"SecurityContext","textPreview":"SecurityContext","textChars":15,"textLines":1,"bbox":[606,292,172,30]}
+{"kind":"textbox","id":"sh/c3e9wjud","slide":8,"name":"text-261","text":"trusted userId + role","textPreview":"trusted userId + role","textChars":21,"textLines":1,"bbox":[606,326,172,58]}
+{"kind":"shape","id":"sh/b258neds","slide":8,"name":"shape-262","bbox":[592,276,5,116]}
+{"kind":"shape","id":"sh/a1wru9c7","slide":8,"name":"shape-263","bbox":[854,276,190,116]}
+{"kind":"textbox","id":"sh/l87atovu","slide":8,"name":"text-264","text":"Controller","textPreview":"Controller","textChars":10,"textLines":1,"bbox":[868,292,162,30]}
+{"kind":"textbox","id":"sh/k7e90ju9","slide":8,"name":"text-265","text":"CurrentUser / role guard","textPreview":"CurrentUser / role guard","textChars":24,"textLines":1,"bbox":[868,326,162,58]}
+{"kind":"shape","id":"sh/4n61cr6x","slide":8,"name":"shape-266","bbox":[854,276,5,116]}
+{"kind":"shape","id":"sh/5of2lwn2","slide":8,"name":"shape-267","bbox":[260,324,38,20]}
+{"kind":"shape","id":"sh/ilojahor","slide":8,"name":"shape-268","bbox":[540,324,38,20]}
+{"kind":"shape","id":"sh/3mxkjm5c","slide":8,"name":"shape-269","bbox":[802,324,38,20]}
+{"kind":"shape","id":"sh/srqlgb6t","slide":8,"name":"shape-270","bbox":[112,470,70,30]}
+{"kind":"textbox","id":"sh/dsz2pwne","slide":8,"name":"text-271","text":"401","textPreview":"401","textChars":3,"textLines":1,"bbox":[122,473,50,24]}
+{"kind":"textbox","id":"sh/qpoje1on","slide":8,"name":"text-272","text":"未携带 / 失效 token → 统一未认证","textPreview":"未携带 / 失效 token → 统一未认证","textChars":22,"textLines":1,"bbox":[200,468,360,30]}
+{"kind":"shape","id":"sh/rqhkn658","slide":8,"name":"shape-273","bbox":[620,470,70,30]}
+{"kind":"textbox","id":"sh/8vm1476p","slide":8,"name":"text-274","text":"403","textPreview":"403","textChars":3,"textLines":1,"bbox":[630,473,50,24]}
+{"kind":"textbox","id":"sh/twv2dc7u","slide":8,"name":"text-275","text":"已登录但角色不足 → 统一拒绝","textPreview":"已登录但角色不足 → 统一拒绝","textChars":15,"textLines":1,"bbox":[708,468,360,30]}
+{"kind":"textbox","id":"sh/bal4japs","slide":8,"name":"text-276","text":"Access 2h  ·  Refresh 7d  ·  BCrypt strength 10  ·  axios 自动刷新","textPreview":"Access 2h  ·  Refresh 7d  ·  BCrypt strength 10  ·  axios 自动刷新","textChars":62,"textLines":1,"bbox":[88,554,980,28]}
+{"kind":"shape","id":"sh/a9cna587","slide":8,"name":"line-277","bbox":[64,672,1152,0]}
+{"kind":"textbox","id":"sh/xc3mlk7i","slide":8,"name":"text-278","text":"Source: JwtService · JwtAuthenticationFilter · SecurityConfig · http.js","textPreview":"Source: JwtService · JwtAuthenticationFilter · SecurityConfig · http.js","textChars":71,"textLines":1,"bbox":[64,682,960,20]}
+{"kind":"textbox","id":"sh/cbu5cfqx","slide":8,"name":"text-279","text":"08","textPreview":"08","textChars":2,"textLines":1,"bbox":[1180,681,36,20]}
+{"kind":"notes","id":"nt/s7qz8t","slide":8,"text":"用一个对比讲清 401 与 403：前者是没有身份，后者是身份存在但权限不够。\n密码是 BCrypt 哈希，access/refresh 的期限和 axios 的单飞刷新都在代码里可查。"}
+{"kind":"slide","id":"sl/4q8r61","slide":9,"title":"MODULE 02 · PRODUCT","textShapes":14}
+{"kind":"textbox","id":"sh/itonqh47","slide":9,"name":"text-280","text":"MODULE 02 · PRODUCT","textPreview":"MODULE 02 · PRODUCT","textChars":19,"textLines":1,"bbox":[64,34,430,24]}
+{"kind":"textbox","id":"sh/5wf6lc3y","slide":9,"name":"text-281","text":"商品模块覆盖浏览、库存与后台维护","textPreview":"商品模块覆盖浏览、库存与后台维护","textChars":16,"textLines":1,"bbox":[64,70,1040,64]}
+{"kind":"textbox","id":"sh/4v65s7md","slide":9,"name":"text-282","text":"公开浏览、分类树、分页排序与 ADMIN CRUD 共用同一套业务 API。","textPreview":"公开浏览、分类树、分页排序与 ADMIN CRUD 共用同一套业务 API。","textChars":38,"textLines":1,"bbox":[64,137,1020,40]}
+{"kind":"shape","id":"sh/ryxonml4","slide":9,"name":"shape-283","bbox":[58,208,712,406]}
+{"kind":"shape","id":"sh/t0z6pw3u","slide":9,"name":"shape-284","bbox":[88,238,78,24]}
+{"kind":"textbox","id":"sh/sz6pwr29","slide":9,"name":"text-285","text":"REAL UI","textPreview":"REAL UI","textChars":7,"textLines":1,"bbox":[98,241,58,18]}
+{"kind":"shape","id":"sh/72dobilk","slide":9,"name":"shape-286","bbox":[832,254,10,10]}
+{"kind":"textbox","id":"sh/m14nix4z","slide":9,"name":"text-287","text":"分类 + 排序 + 分页","textPreview":"分类 + 排序 + 分页","textChars":12,"textLines":1,"bbox":[854,248,306,26]}
+{"kind":"textbox","id":"sh/oj6tg7id","slide":9,"name":"text-288","text":"Pageable 边界校验，超页返回空列表。","textPreview":"Pageable 边界校验，超页返回空列表。","textChars":22,"textLines":1,"bbox":[854,277,306,42]}
+{"kind":"shape","id":"sh/9kfupcji","slide":9,"name":"shape-289","bbox":[832,340,10,10]}
+{"kind":"textbox","id":"sh/mh4bex07","slide":9,"name":"text-290","text":"库存状态","textPreview":"库存状态","textChars":4,"textLines":1,"bbox":[854,334,306,26]}
+{"kind":"textbox","id":"sh/nixcn21s","slide":9,"name":"text-291","text":"stock=0 显示售罄，前端禁用加入购物车。","textPreview":"stock=0 显示售罄，前端禁用加入购物车。","textChars":23,"textLines":1,"bbox":[854,363,306,42]}
+{"kind":"shape","id":"sh/w76tk7i9","slide":9,"name":"shape-292","bbox":[832,426,10,10]}
+{"kind":"textbox","id":"sh/x8futcju","slide":9,"name":"text-293","text":"管理员维护","textPreview":"管理员维护","textChars":5,"textLines":1,"bbox":[854,420,306,26]}
+{"kind":"textbox","id":"sh/alobih03","slide":9,"name":"text-294","text":"CRUD、软下架、本地图片上传、标签。","textPreview":"CRUD、软下架、本地图片上传、标签。","textChars":19,"textLines":1,"bbox":[854,449,306,42]}
+{"kind":"shape","id":"sh/bmxcr21o","slide":9,"name":"shape-295","bbox":[832,512,10,10]}
+{"kind":"textbox","id":"sh/crmt8n25","slide":9,"name":"text-296","text":"搜索入口","textPreview":"搜索入口","textChars":4,"textLines":1,"bbox":[854,506,306,26]}
+{"kind":"textbox","id":"sh/dcvahsjq","slide":9,"name":"text-297","text":"名称 / 描述关键词统一进入 Search API。","textPreview":"名称 / 描述关键词统一进入 Search API。","textChars":26,"textLines":1,"bbox":[854,535,306,42]}
+{"kind":"shape","id":"sh/t8nq54be","slide":9,"name":"line-298","bbox":[64,672,1152,0]}
+{"kind":"textbox","id":"sh/s7e9cjut","slide":9,"name":"text-299","text":"Source: ProductController · ProductListView.vue · real screenshot","textPreview":"Source: ProductController · ProductListView.vue · real screenshot","textChars":65,"textLines":1,"bbox":[64,682,960,20]}
+{"kind":"textbox","id":"sh/r6583et8","slide":9,"name":"text-300","text":"09","textPreview":"09","textChars":2,"textLines":1,"bbox":[1180,681,36,20]}
+{"kind":"image","id":"im/zatcfqlc","slide":9,"name":"","geometry":"roundRect","alt":"登录态商品中心","bbox":[64,214,700,394]}
+{"kind":"notes","id":"nt/4q8r61","slide":9,"text":"左侧是登录态真实页面，不是设计稿。\n商品模块既是用户可见功能，也是订单和 Agent 的共同数据源。"}
+{"kind":"slide","id":"sl/6cdlm8","slide":10,"title":"MODULE 03 · SEARCH","textShapes":17}
+{"kind":"textbox","id":"sh/wv6pcbux","slide":10,"name":"text-301","text":"MODULE 03 · SEARCH","textPreview":"MODULE 03 · SEARCH","textChars":18,"textLines":1,"bbox":[64,34,430,24]}
+{"kind":"textbox","id":"sh/vux8j6tc","slide":10,"name":"text-302","text":"搜索选择可解释的教学简化","textPreview":"搜索选择可解释的教学简化","textChars":12,"textLines":1,"bbox":[64,70,1040,64]}
+{"kind":"textbox","id":"sh/at47alcr","slide":10,"name":"text-303","text":"当前运行逻辑是 LIKE + 销量 / ID 排序；DDL 虽保留 ngram 索引，但不把未启用的能力写成已实现。","textPreview":"当前运行逻辑是 LIKE + 销量 / ID 排序；DDL 虽保留 ngram 索引，但不把未启用的能力写成已实现。","textChars":58,"textLines":1,"bbox":[64,137,1020,40]}
+{"kind":"shape","id":"sh/50fqp0bu","slide":10,"name":"shape-304","bbox":[90,274,170,108]}
+{"kind":"textbox","id":"sh/kz6pgva9","slide":10,"name":"text-305","text":"keyword","textPreview":"keyword","textChars":7,"textLines":1,"bbox":[104,290,142,30]}
+{"kind":"textbox","id":"sh/jyx8nqto","slide":10,"name":"text-306","text":"“键盘”","textPreview":"“键盘”","textChars":4,"textLines":1,"bbox":[104,324,142,50]}
+{"kind":"shape","id":"sh/ixo7els3","slide":10,"name":"shape-307","bbox":[90,274,5,108]}
+{"kind":"shape","id":"sh/tozqt0bq","slide":10,"name":"shape-308","bbox":[340,254,250,148]}
+{"kind":"textbox","id":"sh/snq9kva5","slide":10,"name":"text-309","text":"ProductRepository.search","textPreview":"ProductRepository.search","textChars":24,"textLines":1,"bbox":[354,270,222,30]}
+{"kind":"textbox","id":"sh/md4z2d0v","slide":10,"name":"text-310","text":"name LIKE %q%\ndescription LIKE %q%","textPreview":"name LIKE %q% | description LIKE %q%","textChars":34,"textLines":2,"bbox":[354,304,222,90]}
+{"kind":"shape","id":"sh/nexgbihg","slide":10,"name":"shape-311","bbox":[340,254,5,148]}
+{"kind":"shape","id":"sh/8f6h4nil","slide":10,"name":"shape-312","bbox":[670,274,180,108]}
+{"kind":"textbox","id":"sh/90fydsz6","slide":10,"name":"text-313","text":"Sort","textPreview":"Sort","textChars":4,"textLines":1,"bbox":[684,290,152,30]}
+{"kind":"textbox","id":"sh/a1oz6x0r","slide":10,"name":"text-314","text":"sales_count DESC\nid DESC","textPreview":"sales_count DESC | id DESC","textChars":24,"textLines":2,"bbox":[684,324,152,50]}
+{"kind":"shape","id":"sh/v2xgf2hc","slide":10,"name":"shape-315","bbox":[670,274,5,108]}
+{"kind":"shape","id":"sh/w36h87ix","slide":10,"name":"shape-316","bbox":[930,274,190,108]}
+{"kind":"textbox","id":"sh/x4fyhczi","slide":10,"name":"text-317","text":"Pageable","textPreview":"Pageable","textChars":8,"textLines":1,"bbox":[944,290,162,30]}
+{"kind":"textbox","id":"sh/q5kfat0n","slide":10,"name":"text-318","text":"page / size\n超页 = 空列表","textPreview":"page / size | 超页 = 空列表","textChars":20,"textLines":2,"bbox":[944,324,162,50]}
+{"kind":"shape","id":"sh/b6tg3yh8","slide":10,"name":"shape-319","bbox":[930,274,5,108]}
+{"kind":"shape","id":"sh/vep4vato","slide":10,"name":"shape-320","bbox":[270,318,44,20]}
+{"kind":"shape","id":"sh/udgnm5c3","slide":10,"name":"shape-321","bbox":[600,318,44,20]}
+{"kind":"shape","id":"sh/h07mxkbu","slide":10,"name":"shape-322","bbox":[860,318,44,20]}
+{"kind":"shape","id":"sh/gzy5ofu9","slide":10,"name":"shape-323","bbox":[90,460,660,126]}
+{"kind":"shape","id":"sh/7ap4rqtc","slide":10,"name":"shape-324","bbox":[108,476,114,24]}
+{"kind":"textbox","id":"sh/69w3ilc7","slide":10,"name":"text-325","text":"SOURCE TRACE","textPreview":"SOURCE TRACE","textChars":12,"textLines":1,"bbox":[118,479,94,18]}
+{"kind":"textbox","id":"sh/tc7mt0bi","slide":10,"name":"text-326","text":"GET /api/products/search?keyword=键盘&page=1&size=20\n\nFULLTEXT ngram：schema 已有\nMATCH AGAINST：runtime 尚未启用","textPreview":"GET /api/products/search?keyword=键盘&page=1&size=20 |  | FULLTEXT ngram：schema 已有 | MATCH AGAINST：runtime 尚未启用","textChars":103,"textLines":4,"bbox":[110,514,620,58]}
+{"kind":"shape","id":"sh/8by5kvux","slide":10,"name":"shape-327","bbox":[800,460,320,126]}
+{"kind":"shape","id":"sh/r694nutw","slide":10,"name":"shape-328","bbox":[826,484,92,25]}
+{"kind":"textbox","id":"sh/q50nupcb","slide":10,"name":"text-329","text":"答辩表述","textPreview":"答辩表述","textChars":4,"textLines":1,"bbox":[836,487,72,19]}
+{"kind":"textbox","id":"sh/obu1orat","slide":10,"name":"text-330","text":"先用可解释方案打通主链路，后续再切换全文索引。","textPreview":"先用可解释方案打通主链路，后续再切换全文索引。","textChars":23,"textLines":1,"bbox":[826,523,254,42]}
+{"kind":"shape","id":"sh/9c32hwre","slide":10,"name":"line-331","bbox":[64,672,1152,0]}
+{"kind":"textbox","id":"sh/mpsjmhsn","slide":10,"name":"text-332","text":"Source: ProductRepository · ProductController · docs/schema.sql","textPreview":"Source: ProductRepository · ProductController · docs/schema.sql","textChars":63,"textLines":1,"bbox":[64,682,960,20]}
+{"kind":"textbox","id":"sh/na1kfm98","slide":10,"name":"text-333","text":"10","textPreview":"10","textChars":2,"textLines":1,"bbox":[1180,681,36,20]}
+{"kind":"notes","id":"nt/6cdlm8","slide":10,"text":"这页主动纠正旧稿：搜索运行时确实是 LIKE，不是 MATCH AGAINST。\n在教学项目里，能准确说出已启用和未启用，比堆砌技术名词更重要。"}
+{"kind":"slide","id":"sl/oznpba","slide":11,"title":"MODULE 04 · CART","textShapes":17}
+{"kind":"textbox","id":"sh/sn25076t","slide":11,"name":"text-334","text":"MODULE 04 · CART","textPreview":"MODULE 04 · CART","textChars":16,"textLines":1,"bbox":[64,34,430,24]}
+{"kind":"textbox","id":"sh/7mt472p8","slide":11,"name":"text-335","text":"购物车把商品选择变成可结算订单","textPreview":"购物车把商品选择变成可结算订单","textChars":15,"textLines":1,"bbox":[64,70,1040,64]}
+{"kind":"textbox","id":"sh/6lknyxon","slide":11,"name":"text-336","text":"唯一约束、数量调整、勾选结算和地址/优惠计算都在订单前置体验里完成。","textPreview":"唯一约束、数量调整、勾选结算和地址/优惠计算都在订单前置体验里完成。","textChars":34,"textLines":1,"bbox":[64,137,1020,40]}
+{"kind":"shape","id":"sh/hcvmdcnq","slide":11,"name":"shape-337","bbox":[58,198,712,406]}
+{"kind":"shape","id":"sh/fat4b2pk","slide":11,"name":"line-338","bbox":[840,266,0,266]}
+{"kind":"shape","id":"sh/u9kn2xoz","slide":11,"name":"shape-339","bbox":[825,244,30,30]}
+{"kind":"textbox","id":"sh/xgrm1876","slide":11,"name":"text-340","text":"1","textPreview":"1","textChars":1,"textLines":1,"bbox":[830,248,20,22]}
+{"kind":"textbox","id":"sh/wfilsn6l","slide":11,"name":"text-341","text":"加入","textPreview":"加入","textChars":2,"textLines":1,"bbox":[876,245,110,24]}
+{"kind":"textbox","id":"sh/uhobql4n","slide":11,"name":"text-342","text":"uk_user_product","textPreview":"uk_user_product","textChars":15,"textLines":1,"bbox":[876,273,220,22]}
+{"kind":"shape","id":"sh/fixszq5s","slide":11,"name":"shape-343","bbox":[825,322,30,30]}
+{"kind":"textbox","id":"sh/gjqtsvmd","slide":11,"name":"text-344","text":"2","textPreview":"2","textChars":1,"textLines":1,"bbox":[830,326,20,22]}
+{"kind":"textbox","id":"sh/hkza10ny","slide":11,"name":"text-345","text":"调整","textPreview":"调整","textChars":2,"textLines":1,"bbox":[876,323,110,24]}
+{"kind":"textbox","id":"sh/2l8bu54j","slide":11,"name":"text-346","text":"stock check","textPreview":"stock check","textChars":11,"textLines":1,"bbox":[876,351,220,22]}
+{"kind":"shape","id":"sh/3mhs3a54","slide":11,"name":"shape-347","bbox":[825,400,30,30]}
+{"kind":"textbox","id":"sh/4nqtwvmp","slide":11,"name":"text-348","text":"3","textPreview":"3","textChars":1,"textLines":1,"bbox":[830,404,20,22]}
+{"kind":"textbox","id":"sh/pozu50na","slide":11,"name":"text-349","text":"勾选","textPreview":"勾选","textChars":2,"textLines":1,"bbox":[876,401,110,24]}
+{"kind":"textbox","id":"sh/qp8by54f","slide":11,"name":"text-350","text":"subtotal","textPreview":"subtotal","textChars":8,"textLines":1,"bbox":[876,429,220,22]}
+{"kind":"shape","id":"sh/ra1c7a50","slide":11,"name":"shape-351","bbox":[825,478,30,30]}
+{"kind":"textbox","id":"sh/ne1sva18","slide":11,"name":"text-352","text":"4","textPreview":"4","textChars":1,"textLines":1,"bbox":[830,482,20,22]}
+{"kind":"textbox","id":"sh/mdsrm5kn","slide":11,"name":"text-353","text":"结算","textPreview":"结算","textChars":2,"textLines":1,"bbox":[876,479,110,24]}
+{"kind":"textbox","id":"sh/9gjaxkje","slide":11,"name":"text-354","text":"address / coupon","textPreview":"address / coupon","textChars":16,"textLines":1,"bbox":[876,507,220,22]}
+{"kind":"shape","id":"sh/ofa9of2t","slide":11,"name":"line-355","bbox":[64,672,1152,0]}
+{"kind":"textbox","id":"sh/zq1sra1c","slide":11,"name":"text-356","text":"Source: CartView.vue · CheckoutView.vue · CartRepository","textPreview":"Source: CartView.vue · CheckoutView.vue · CartRepository","textChars":56,"textLines":1,"bbox":[64,682,960,20]}
+{"kind":"textbox","id":"sh/ep8ri5kr","slide":11,"name":"text-357","text":"11","textPreview":"11","textChars":2,"textLines":1,"bbox":[1180,681,36,20]}
+{"kind":"image","id":"im/103edc72","slide":11,"name":"","geometry":"roundRect","alt":"真实购物车页面","bbox":[64,204,700,394]}
+{"kind":"notes","id":"nt/oznpba","slide":11,"text":"购物车不是单独的 UI 功能，它是订单事务的输入集合。\n唯一约束确保同一用户同一商品只有一条 cart 记录，数量通过更新维护。"}
+{"kind":"slide","id":"sl/6tucxe","slide":12,"title":"MODULE 05 · ORDER STATE","textShapes":19}
+{"kind":"textbox","id":"sh/lkbe5kzq","slide":12,"name":"text-358","text":"MODULE 05 · ORDER STATE","textPreview":"MODULE 05 · ORDER STATE","textChars":23,"textLines":1,"bbox":[64,34,430,24]}
+{"kind":"textbox","id":"sh/yhkvu50z","slide":12,"name":"text-359","text":"订单状态机拒绝非法跳转","textPreview":"订单状态机拒绝非法跳转","textChars":11,"textLines":1,"bbox":[64,70,1040,64]}
+{"kind":"textbox","id":"sh/zitw3ahk","slide":12,"name":"text-360","text":"状态变化由条件更新保护，副作用只在合法边上发生。","textPreview":"状态变化由条件更新保护，副作用只在合法边上发生。","textChars":24,"textLines":1,"bbox":[64,137,1020,40]}
+{"kind":"shape","id":"sh/cf2dsvi9","slide":12,"name":"line-361","bbox":[110,334,846,0]}
+{"kind":"shape","id":"sh/xgbe10zu","slide":12,"name":"shape-362","bbox":[87,311,46,46]}
+{"kind":"textbox","id":"sh/ad0vq503","slide":12,"name":"text-363","text":"1","textPreview":"1","textChars":1,"textLines":1,"bbox":[96,321,28,26]}
+{"kind":"textbox","id":"sh/betwzqho","slide":12,"name":"text-364","text":"PENDING_PAYMENT","textPreview":"PENDING_PAYMENT","textChars":15,"textLines":1,"bbox":[10,386,200,26]}
+{"kind":"textbox","id":"sh/gbmx4zid","slide":12,"name":"text-365","text":"创建订单","textPreview":"创建订单","textChars":4,"textLines":1,"bbox":[10,418,200,22]}
+{"kind":"shape","id":"sh/hcved4zy","slide":12,"name":"shape-366","bbox":[160,324,126,20]}
+{"kind":"shape","id":"sh/d8zmxkjy","slide":12,"name":"shape-367","bbox":[369,311,46,46]}
+{"kind":"textbox","id":"sh/c7q5of2d","slide":12,"name":"text-368","text":"2","textPreview":"2","textChars":1,"textLines":1,"bbox":[378,321,28,26]}
+{"kind":"textbox","id":"sh/b6h4vu18","slide":12,"name":"text-369","text":"PAID","textPreview":"PAID","textChars":4,"textLines":1,"bbox":[292,386,200,26]}
+{"kind":"textbox","id":"sh/q5o3mpkn","slide":12,"name":"text-370","text":"模拟支付","textPreview":"模拟支付","textChars":4,"textLines":1,"bbox":[292,418,200,22]}
+{"kind":"shape","id":"sh/p4fmtkj2","slide":12,"name":"shape-371","bbox":[442,324,126,20]}
+{"kind":"shape","id":"sh/o36lkf2h","slide":12,"name":"shape-372","bbox":[651,311,46,46]}
+{"kind":"textbox","id":"sh/3ix4ra1w","slide":12,"name":"text-373","text":"3","textPreview":"3","textChars":1,"textLines":1,"bbox":[660,321,28,26]}
+{"kind":"textbox","id":"sh/2ho3i5kb","slide":12,"name":"text-374","text":"SHIPPED","textPreview":"SHIPPED","textChars":7,"textLines":1,"bbox":[574,386,200,26]}
+{"kind":"textbox","id":"sh/90jm54j6","slide":12,"name":"text-375","text":"管理员发货","textPreview":"管理员发货","textChars":5,"textLines":1,"bbox":[574,418,200,22]}
+{"kind":"shape","id":"sh/8za5wz2l","slide":12,"name":"shape-376","bbox":[724,324,126,20]}
+{"kind":"shape","id":"sh/sjipsnqx","slide":12,"name":"shape-377","bbox":[933,311,46,46]}
+{"kind":"textbox","id":"sh/tkr61sri","slide":12,"name":"text-378","text":"4","textPreview":"4","textChars":1,"textLines":1,"bbox":[942,321,28,26]}
+{"kind":"textbox","id":"sh/6hg7qd8r","slide":12,"name":"text-379","text":"COMPLETED","textPreview":"COMPLETED","textChars":9,"textLines":1,"bbox":[856,386,200,26]}
+{"kind":"textbox","id":"sh/7i9ozi9c","slide":12,"name":"text-380","text":"确认收货","textPreview":"确认收货","textChars":4,"textLines":1,"bbox":[856,418,200,22]}
+{"kind":"shape","id":"sh/kfypo3q1","slide":12,"name":"line-381","bbox":[110,334,0,196]}
+{"kind":"shape","id":"sh/5g76x8r6","slide":12,"name":"line-382","bbox":[110,530,160,0]}
+{"kind":"shape","id":"sh/idg7mt8v","slide":12,"name":"shape-383","bbox":[248,520,22,20]}
+{"kind":"shape","id":"sh/jepovy9g","slide":12,"name":"shape-384","bbox":[286,510,120,28]}
+{"kind":"textbox","id":"sh/wby5k3qp","slide":12,"name":"text-385","text":"CANCELLED","textPreview":"CANCELLED","textChars":9,"textLines":1,"bbox":[296,513,100,22]}
+{"kind":"textbox","id":"sh/xc76t8ra","slide":12,"name":"text-386","text":"仅 PENDING_PAYMENT 可取消；取消会原子回补库存和优惠。","textPreview":"仅 PENDING_PAYMENT 可取消；取消会原子回补库存和优惠。","textChars":35,"textLines":1,"bbox":[434,510,620,30]}
+{"kind":"shape","id":"sh/zm583ytw","slide":12,"name":"line-387","bbox":[64,672,1152,0]}
+{"kind":"textbox","id":"sh/elw7atcr","slide":12,"name":"text-388","text":"Source: OrderController · OrderService · state transition tests","textPreview":"Source: OrderController · OrderService · state transition tests","textChars":63,"textLines":1,"bbox":[64,682,960,20]}
+{"kind":"textbox","id":"sh/18nq5ob2","slide":12,"name":"text-389","text":"12","textPreview":"12","textChars":2,"textLines":1,"bbox":[1180,681,36,20]}
+{"kind":"notes","id":"nt/6tucxe","slide":12,"text":"状态机页只讲合法边，不把售后扩展状态混进核心演示。\n取消分支的重点是回补库存，避免答辩老师追问取消后库存去哪了。"}
+{"kind":"slide","id":"sl/qmi1nu","slide":13,"title":"ORDER CONSISTENCY","textShapes":21}
+{"kind":"textbox","id":"sh/1cn2hkju","slide":13,"name":"text-390","text":"ORDER CONSISTENCY","textPreview":"ORDER CONSISTENCY","textChars":17,"textLines":1,"bbox":[64,34,430,24]}
+{"kind":"textbox","id":"sh/e9w365kj","slide":13,"name":"text-391","text":"下单把四个副作用放进同一事务尝试","textPreview":"下单把四个副作用放进同一事务尝试","textChars":16,"textLines":1,"bbox":[64,70,1040,64]}
+{"kind":"textbox","id":"sh/za5kfa14","slide":13,"name":"text-392","text":"当前实现用编程式 REQUIRES_NEW + CAS 重试；不是简单地在方法名上贴一个 @Transactional。","textPreview":"当前实现用编程式 REQUIRES_NEW + CAS 重试；不是简单地在方法名上贴一个 @Transactional。","textChars":60,"textLines":1,"bbox":[64,137,1020,40]}
+{"kind":"shape","id":"sh/ofylcz2l","slide":13,"name":"shape-393","bbox":[78,244,244,174]}
+{"kind":"shape","id":"sh/9g7mlkj6","slide":13,"name":"shape-394","bbox":[98,266,42,26]}
+{"kind":"textbox","id":"sh/mdg3apkf","slide":13,"name":"text-395","text":"01","textPreview":"01","textChars":2,"textLines":1,"bbox":[108,269,22,20]}
+{"kind":"textbox","id":"sh/nep4ju10","slide":13,"name":"text-396","text":"扣库存","textPreview":"扣库存","textChars":3,"textLines":1,"bbox":[98,312,200,28]}
+{"kind":"textbox","id":"sh/4jul0v2h","slide":13,"name":"text-397","text":"stock >= qty\nversion = expected","textPreview":"stock >= qty | version = expected","textChars":31,"textLines":2,"bbox":[98,352,200,44]}
+{"kind":"shape","id":"sh/pk3290j2","slide":13,"name":"shape-398","bbox":[330,322,26,18]}
+{"kind":"shape","id":"sh/5srahgju","slide":13,"name":"shape-399","bbox":[363,244,244,174]}
+{"kind":"shape","id":"sh/4rit8bi9","slide":13,"name":"shape-400","bbox":[383,266,42,26]}
+{"kind":"textbox","id":"sh/3qpsf61o","slide":13,"name":"text-401","text":"02","textPreview":"02","textChars":2,"textLines":1,"bbox":[393,269,22,20]}
+{"kind":"textbox","id":"sh/ipgb6103","slide":13,"name":"text-402","text":"插 order","textPreview":"插 order","textChars":7,"textLines":1,"bbox":[383,312,200,28]}
+{"kind":"textbox","id":"sh/dgralgjq","slide":13,"name":"text-403","text":"order_no\n总金额 / 地址","textPreview":"order_no | 总金额 / 地址","textChars":17,"textLines":2,"bbox":[383,352,200,44]}
+{"kind":"shape","id":"sh/sfitcvi5","slide":13,"name":"shape-404","bbox":[615,322,26,18]}
+{"kind":"shape","id":"sh/ru9sjq10","slide":13,"name":"shape-405","bbox":[648,244,244,174]}
+{"kind":"shape","id":"sh/qt0bal0f","slide":13,"name":"shape-406","bbox":[668,266,42,26]}
+{"kind":"textbox","id":"sh/1kbap0z2","slide":13,"name":"text-407","text":"03","textPreview":"03","textChars":2,"textLines":1,"bbox":[678,269,22,20]}
+{"kind":"textbox","id":"sh/0j2tgvih","slide":13,"name":"text-408","text":"插 item","textPreview":"插 item","textChars":6,"textLines":1,"bbox":[668,312,200,28]}
+{"kind":"textbox","id":"sh/knadczqt","slide":13,"name":"text-409","text":"name / price\n历史快照","textPreview":"name / price | 历史快照","textChars":17,"textLines":2,"bbox":[668,352,200,44]}
+{"kind":"shape","id":"sh/lojul47y","slide":13,"name":"shape-410","bbox":[900,322,26,18]}
+{"kind":"shape","id":"sh/y18va98n","slide":13,"name":"shape-411","bbox":[933,244,244,174]}
+{"kind":"shape","id":"sh/zm1cjup8","slide":13,"name":"shape-412","bbox":[953,266,42,26]}
+{"kind":"textbox","id":"sh/8radgjqp","slide":13,"name":"text-413","text":"04","textPreview":"04","textChars":2,"textLines":1,"bbox":[963,269,22,20]}
+{"kind":"textbox","id":"sh/9sjupo7a","slide":13,"name":"text-414","text":"清 cart","textPreview":"清 cart","textChars":6,"textLines":1,"bbox":[953,312,200,28]}
+{"kind":"textbox","id":"sh/mpsve98j","slide":13,"name":"text-415","text":"成功后清理\n选择项","textPreview":"成功后清理 | 选择项","textChars":9,"textLines":2,"bbox":[953,352,200,44]}
+{"kind":"shape","id":"sh/7q1cnep4","slide":13,"name":"shape-416","bbox":[78,480,550,140]}
+{"kind":"shape","id":"sh/ovqd4fql","slide":13,"name":"shape-417","bbox":[96,496,114,24]}
+{"kind":"textbox","id":"sh/pwzudk76","slide":13,"name":"text-418","text":"SOURCE TRACE","textPreview":"SOURCE TRACE","textChars":12,"textLines":1,"bbox":[106,499,94,18]}
+{"kind":"textbox","id":"sh/r2pozmdk","slide":13,"name":"text-419","text":"UPDATE product\nSET stock = stock - :q,\n    sales_count = sales_count + :q,\n    version = version + 1\nWHERE id = :id AND stock >= :q AND version = :v;","textPreview":"UPDATE product | SET stock = stock - :q, |     sales_count = sales_count + :q, |     version = version + 1 | WHERE id = :id AND stock >= ...","textChars":149,"textLines":5,"bbox":[98,534,510,72]}
+{"kind":"shape","id":"sh/q1g76hwf","slide":13,"name":"shape-420","bbox":[682,480,456,140]}
+{"kind":"shape","id":"sh/do761wvq","slide":13,"name":"shape-421","bbox":[710,505,94,26]}
+{"kind":"textbox","id":"sh/snyp8re5","slide":13,"name":"text-422","text":"ROLLBACK","textPreview":"ROLLBACK","textChars":8,"textLines":1,"bbox":[720,508,74,20]}
+{"kind":"textbox","id":"sh/3y5ov2do","slide":13,"name":"text-423","text":"任一步失败 → 本次尝试整体回滚\n影响行数 0 → 冲突 / 库存不足 → 重试或业务提示","textPreview":"任一步失败 → 本次尝试整体回滚 | 影响行数 0 → 冲突 / 库存不足 → 重试或业务提示","textChars":45,"textLines":2,"bbox":[710,548,382,48]}
+{"kind":"shape","id":"sh/ixw72hw3","slide":13,"name":"line-424","bbox":[64,672,1152,0]}
+{"kind":"textbox","id":"sh/5076xcvu","slide":13,"name":"text-425","text":"Source: OrderService.java · ProductRepository.java · retry tests","textPreview":"Source: OrderService.java · ProductRepository.java · retry tests","textChars":64,"textLines":1,"bbox":[64,682,960,20]}
+{"kind":"textbox","id":"sh/4zyp47e9","slide":13,"name":"text-426","text":"13","textPreview":"13","textChars":2,"textLines":1,"bbox":[1180,681,36,20]}
+{"kind":"notes","id":"nt/qmi1nu","slide":13,"text":"先读四步，再读 SQL。老师如果问 @Transactional，准确回答当前代码采用 TransactionTemplate 的 REQUIRES_NEW 尝试。\nCAS 的影响行数为 0 时不插脏订单，失败会回滚整次尝试。\n课程验收条款点名 @Transactional：当前实现具备等价的事务边界与回滚语义，但注解形式并未落地。答辩时应主动说明这是实现偏差；若老师按注解形式验收，答辩前应补充薄层 @Transactional 入口并保留 CAS 重试策略。"}
+{"kind":"slide","id":"sl/6hebwb","slide":14,"title":"CONCURRENCY EVIDENCE","textShapes":19}
+{"kind":"textbox","id":"sh/2p8redgj","slide":14,"name":"text-427","text":"CONCURRENCY EVIDENCE","textPreview":"CONCURRENCY EVIDENCE","textChars":20,"textLines":1,"bbox":[64,34,430,24]}
+{"kind":"textbox","id":"sh/pszqp8fu","slide":14,"name":"text-428","text":"100人抢80件，结果恰好80单","textPreview":"100人抢80件，结果恰好80单","textChars":16,"textLines":1,"bbox":[64,70,1040,64]}
+{"kind":"textbox","id":"sh/4rq9g3y9","slide":14,"name":"text-429","text":"连续 3 轮运行态记录：80 成功、20 库存不足、0 异常；最终库存不为负。","textPreview":"连续 3 轮运行态记录：80 成功、20 库存不足、0 异常；最终库存不为负。","textChars":39,"textLines":1,"bbox":[64,137,1020,40]}
+{"kind":"shape","id":"sh/buh8rix0","slide":14,"name":"shape-430","bbox":[72,228,640,318]}
+{"kind":"textbox","id":"sh/qt8ridgf","slide":14,"name":"text-431","text":"ROUND RESULT","textPreview":"ROUND RESULT","textChars":12,"textLines":1,"bbox":[102,256,220,24]}
+{"kind":"textbox","id":"sh/dwjqtsf6","slide":14,"name":"text-432","text":"100","textPreview":"100","textChars":3,"textLines":1,"bbox":[104,312,184,78]}
+{"kind":"textbox","id":"sh/cva9knyl","slide":14,"name":"text-433","text":"并发请求","textPreview":"并发请求","textChars":4,"textLines":1,"bbox":[104,395,180,24]}
+{"kind":"textbox","id":"sh/7yx8fexw","slide":14,"name":"text-434","text":"80","textPreview":"80","textChars":2,"textLines":1,"bbox":[348,312,184,78]}
+{"kind":"textbox","id":"sh/6xo769gb","slide":14,"name":"text-435","text":"成功订单","textPreview":"成功订单","textChars":4,"textLines":1,"bbox":[348,395,180,24]}
+{"kind":"textbox","id":"sh/s3et8nqd","slide":14,"name":"text-436","text":"20","textPreview":"20","textChars":2,"textLines":1,"bbox":[566,312,110,78]}
+{"kind":"textbox","id":"sh/t4na1s7y","slide":14,"name":"text-437","text":"库存不足","textPreview":"库存不足","textChars":4,"textLines":1,"bbox":[560,395,120,24]}
+{"kind":"shape","id":"sh/61wb6d87","slide":14,"name":"shape-438","bbox":[104,456,508,22]}
+{"kind":"shape","id":"sh/r25szips","slide":14,"name":"shape-439","bbox":[104,456,406,22]}
+{"kind":"shape","id":"sh/g7ytc7qp","slide":14,"name":"shape-440","bbox":[510,456,102,22]}
+{"kind":"textbox","id":"sh/187a5c7a","slide":14,"name":"text-441","text":"80%","textPreview":"80%","textChars":3,"textLines":1,"bbox":[278,492,100,22]}
+{"kind":"textbox","id":"sh/e5wbax8j","slide":14,"name":"text-442","text":"20%","textPreview":"20%","textChars":3,"textLines":1,"bbox":[510,492,100,22]}
+{"kind":"shape","id":"sh/f6ps32p4","slide":14,"name":"shape-443","bbox":[768,228,440,318]}
+{"kind":"shape","id":"sh/wbu903q5","slide":14,"name":"shape-444","bbox":[798,256,98,26]}
+{"kind":"textbox","id":"sh/hc3at87q","slide":14,"name":"text-445","text":"POST-CHECK","textPreview":"POST-CHECK","textChars":10,"textLines":1,"bbox":[808,259,78,20]}
+{"kind":"textbox","id":"sh/dgbyh0fi","slide":14,"name":"text-446","text":"stock = 0","textPreview":"stock = 0","textChars":9,"textLines":1,"bbox":[798,320,300,48]}
+{"kind":"textbox","id":"sh/cv2h8vex","slide":14,"name":"text-447","text":"sales_count = 80","textPreview":"sales_count = 80","textChars":16,"textLines":1,"bbox":[798,382,320,36]}
+{"kind":"textbox","id":"sh/butgfaxc","slide":14,"name":"text-448","text":"version = 80","textPreview":"version = 80","textChars":12,"textLines":1,"bbox":[798,432,320,36]}
+{"kind":"textbox","id":"sh/qtkz65wr","slide":14,"name":"text-449","text":"orders = 80  ·  itemQty = 80","textPreview":"orders = 80  ·  itemQty = 80","textChars":28,"textLines":1,"bbox":[798,492,340,26]}
+{"kind":"shape","id":"sh/lkvilkfe","slide":14,"name":"line-450","bbox":[64,672,1152,0]}
+{"kind":"textbox","id":"sh/0jmhcfet","slide":14,"name":"text-451","text":"Source: docs/verification/tier1-concurrency-20260712.log","textPreview":"Source: docs/verification/tier1-concurrency-20260712.log","textChars":56,"textLines":1,"bbox":[64,682,960,20]}
+{"kind":"textbox","id":"sh/zid0jax8","slide":14,"name":"text-452","text":"14","textPreview":"14","textChars":2,"textLines":1,"bbox":[1180,681,36,20]}
+{"kind":"notes","id":"nt/6hebwb","slide":14,"text":"这是订单模块最重要的运行证据：三轮、每轮 100 请求抢 80 件。\n说明成功 80 还不够，必须同时核对 stock、sales_count、version、订单数和明细数量。\n补充说明：脚本使用共享演示库夹具，清洁数据库复跑仍是待补证。"}
+{"kind":"slide","id":"sl/zdftps","slide":15,"title":"SECTION 02","textShapes":9}
+{"kind":"textbox","id":"sh/ps36tgfe","slide":15,"name":"text-453","text":"SECTION 02","textPreview":"SECTION 02","textChars":10,"textLines":1,"bbox":[64,34,430,24]}
+{"kind":"textbox","id":"sh/2pc7i1w3","slide":15,"name":"text-454","text":"AI不是聊天框，是受约束的代理","textPreview":"AI不是聊天框，是受约束的代理","textChars":15,"textLines":1,"bbox":[64,184,650,116]}
+{"kind":"textbox","id":"sh/nqlor6x8","slide":15,"name":"text-455","text":"模型只负责理解与规划；工具返回真实事实；记忆负责个性化；主后端守住业务真相。","textPreview":"模型只负责理解与规划；工具返回真实事实；记忆负责个性化；主后端守住业务真相。","textChars":38,"textLines":1,"bbox":[68,330,600,70]}
+{"kind":"shape","id":"sh/cfepobe5","slide":15,"name":"line-456","bbox":[68,458,1082,0]}
+{"kind":"textbox","id":"sh/xgnqxgfq","slide":15,"name":"text-457","text":"真实数据 · 可追溯工具 · 受控权限","textPreview":"真实数据 · 可追溯工具 · 受控权限","textChars":19,"textLines":1,"bbox":[68,484,560,30]}
+{"kind":"shape","id":"sh/atc7mlwz","slide":15,"name":"shape-458","bbox":[760,174,394,346]}
+{"kind":"shape","id":"sh/be58vqxk","slide":15,"name":"shape-459","bbox":[902,232,108,108]}
+{"kind":"textbox","id":"sh/kjepsve1","slide":15,"name":"text-460","text":"PLAN","textPreview":"PLAN","textChars":4,"textLines":1,"bbox":[918,272,76,28]}
+{"kind":"shape","id":"sh/lknq10fm","slide":15,"name":"shape-461","bbox":[796,396,84,84]}
+{"kind":"textbox","id":"sh/t4nq9ofi","slide":15,"name":"text-462","text":"TOOLS","textPreview":"TOOLS","textChars":5,"textLines":1,"bbox":[798,430,80,24]}
+{"kind":"shape","id":"sh/83ep0jyx","slide":15,"name":"shape-463","bbox":[1032,396,84,84]}
+{"kind":"textbox","id":"sh/725o7exc","slide":15,"name":"text-464","text":"MEMORY","textPreview":"MEMORY","textChars":6,"textLines":1,"bbox":[1034,430,80,24]}
+{"kind":"shape","id":"sh/61w7y9g7","slide":15,"name":"line-465","bbox":[918,330,-66,68]}
+{"kind":"shape","id":"sh/h87qdofu","slide":15,"name":"line-466","bbox":[992,330,68,68]}
+{"kind":"shape","id":"sh/g7yp43y9","slide":15,"name":"line-467","bbox":[880,438,148,0]}
+{"kind":"shape","id":"sh/v6p8byxo","slide":15,"name":"line-468","bbox":[64,672,1152,0]}
+{"kind":"textbox","id":"sh/u5w72tg3","slide":15,"name":"text-469","text":"AI chapter · tools + memory + service boundary","textPreview":"AI chapter · tools + memory + service boundary","textChars":46,"textLines":1,"bbox":[64,682,960,20]}
+{"kind":"textbox","id":"sh/xc3614fa","slide":15,"name":"text-470","text":"15","textPreview":"15","textChars":2,"textLines":1,"bbox":[1180,681,36,20]}
+{"kind":"notes","id":"nt/zdftps","slide":15,"text":"从这里开始把叙事重心切到 AI，但不把它神化为一个黑盒模型。\n后面 16–26 页按生命周期、工具、鉴权、记忆、失败和前端逐层拆开。"}
+{"kind":"slide","id":"sl/3nb6n7","slide":16,"title":"AI 01 · LIFECYCLE","textShapes":25}
+{"kind":"textbox","id":"sh/8zm54ba9","slide":16,"name":"text-471","text":"AI 01 · LIFECYCLE","textPreview":"AI 01 · LIFECYCLE","textChars":17,"textLines":1,"bbox":[64,34,430,24]}
+{"kind":"textbox","id":"sh/nyd4b6to","slide":16,"name":"text-472","text":"一次对话经过身份、记忆、工具与落库","textPreview":"一次对话经过身份、记忆、工具与落库","textChars":17,"textLines":1,"bbox":[64,70,1040,64]}
+{"kind":"textbox","id":"sh/mx4n21s3","slide":16,"name":"text-473","text":"Agent 的价值不在于“会说话”，而在于每个步骤都能被定位、复核和回放。","textPreview":"Agent 的价值不在于“会说话”，而在于每个步骤都能被定位、复核和回放。","textChars":37,"textLines":1,"bbox":[64,137,1020,40]}
+{"kind":"shape","id":"sh/xof6hgbq","slide":16,"name":"line-474","bbox":[116,308,1010,0]}
+{"kind":"shape","id":"sh/wnm58ba5","slide":16,"name":"shape-475","bbox":[100,292,32,32]}
+{"kind":"shape","id":"sh/v2dofqt0","slide":16,"name":"shape-476","bbox":[109,301,14,14]}
+{"kind":"textbox","id":"sh/a14n6lsf","slide":16,"name":"text-477","text":"01","textPreview":"01","textChars":2,"textLines":1,"bbox":[96,264,40,18]}
+{"kind":"textbox","id":"sh/dsbm5wbm","slide":16,"name":"text-478","text":"Authenticate","textPreview":"Authenticate","textChars":12,"textLines":1,"bbox":[44,336,144,26]}
+{"kind":"textbox","id":"sh/cr25wra1","slide":16,"name":"text-479","text":"JWT → profile","textPreview":"JWT → profile","textChars":13,"textLines":1,"bbox":[32,364,168,38]}
+{"kind":"shape","id":"sh/apo7ixw7","slide":16,"name":"shape-480","bbox":[302,292,32,32]}
+{"kind":"shape","id":"sh/bax8r2xs","slide":16,"name":"shape-481","bbox":[311,301,14,14]}
+{"kind":"textbox","id":"sh/wb6pkned","slide":16,"name":"text-482","text":"02","textPreview":"02","textChars":2,"textLines":1,"bbox":[298,264,40,18]}
+{"kind":"textbox","id":"sh/xcfqtsfy","slide":16,"name":"text-483","text":"Load","textPreview":"Load","textChars":4,"textLines":1,"bbox":[246,336,144,26]}
+{"kind":"textbox","id":"sh/ydo7mxw3","slide":16,"name":"text-484","text":"session + prefs","textPreview":"session + prefs","textChars":15,"textLines":1,"bbox":[234,364,168,38]}
+{"kind":"shape","id":"sh/jex8v2xo","slide":16,"name":"shape-485","bbox":[504,292,32,32]}
+{"kind":"shape","id":"sh/kf6po7e9","slide":16,"name":"shape-486","bbox":[513,301,14,14]}
+{"kind":"textbox","id":"sh/lgzqxcfu","slide":16,"name":"text-487","text":"03","textPreview":"03","textChars":2,"textLines":1,"bbox":[500,264,40,18]}
+{"kind":"textbox","id":"sh/6h87qhwf","slide":16,"name":"text-488","text":"Plan","textPreview":"Plan","textChars":4,"textLines":1,"bbox":[448,336,144,26]}
+{"kind":"textbox","id":"sh/7ih8zmx0","slide":16,"name":"text-489","text":"intent → tool","textPreview":"intent → tool","textChars":13,"textLines":1,"bbox":[436,364,168,38]}
+{"kind":"shape","id":"sh/3mhonmd8","slide":16,"name":"shape-490","bbox":[706,292,32,32]}
+{"kind":"shape","id":"sh/il87ehcn","slide":16,"name":"shape-491","bbox":[715,301,14,14]}
+{"kind":"textbox","id":"sh/58j6pcvy","slide":16,"name":"text-492","text":"04","textPreview":"04","textChars":2,"textLines":1,"bbox":[702,264,40,18]}
+{"kind":"textbox","id":"sh/4napgrud","slide":16,"name":"text-493","text":"Execute","textPreview":"Execute","textChars":7,"textLines":1,"bbox":[650,336,144,26]}
+{"kind":"textbox","id":"sh/vihoj2dw","slide":16,"name":"text-494","text":"real REST","textPreview":"real REST","textChars":9,"textLines":1,"bbox":[638,364,168,38]}
+{"kind":"shape","id":"sh/uh87axcb","slide":16,"name":"shape-495","bbox":[908,292,32,32]}
+{"kind":"shape","id":"sh/hkz6lcv2","slide":16,"name":"shape-496","bbox":[917,301,14,14]}
+{"kind":"textbox","id":"sh/gjqpc7uh","slide":16,"name":"text-497","text":"05","textPreview":"05","textChars":2,"textLines":1,"bbox":[904,264,40,18]}
+{"kind":"textbox","id":"sh/7exof2d0","slide":16,"name":"text-498","text":"Compose","textPreview":"Compose","textChars":7,"textLines":1,"bbox":[852,336,144,26]}
+{"kind":"textbox","id":"sh/6do76xcf","slide":16,"name":"text-499","text":"grounded reply","textPreview":"grounded reply","textChars":14,"textLines":1,"bbox":[840,364,168,38]}
+{"kind":"shape","id":"sh/c72d0z61","slide":16,"name":"shape-500","bbox":[1110,292,32,32]}
+{"kind":"shape","id":"sh/d8but47m","slide":16,"name":"shape-501","bbox":[1119,301,14,14]}
+{"kind":"textbox","id":"sh/qlkvypov","slide":16,"name":"text-502","text":"06","textPreview":"06","textChars":2,"textLines":1,"bbox":[1106,264,40,18]}
+{"kind":"textbox","id":"sh/bmtcrupg","slide":16,"name":"text-503","text":"Persist","textPreview":"Persist","textChars":7,"textLines":1,"bbox":[1054,336,144,26]}
+{"kind":"textbox","id":"sh/0bmd4j6x","slide":16,"name":"text-504","text":"conversation + tags","textPreview":"conversation + tags","textChars":19,"textLines":1,"bbox":[1042,364,168,38]}
+{"kind":"shape","id":"sh/lcvexo7i","slide":16,"name":"shape-505","bbox":[110,488,1032,90]}
+{"kind":"shape","id":"sh/y9kv29or","slide":16,"name":"shape-506","bbox":[136,516,70,24]}
+{"kind":"textbox","id":"sh/zatcvepc","slide":16,"name":"text-507","text":"TRACE","textPreview":"TRACE","textChars":5,"textLines":1,"bbox":[146,519,50,18]}
+{"kind":"textbox","id":"sh/gfidsf6t","slide":16,"name":"text-508","text":"tool_start → tool_end → reply · 每轮消息同时写入 agent_conversation","textPreview":"tool_start → tool_end → reply · 每轮消息同时写入 agent_conversation","textChars":59,"textLines":1,"bbox":[228,510,850,30]}
+{"kind":"shape","id":"sh/1grulk7e","slide":16,"name":"line-509","bbox":[64,672,1152,0]}
+{"kind":"textbox","id":"sh/toneh4bu","slide":16,"name":"text-510","text":"Source: agent-service/app/main.py · agent_conversation","textPreview":"Source: agent-service/app/main.py · agent_conversation","textChars":54,"textLines":1,"bbox":[64,682,960,20]}
+{"kind":"textbox","id":"sh/8ned8ja9","slide":16,"name":"text-511","text":"16","textPreview":"16","textChars":2,"textLines":1,"bbox":[1180,681,36,20]}
+{"kind":"notes","id":"nt/3nb6n7","slide":16,"text":"这页先讲时序，不讲具体工具。用户输入之后，Agent 先确认身份，再加载短期与长期记忆，最后才规划工具。\ntool_start / tool_end 事件让前端和日志都能看到执行轨迹。"}
+{"kind":"slide","id":"sl/dtxxh0","slide":17,"title":"AI 02 · TOOLS","textShapes":24}
+{"kind":"textbox","id":"sh/65szypgn","slide":17,"name":"text-512","text":"AI 02 · TOOLS","textPreview":"AI 02 · TOOLS","textChars":13,"textLines":1,"bbox":[64,34,430,24]}
+{"kind":"textbox","id":"sh/tsjy94fy","slide":17,"name":"text-513","text":"8个工具把自然语言连接到真实业务","textPreview":"8个工具把自然语言连接到真实业务","textChars":16,"textLines":1,"bbox":[64,70,1040,64]}
+{"kind":"textbox","id":"sh/srah0zyd","slide":17,"name":"text-514","text":"模型选择工具，工具返回事实；价格、库存、订单状态不由模型凭空生成。","textPreview":"模型选择工具，工具返回事实；价格、库存、订单状态不由模型凭空生成。","textChars":33,"textLines":1,"bbox":[64,137,1020,40]}
+{"kind":"shape","id":"sh/fu10bex4","slide":17,"name":"line-515","bbox":[92,214,1088,0]}
+{"kind":"textbox","id":"sh/etsz29gj","slide":17,"name":"text-516","text":"READ","textPreview":"READ","textChars":4,"textLines":1,"bbox":[110,178,170,24]}
+{"kind":"textbox","id":"sh/1wjid4fa","slide":17,"name":"text-517","text":"PLAN","textPreview":"PLAN","textChars":4,"textLines":1,"bbox":[620,178,170,24]}
+{"kind":"shape","id":"sh/0vah4zyp","slide":17,"name":"line-518","bbox":[96,300,466,0]}
+{"kind":"shape","id":"sh/vyhgzax0","slide":17,"name":"shape-519","bbox":[98,252,16,16]}
+{"kind":"textbox","id":"sh/uxozq5gf","slide":17,"name":"text-520","text":"search_products","textPreview":"search_products","textChars":15,"textLines":1,"bbox":[128,246,284,26]}
+{"kind":"textbox","id":"sh/gf6tove5","slide":17,"name":"text-521","text":"关键词 + 预算","textPreview":"关键词 + 预算","textChars":8,"textLines":1,"bbox":[128,275,310,22]}
+{"kind":"shape","id":"sh/10fuh0fa","slide":17,"name":"line-522","bbox":[96,378,466,0]}
+{"kind":"shape","id":"sh/edobmlwz","slide":17,"name":"shape-523","bbox":[98,330,16,16]}
+{"kind":"textbox","id":"sh/fexcfqxk","slide":17,"name":"text-524","text":"get_product_detail","textPreview":"get_product_detail","textChars":18,"textLines":1,"bbox":[128,324,284,26]}
+{"kind":"textbox","id":"sh/o36tsfe1","slide":17,"name":"text-525","text":"读取商品详情","textPreview":"读取商品详情","textChars":6,"textLines":1,"bbox":[128,353,310,22]}
+{"kind":"shape","id":"sh/p4fulkfm","slide":17,"name":"line-526","bbox":[96,456,466,0]}
+{"kind":"shape","id":"sh/21obq5wv","slide":17,"name":"shape-527","bbox":[98,408,16,16]}
+{"kind":"textbox","id":"sh/32xcjaxg","slide":17,"name":"text-528","text":"compare_products","textPreview":"compare_products","textChars":16,"textLines":1,"bbox":[128,402,284,26]}
+{"kind":"textbox","id":"sh/47mtgbex","slide":17,"name":"text-529","text":"最多比较 4 件","textPreview":"最多比较 4 件","textChars":8,"textLines":1,"bbox":[128,431,310,22]}
+{"kind":"shape","id":"sh/58va9gfi","slide":17,"name":"line-530","bbox":[96,534,466,0]}
+{"kind":"shape","id":"sh/l4nqdc76","slide":17,"name":"shape-531","bbox":[98,486,16,16]}
+{"kind":"textbox","id":"sh/k3e947ql","slide":17,"name":"text-532","text":"recommend_by_preference","textPreview":"recommend_by_preference","textChars":23,"textLines":1,"bbox":[128,480,284,26]}
+{"kind":"textbox","id":"sh/j258b2p0","slide":17,"name":"text-533","text":"偏好标签 → 推荐","textPreview":"偏好标签 → 推荐","textChars":9,"textLines":1,"bbox":[128,509,310,22]}
+{"kind":"shape","id":"sh/y1cr2x8f","slide":17,"name":"line-534","bbox":[640,300,466,0]}
+{"kind":"shape","id":"sh/t8nahc72","slide":17,"name":"shape-535","bbox":[642,252,16,16]}
+{"kind":"textbox","id":"sh/87e987qx","slide":17,"name":"text-536","text":"query_order_status","textPreview":"query_order_status","textChars":18,"textLines":1,"bbox":[672,246,284,26]}
+{"kind":"textbox","id":"sh/7658f2pc","slide":17,"name":"text-537","text":"当前用户订单","textPreview":"当前用户订单","textChars":6,"textLines":1,"bbox":[672,275,310,22]}
+{"kind":"shape","id":"sh/65wr6h8r","slide":17,"name":"line-538","bbox":[640,378,466,0]}
+{"kind":"shape","id":"sh/hw7alw7e","slide":17,"name":"shape-539","bbox":[642,330,16,16]}
+{"kind":"textbox","id":"sh/gvy9cr6t","slide":17,"name":"text-540","text":"build_purchase_plan","textPreview":"build_purchase_plan","textChars":19,"textLines":1,"bbox":[672,324,284,26]}
+{"kind":"textbox","id":"sh/e5ofqpkz","slide":17,"name":"text-541","text":"预算 + 库存方案","textPreview":"预算 + 库存方案","textChars":9,"textLines":1,"bbox":[672,353,310,22]}
+{"kind":"shape","id":"sh/f6hwju1k","slide":17,"name":"line-542","bbox":[640,456,466,0]}
+{"kind":"shape","id":"sh/g7qxsz25","slide":17,"name":"shape-543","bbox":[642,408,16,16]}
+{"kind":"textbox","id":"sh/1szyl4jq","slide":17,"name":"text-544","text":"add_to_cart","textPreview":"add_to_cart","textChars":11,"textLines":1,"bbox":[672,402,284,26]}
+{"kind":"textbox","id":"sh/2t8fu9kb","slide":17,"name":"text-545","text":"确认后受控写入","textPreview":"确认后受控写入","textChars":7,"textLines":1,"bbox":[672,431,310,22]}
+{"kind":"shape","id":"sh/nuhgne1g","slide":17,"name":"shape-546","bbox":[994,410,86,24]}
+{"kind":"textbox","id":"sh/ovqxwz21","slide":17,"name":"text-547","text":"CONFIRM","textPreview":"CONFIRM","textChars":7,"textLines":1,"bbox":[1004,413,66,18]}
+{"kind":"shape","id":"sh/pwzyp4jm","slide":17,"name":"line-548","bbox":[640,534,466,0]}
+{"kind":"shape","id":"sh/axsfy9k7","slide":17,"name":"shape-549","bbox":[642,486,16,16]}
+{"kind":"textbox","id":"sh/by1gre1s","slide":17,"name":"text-550","text":"search_knowledge_base","textPreview":"search_knowledge_base","textChars":21,"textLines":1,"bbox":[672,480,284,26]}
+{"kind":"textbox","id":"sh/jexwbetw","slide":17,"name":"text-551","text":"商品 / 评价 / FAQ","textPreview":"商品 / 评价 / FAQ","textChars":13,"textLines":1,"bbox":[672,509,310,22]}
+{"kind":"shape","id":"sh/ydofi9sb","slide":17,"name":"line-552","bbox":[64,672,1152,0]}
+{"kind":"textbox","id":"sh/lgfedob2","slide":17,"name":"text-553","text":"Source: /health · TOOLS registry · agent smoke log","textPreview":"Source: /health · TOOLS registry · agent smoke log","textChars":50,"textLines":1,"bbox":[64,682,960,20]}
+{"kind":"textbox","id":"sh/kf6xkjah","slide":17,"name":"text-554","text":"17","textPreview":"17","textChars":2,"textLines":1,"bbox":[1180,681,36,20]}
+{"kind":"notes","id":"nt/dtxxh0","slide":17,"text":"八个工具中，搜索、详情、比较和偏好推荐是读工具；订单查询和加购还要经过服务间授权。\n把 add_to_cart 单独标成 CONFIRM，提醒老师写操作不是模型一句话就能完成。"}
+{"kind":"slide","id":"sl/000097","slide":18,"title":"AI 03 · REAL TOOL TRACE","textShapes":14}
+{"kind":"textbox","id":"sh/uxkzqtsr","slide":18,"name":"text-555","text":"AI 03 · REAL TOOL TRACE","textPreview":"AI 03 · REAL TOOL TRACE","textChars":23,"textLines":1,"bbox":[64,34,430,24]}
+{"kind":"textbox","id":"sh/h0vylori","slide":18,"name":"text-556","text":"“预算500的键盘”会触发真实商品检索","textPreview":"“预算500的键盘”会触发真实商品检索","textChars":19,"textLines":1,"bbox":[64,70,1040,64]}
+{"kind":"textbox","id":"sh/wz2hsjax","slide":18,"name":"text-557","text":"同一个问题里，模型负责理解预算和意图；后端负责返回可验证的商品、价格和库存。","textPreview":"同一个问题里，模型负责理解预算和意图；后端负责返回可验证的商品、价格和库存。","textChars":38,"textLines":1,"bbox":[64,137,1020,40]}
+{"kind":"shape","id":"sh/7atgfe90","slide":18,"name":"shape-558","bbox":[76,230,266,126]}
+{"kind":"shape","id":"sh/m9kzm9sv","slide":18,"name":"shape-559","bbox":[100,252,64,24]}
+{"kind":"textbox","id":"sh/9wbyhor6","slide":18,"name":"text-560","text":"USER","textPreview":"USER","textChars":4,"textLines":1,"bbox":[110,255,44,18]}
+{"kind":"textbox","id":"sh/8v2hojal","slide":18,"name":"text-561","text":"有没有适合敲代码的键盘？\n预算 500","textPreview":"有没有适合敲代码的键盘？ | 预算 500","textChars":19,"textLines":2,"bbox":[100,291,210,48]}
+{"kind":"shape","id":"sh/z69gbut4","slide":18,"name":"shape-562","bbox":[356,282,44,20]}
+{"kind":"shape","id":"sh/y50zi9sj","slide":18,"name":"shape-563","bbox":[430,226,300,166]}
+{"kind":"shape","id":"sh/ori183at","slide":18,"name":"shape-564","bbox":[448,242,114,24]}
+{"kind":"textbox","id":"sh/9cri1obe","slide":18,"name":"text-565","text":"SOURCE TRACE","textPreview":"SOURCE TRACE","textChars":12,"textLines":1,"bbox":[458,245,94,18]}
+{"kind":"textbox","id":"sh/mpgj6tsn","slide":18,"name":"text-566","text":"search_products(\n  keyword=\"键盘\",\n  max_price=500,\n  page=1, size=5\n)","textPreview":"search_products( |   keyword=\"键盘\", |   max_price=500, |   page=1, size=5 | )","textChars":68,"textLines":5,"bbox":[450,280,260,98]}
+{"kind":"shape","id":"sh/nq90zyt8","slide":18,"name":"shape-567","bbox":[748,282,44,20]}
+{"kind":"shape","id":"sh/0nyh4jux","slide":18,"name":"shape-568","bbox":[812,226,368,166]}
+{"kind":"shape","id":"sh/1o7ixob2","slide":18,"name":"shape-569","bbox":[838,248,126,24]}
+{"kind":"textbox","id":"sh/elgz29cr","slide":18,"name":"text-570","text":"BACKEND RESULT","textPreview":"BACKEND RESULT","textChars":14,"textLines":1,"bbox":[848,251,106,18]}
+{"kind":"textbox","id":"sh/zmp0vetc","slide":18,"name":"text-571","text":"极客机械键盘 K87  · ¥399  · 库存 80\n静音办公机械键盘  · ¥459  · 库存 45","textPreview":"极客机械键盘 K87  · ¥399  · 库存 80 | 静音办公机械键盘  · ¥459  · 库存 45","textChars":53,"textLines":2,"bbox":[838,291,312,60]}
+{"kind":"textbox","id":"sh/kj21gna1","slide":18,"name":"text-572","text":"productId / price / stock 可回查","textPreview":"productId / price / stock 可回查","textChars":29,"textLines":1,"bbox":[838,358,300,22]}
+{"kind":"shape","id":"sh/lkbi98bm","slide":18,"name":"line-573","bbox":[100,468,1030,0]}
+{"kind":"shape","id":"sh/t07it83q","slide":18,"name":"shape-574","bbox":[100,506,134,26]}
+{"kind":"textbox","id":"sh/szy1k325","slide":18,"name":"text-575","text":"GROUNDED REPLY","textPreview":"GROUNDED REPLY","textChars":14,"textLines":1,"bbox":[110,509,114,20]}
+{"kind":"textbox","id":"sh/7yp0rylk","slide":18,"name":"text-576","text":"为你筛出两款真实商品，并把预算、库存和下一步动作一起带回对话。","textPreview":"为你筛出两款真实商品，并把预算、库存和下一步动作一起带回对话。","textChars":31,"textLines":1,"bbox":[258,502,840,30]}
+{"kind":"shape","id":"sh/6xgzidkz","slide":18,"name":"line-577","bbox":[64,672,1152,0]}
+{"kind":"textbox","id":"sh/5c7ip83e","slide":18,"name":"text-578","text":"Source: search_products tool · backend /api/products/search · agent smoke","textPreview":"Source: search_products tool · backend /api/products/search · agent smoke","textChars":73,"textLines":1,"bbox":[64,682,960,20]}
+{"kind":"textbox","id":"sh/kbehg329","slide":18,"name":"text-579","text":"18","textPreview":"18","textChars":2,"textLines":1,"bbox":[1180,681,36,20]}
+{"kind":"notes","id":"nt/000097","slide":18,"text":"这页要强调参数和返回值，而不是只说调用过工具。\n商品卡片中的 productId、price、stock 都来自主后端，答辩时可以用 API 再查一遍。"}
+{"kind":"slide","id":"sl/ovebz5","slide":19,"title":"AI 04 · ORDER TRACE","textShapes":11}
+{"kind":"textbox","id":"sh/buh4zml0","slide":19,"name":"text-580","text":"AI 04 · ORDER TRACE","textPreview":"AI 04 · ORDER TRACE","textChars":19,"textLines":1,"bbox":[64,34,430,24]}
+{"kind":"textbox","id":"sh/wvq587ml","slide":19,"name":"text-581","text":"“上次买的东西到哪了”只能查询当前用户","textPreview":"“上次买的东西到哪了”只能查询当前用户","textChars":19,"textLines":1,"bbox":[64,70,1040,64]}
+{"kind":"textbox","id":"sh/xwz61c36","slide":19,"name":"text-582","text":"Agent 先用用户 JWT 回访 profile，再用内部接口查订单；请求体里的 userId 不被信任。","textPreview":"Agent 先用用户 JWT 回访 profile，再用内部接口查订单；请求体里的 userId 不被信任。","textChars":54,"textLines":1,"bbox":[64,137,1020,40]}
+{"kind":"shape","id":"sh/yx8nah4r","slide":19,"name":"shape-583","bbox":[74,232,510,354]}
+{"kind":"shape","id":"sh/jyho3mlc","slide":19,"name":"shape-584","bbox":[102,256,70,24]}
+{"kind":"textbox","id":"sh/kzq5crmh","slide":19,"name":"text-585","text":"TRACE","textPreview":"TRACE","textChars":5,"textLines":1,"bbox":[112,259,50,18]}
+{"kind":"textbox","id":"sh/l0j65w32","slide":19,"name":"text-586","text":"01  Bearer JWT → /api/user/profile","textPreview":"01  Bearer JWT → /api/user/profile","textChars":34,"textLines":1,"bbox":[104,308,430,28]}
+{"kind":"textbox","id":"sh/6lsne14n","slide":19,"name":"text-587","text":"02  trusted userId = 5","textPreview":"02  trusted userId = 5","textChars":22,"textLines":1,"bbox":[104,360,430,28]}
+{"kind":"textbox","id":"sh/7m1o76l8","slide":19,"name":"text-588","text":"03  query_order_status()","textPreview":"03  query_order_status()","textChars":24,"textLines":1,"bbox":[104,412,430,28]}
+{"kind":"textbox","id":"sh/n61cryx0","slide":19,"name":"text-589","text":"04  internal order summary → reply","textPreview":"04  internal order summary → reply","textChars":34,"textLines":1,"bbox":[104,464,430,28]}
+{"kind":"shape","id":"sh/25sbytgf","slide":19,"name":"shape-590","bbox":[104,522,170,24]}
+{"kind":"textbox","id":"sh/psjut8fq","slide":19,"name":"text-591","text":"NO USERID SPOOFING","textPreview":"NO USERID SPOOFING","textChars":18,"textLines":1,"bbox":[114,525,150,18]}
+{"kind":"shape","id":"sh/o7at03yl","slide":19,"name":"shape-592","bbox":[658,220,520,372]}
+{"kind":"shape","id":"sh/e1sbutg3","slide":19,"name":"line-593","bbox":[64,672,1152,0]}
+{"kind":"textbox","id":"sh/14jup8fu","slide":19,"name":"text-594","text":"Source: ai-chat-order-query.png · query_order_status · Jwt profile check","textPreview":"Source: ai-chat-order-query.png · query_order_status · Jwt profile check","textChars":72,"textLines":1,"bbox":[64,682,960,20]}
+{"kind":"textbox","id":"sh/03atw3y9","slide":19,"name":"text-595","text":"19","textPreview":"19","textChars":2,"textLines":1,"bbox":[1180,681,36,20]}
+{"kind":"image","id":"im/cb690ne1","slide":19,"name":"","geometry":"roundRect","alt":"真实 Agent 查询订单截图","bbox":[664,226,508,360]}
+{"kind":"notes","id":"nt/ovebz5","slide":19,"text":"右侧是实际前端截图，左侧把同一场景拆成四个身份与工具步骤。\n回答“Agent 怎么知道该用户订单”时，核心不是把 userId 放进 prompt，而是用 JWT 回访主后端确认。"}
+{"kind":"slide","id":"sl/zoy5k0","slide":20,"title":"AI 05 · SERVICE AUTH","textShapes":17}
+{"kind":"textbox","id":"sh/czap8rit","slide":20,"name":"text-596","text":"AI 05 · SERVICE AUTH","textPreview":"AI 05 · SERVICE AUTH","textChars":20,"textLines":1,"bbox":[64,34,430,24]}
+{"kind":"textbox","id":"sh/be1ozm18","slide":20,"name":"text-597","text":"两层令牌把用户身份与服务权限分开","textPreview":"两层令牌把用户身份与服务权限分开","textChars":16,"textLines":1,"bbox":[64,70,1040,64]}
+{"kind":"textbox","id":"sh/qdsn610n","slide":20,"name":"text-598","text":"用户 JWT 证明“是谁”；内部 service header 证明“哪个服务可以做什么”。","textPreview":"用户 JWT 证明“是谁”；内部 service header 证明“哪个服务可以做什么”。","textChars":46,"textLines":1,"bbox":[64,137,1020,40]}
+{"kind":"shape","id":"sh/pcj6xwj2","slide":20,"name":"line-599","bbox":[106,324,1012,0]}
+{"kind":"shape","id":"sh/oba54rih","slide":20,"name":"shape-600","bbox":[82,268,180,112]}
+{"kind":"textbox","id":"sh/3a1ovm1w","slide":20,"name":"text-601","text":"Browser","textPreview":"Browser","textChars":7,"textLines":1,"bbox":[96,284,152,30]}
+{"kind":"textbox","id":"sh/29sn2h0b","slide":20,"name":"text-602","text":"Bearer user JWT","textPreview":"Bearer user JWT","textChars":15,"textLines":1,"bbox":[96,318,152,54]}
+{"kind":"shape","id":"sh/98n69gj6","slide":20,"name":"shape-603","bbox":[82,268,5,112]}
+{"kind":"shape","id":"sh/87epgbil","slide":20,"name":"shape-604","bbox":[338,268,216,112]}
+{"kind":"textbox","id":"sh/yts3u587","slide":20,"name":"text-605","text":"Agent","textPreview":"Agent","textChars":5,"textLines":1,"bbox":[352,284,188,30]}
+{"kind":"textbox","id":"sh/zu1knaps","slide":20,"name":"text-606","text":"profile callback\nactive_tool_user_id","textPreview":"profile callback | active_tool_user_id","textChars":36,"textLines":2,"bbox":[352,318,188,54]}
+{"kind":"shape","id":"sh/kvalwfqx","slide":20,"name":"shape-607","bbox":[338,268,5,112]}
+{"kind":"shape","id":"sh/lwj2pk7i","slide":20,"name":"shape-608","bbox":[634,268,216,112]}
+{"kind":"textbox","id":"sh/a5sjq58v","slide":20,"name":"text-609","text":"Backend","textPreview":"Backend","textChars":7,"textLines":1,"bbox":[648,284,188,30]}
+{"kind":"textbox","id":"sh/b61kjqpg","slide":20,"name":"text-610","text":"internal scope\nX-Internal-Service","textPreview":"internal scope | X-Internal-Service","textChars":33,"textLines":2,"bbox":[648,318,188,54]}
+{"kind":"shape","id":"sh/c7a1svq1","slide":20,"name":"shape-611","bbox":[634,268,5,112]}
+{"kind":"shape","id":"sh/x8j2l07m","slide":20,"name":"shape-612","bbox":[930,268,216,112]}
+{"kind":"textbox","id":"sh/u1c32p8f","slide":20,"name":"text-613","text":"Order / Cart","textPreview":"Order / Cart","textChars":12,"textLines":1,"bbox":[944,284,188,30]}
+{"kind":"textbox","id":"sh/v2lkvup0","slide":20,"name":"text-614","text":"only current user\nno password fields","textPreview":"only current user | no password fields","textChars":36,"textLines":2,"bbox":[944,318,188,54]}
+{"kind":"shape","id":"sh/rud87i10","slide":20,"name":"shape-615","bbox":[930,268,5,112]}
+{"kind":"shape","id":"sh/6t4ryxkf","slide":20,"name":"shape-616","bbox":[274,314,44,20]}
+{"kind":"shape","id":"sh/twvq9sj6","slide":20,"name":"shape-617","bbox":[566,314,44,20]}
+{"kind":"shape","id":"sh/svm90n2l","slide":20,"name":"shape-618","bbox":[862,314,44,20]}
+{"kind":"shape","id":"sh/fyd8b21w","slide":20,"name":"shape-619","bbox":[108,466,466,104]}
+{"kind":"shape","id":"sh/ex4r2xkr","slide":20,"name":"shape-620","bbox":[134,492,64,24]}
+{"kind":"textbox","id":"sh/10fqdcj2","slide":20,"name":"text-621","text":"DENY","textPreview":"DENY","textChars":4,"textLines":1,"bbox":[144,495,44,18]}
+{"kind":"textbox","id":"sh/gzm9472h","slide":20,"name":"text-622","text":"tool userId ≠ active user → 401 / 403","textPreview":"tool userId ≠ active user → 401 / 403","textChars":37,"textLines":1,"bbox":[218,488,318,28]}
+{"kind":"shape","id":"sh/32x8f218","slide":20,"name":"shape-623","bbox":[644,466,466,104]}
+{"kind":"shape","id":"sh/21or6hkn","slide":20,"name":"shape-624","bbox":[670,492,70,24]}
+{"kind":"textbox","id":"sh/0rqpw7yl","slide":20,"name":"text-625","text":"ALLOW","textPreview":"ALLOW","textChars":5,"textLines":1,"bbox":[680,495,50,18]}
+{"kind":"textbox","id":"sh/lszq5cz6","slide":20,"name":"text-626","text":"内部 header + secret + scope 校验通过","textPreview":"内部 header + secret + scope 校验通过","textChars":31,"textLines":1,"bbox":[760,488,318,28]}
+{"kind":"shape","id":"sh/y5o7uhgv","slide":20,"name":"line-627","bbox":[64,672,1152,0]}
+{"kind":"textbox","id":"sh/zqx83mhg","slide":20,"name":"text-628","text":"Source: agent main.py · backend internal endpoints · INTERNAL_SERVICE_SECRET","textPreview":"Source: agent main.py · backend internal endpoints · INTERNAL_SERVICE_SECRET","textChars":76,"textLines":1,"bbox":[64,682,960,20]}
+{"kind":"textbox","id":"sh/c36ps7yp","slide":20,"name":"text-629","text":"20","textPreview":"20","textChars":2,"textLines":1,"bbox":[1180,681,36,20]}
+{"kind":"notes","id":"nt/zoy5k0","slide":20,"text":"这是 AI 部分最容易被追问的安全问题。把身份认证和服务授权分成两层，避免让用户把 JWT 交给 Agent。\nactive_tool_user_id 是最后一道模型越权保护，模型不能通过参数改查另一个用户。"}
+{"kind":"slide","id":"sl/faticx","slide":21,"title":"AI 06 · SHORT MEMORY","textShapes":22}
+{"kind":"textbox","id":"sh/p4nyp4za","slide":21,"name":"text-630","text":"AI 06 · SHORT MEMORY","textPreview":"AI 06 · SHORT MEMORY","textChars":20,"textLines":1,"bbox":[64,34,430,24]}
+{"kind":"textbox","id":"sh/21wfepgz","slide":21,"name":"text-631","text":"短期记忆按 userId:sessionId 隔离","textPreview":"短期记忆按 userId:sessionId 隔离","textChars":25,"textLines":1,"bbox":[64,70,1040,64]}
+{"kind":"textbox","id":"sh/n25gnuhk","slide":21,"name":"text-632","text":"内存窗口提供当前语境；agent_conversation 负责重启后的恢复兜底。","textPreview":"内存窗口提供当前语境；agent_conversation 负责重启后的恢复兜底。","textChars":41,"textLines":1,"bbox":[64,137,1020,40]}
+{"kind":"textbox","id":"sh/0zexcfyt","slide":21,"name":"text-633","text":"session = userId:sessionId","textPreview":"session = userId:sessionId","textChars":26,"textLines":1,"bbox":[90,228,540,34]}
+{"kind":"shape","id":"sh/10nylkze","slide":21,"name":"line-634","bbox":[110,360,1020,0]}
+{"kind":"shape","id":"sh/edwfapgn","slide":21,"name":"shape-635","bbox":[104,346,28,28]}
+{"kind":"textbox","id":"sh/fe5gjuh8","slide":21,"name":"text-636","text":"用户","textPreview":"用户","textChars":2,"textLines":1,"bbox":[92,396,52,22]}
+{"kind":"shape","id":"sh/sbux8fyh","slide":21,"name":"shape-637","bbox":[186,346,28,28]}
+{"kind":"textbox","id":"sh/dc3yhkz2","slide":21,"name":"text-638","text":"Agent","textPreview":"Agent","textChars":5,"textLines":1,"bbox":[174,396,52,22]}
+{"kind":"shape","id":"sh/p8nmlcfe","slide":21,"name":"shape-639","bbox":[268,346,28,28]}
+{"kind":"textbox","id":"sh/o7e5c7yt","slide":21,"name":"text-640","text":"用户","textPreview":"用户","textChars":2,"textLines":1,"bbox":[256,396,52,22]}
+{"kind":"shape","id":"sh/3654jmx8","slide":21,"name":"shape-641","bbox":[350,346,28,28]}
+{"kind":"textbox","id":"sh/25wnahgn","slide":21,"name":"text-642","text":"Agent","textPreview":"Agent","textChars":5,"textLines":1,"bbox":[338,396,52,22]}
+{"kind":"shape","id":"sh/14nmhcf2","slide":21,"name":"shape-643","bbox":[432,346,28,28]}
+{"kind":"textbox","id":"sh/g3u587yx","slide":21,"name":"text-644","text":"用户","textPreview":"用户","textChars":2,"textLines":1,"bbox":[420,396,52,22]}
+{"kind":"shape","id":"sh/f2l4f2xc","slide":21,"name":"shape-645","bbox":[514,346,28,28]}
+{"kind":"textbox","id":"sh/e1c36xgr","slide":21,"name":"text-646","text":"Agent","textPreview":"Agent","textChars":5,"textLines":1,"bbox":[502,396,52,22]}
+{"kind":"shape","id":"sh/tg3mdsf6","slide":21,"name":"shape-647","bbox":[596,346,28,28]}
+{"kind":"textbox","id":"sh/sful4nyl","slide":21,"name":"text-648","text":"用户","textPreview":"用户","textChars":2,"textLines":1,"bbox":[584,396,52,22]}
+{"kind":"shape","id":"sh/kjy5k76h","slide":21,"name":"shape-649","bbox":[678,346,28,28]}
+{"kind":"textbox","id":"sh/5k7mtsn2","slide":21,"name":"text-650","text":"Agent","textPreview":"Agent","textChars":5,"textLines":1,"bbox":[666,396,52,22]}
+{"kind":"shape","id":"sh/ihgnixob","slide":21,"name":"shape-651","bbox":[760,346,28,28]}
+{"kind":"textbox","id":"sh/jip4r25w","slide":21,"name":"text-652","text":"用户","textPreview":"用户","textChars":2,"textLines":1,"bbox":[748,396,52,22]}
+{"kind":"shape","id":"sh/wve5gn6l","slide":21,"name":"shape-653","bbox":[842,346,28,28]}
+{"kind":"textbox","id":"sh/xgnmpsnq","slide":21,"name":"text-654","text":"Agent","textPreview":"Agent","textChars":5,"textLines":1,"bbox":[830,396,52,22]}
+{"kind":"shape","id":"sh/atwnedof","slide":21,"name":"shape-655","bbox":[924,346,28,28]}
+{"kind":"textbox","id":"sh/vu54ni50","slide":21,"name":"text-656","text":"用户","textPreview":"用户","textChars":2,"textLines":1,"bbox":[912,396,52,22]}
+{"kind":"shape","id":"sh/gri5sr6p","slide":21,"name":"shape-657","bbox":[1006,346,28,28]}
+{"kind":"textbox","id":"sh/hcr61cna","slide":21,"name":"text-658","text":"Agent","textPreview":"Agent","textChars":5,"textLines":1,"bbox":[994,396,52,22]}
+{"kind":"shape","id":"sh/b6t8rqpc","slide":21,"name":"shape-659","bbox":[118,326,934,68]}
+{"kind":"shape","id":"sh/qlk7yl8r","slide":21,"name":"shape-660","bbox":[118,470,174,28]}
+{"kind":"textbox","id":"sh/d8vqtg7i","slide":21,"name":"text-661","text":"WINDOW = 12 messages","textPreview":"WINDOW = 12 messages","textChars":20,"textLines":1,"bbox":[128,473,154,22]}
+{"kind":"shape","id":"sh/c72p0bqx","slide":21,"name":"shape-662","bbox":[356,470,88,28]}
+{"kind":"textbox","id":"sh/zad8vqpo","slide":21,"name":"text-663","text":"PERSIST","textPreview":"PERSIST","textChars":7,"textLines":1,"bbox":[366,473,68,22]}
+{"kind":"textbox","id":"sh/y9472l83","slide":21,"name":"text-664","text":"每轮写入 agent_conversation；重启后加载最近 12 条。","textPreview":"每轮写入 agent_conversation；重启后加载最近 12 条。","textChars":37,"textLines":1,"bbox":[470,470,560,28]}
+{"kind":"shape","id":"sh/lcvqx07e","slide":21,"name":"shape-665","bbox":[118,540,934,66]}
+{"kind":"textbox","id":"sh/0bmp4vqt","slide":21,"name":"text-666","text":"Session A ≠ Session B  ·  同一 user 也不会串话","textPreview":"Session A ≠ Session B  ·  同一 user 也不会串话","textChars":39,"textLines":1,"bbox":[146,560,800,28]}
+{"kind":"shape","id":"sh/fe9oj6p4","slide":21,"name":"line-667","bbox":[64,672,1152,0]}
+{"kind":"textbox","id":"sh/ud07q18j","slide":21,"name":"text-668","text":"Source: agent memory deque · agent_conversation schema","textPreview":"Source: agent memory deque · agent_conversation schema","textChars":54,"textLines":1,"bbox":[64,682,960,20]}
+{"kind":"textbox","id":"sh/69ozmlkr","slide":21,"name":"text-669","text":"21","textPreview":"21","textChars":2,"textLines":1,"bbox":[1180,681,36,20]}
+{"kind":"notes","id":"nt/faticx","slide":21,"text":"短期记忆回答的是“当前这一场对话说了什么”。\n会话键包含 userId 和 sessionId，既隔离不同用户，也隔离同一用户的不同会话。"}
+{"kind":"slide","id":"sl/jcijf8","slide":22,"title":"AI 07 · LONG MEMORY WRITE","textShapes":17}
+{"kind":"textbox","id":"sh/gfmh0rqp","slide":22,"name":"text-670","text":"AI 07 · LONG MEMORY WRITE","textPreview":"AI 07 · LONG MEMORY WRITE","textChars":25,"textLines":1,"bbox":[64,34,430,24]}
+{"kind":"textbox","id":"sh/fedgrmp4","slide":22,"name":"text-671","text":"长期记忆把偏好变成可更新的数据","textPreview":"长期记忆把偏好变成可更新的数据","textChars":15,"textLines":1,"bbox":[64,70,1040,64]}
+{"kind":"textbox","id":"sh/ud4zyh8j","slide":22,"name":"text-672","text":"对话结束后提炼标签；重复偏好加权但封顶，避免一次偶然表达永久主导推荐。","textPreview":"对话结束后提炼标签；重复偏好加权但封顶，避免一次偶然表达永久主导推荐。","textChars":35,"textLines":1,"bbox":[64,137,1020,40]}
+{"kind":"shape","id":"sh/pkfyxw76","slide":22,"name":"line-673","bbox":[160,346,880,0]}
+{"kind":"shape","id":"sh/4jmh4bql","slide":22,"name":"shape-674","bbox":[86,278,220,136]}
+{"kind":"textbox","id":"sh/3idgv6p0","slide":22,"name":"text-675","text":"Conversation","textPreview":"Conversation","textChars":12,"textLines":1,"bbox":[100,294,192,30]}
+{"kind":"textbox","id":"sh/2h4z218f","slide":22,"name":"text-676","text":"“我喜欢机械键盘”","textPreview":"“我喜欢机械键盘”","textChars":9,"textLines":1,"bbox":[100,328,192,78]}
+{"kind":"shape","id":"sh/5obylc72","slide":22,"name":"shape-677","bbox":[86,278,5,136]}
+{"kind":"shape","id":"sh/kn2xs7qh","slide":22,"name":"shape-678","bbox":[390,278,220,136]}
+{"kind":"textbox","id":"sh/eh4nitgv","slide":22,"name":"text-679","text":"Extract","textPreview":"Extract","textChars":7,"textLines":1,"bbox":[404,294,192,30]}
+{"kind":"textbox","id":"sh/fidobexg","slide":22,"name":"text-680","text":"rule / optional LLM\nJSON tags","textPreview":"rule / optional LLM | JSON tags","textChars":29,"textLines":2,"bbox":[404,328,192,78]}
+{"kind":"shape","id":"sh/0jm5kjy1","slide":22,"name":"shape-681","bbox":[390,278,5,136]}
+{"kind":"shape","id":"sh/1kv6dofm","slide":22,"name":"shape-682","bbox":[694,278,220,136]}
+{"kind":"textbox","id":"sh/254nmtgr","slide":22,"name":"text-683","text":"Upsert","textPreview":"Upsert","textChars":6,"textLines":1,"bbox":[708,294,192,30]}
+{"kind":"textbox","id":"sh/n6xofyxc","slide":22,"name":"text-684","text":"user_id + tag\nweight += 0.1","textPreview":"user_id + tag | weight += 0.1","textChars":27,"textLines":2,"bbox":[708,328,192,78]}
+{"kind":"shape","id":"sh/o765o3yx","slide":22,"name":"shape-685","bbox":[694,278,5,136]}
+{"kind":"shape","id":"sh/p8f6h8fi","slide":22,"name":"shape-686","bbox":[998,278,196,136]}
+{"kind":"textbox","id":"sh/a9onqdg3","slide":22,"name":"text-687","text":"user_preference","textPreview":"user_preference","textChars":15,"textLines":1,"bbox":[1012,294,168,30]}
+{"kind":"textbox","id":"sh/baxojyxo","slide":22,"name":"text-688","text":"top 3 on next session\ncap = 2.0","textPreview":"top 3 on next session | cap = 2.0","textChars":31,"textLines":2,"bbox":[1012,328,168,78]}
+{"kind":"shape","id":"sh/7eh47idg","slide":22,"name":"shape-689","bbox":[998,278,5,136]}
+{"kind":"shape","id":"sh/6d8nydcb","slide":22,"name":"shape-690","bbox":[324,336,46,20]}
+{"kind":"shape","id":"sh/tgzm98vm","slide":22,"name":"shape-691","bbox":[628,336,46,20]}
+{"kind":"shape","id":"sh/8fq503u1","slide":22,"name":"shape-692","bbox":[932,336,46,20]}
+{"kind":"shape","id":"sh/zax43ydk","slide":22,"name":"shape-693","bbox":[136,486,430,108]}
+{"kind":"shape","id":"sh/y9onutwz","slide":22,"name":"shape-694","bbox":[154,502,114,24]}
+{"kind":"textbox","id":"sh/lcfm58vq","slide":22,"name":"text-695","text":"SOURCE TRACE","textPreview":"SOURCE TRACE","textChars":12,"textLines":1,"bbox":[164,505,94,18]}
+{"kind":"textbox","id":"sh/kb65w3e5","slide":22,"name":"text-696","text":"tag = \"机械键盘\"\nweight: 1.00 → 1.10\nunique(user_id, preference_tag)","textPreview":"tag = \"机械键盘\" | weight: 1.00 → 1.10 | unique(user_id, preference_tag)","textChars":64,"textLines":3,"bbox":[156,540,390,40]}
+{"kind":"shape","id":"sh/bmx4zydo","slide":22,"name":"shape-697","bbox":[650,486,490,108]}
+{"kind":"shape","id":"sh/al4nqtw3","slide":22,"name":"shape-698","bbox":[676,510,124,24]}
+{"kind":"textbox","id":"sh/gfitkvqp","slide":22,"name":"text-699","text":"WHY IT MATTERS","textPreview":"WHY IT MATTERS","textChars":14,"textLines":1,"bbox":[686,513,104,18]}
+{"kind":"textbox","id":"sh/1gbad07a","slide":22,"name":"text-700","text":"偏好落在数据库里，下一次会话能复核，而不是只停留在 prompt。","textPreview":"偏好落在数据库里，下一次会话能复核，而不是只停留在 prompt。","textChars":33,"textLines":1,"bbox":[824,506,286,48]}
+{"kind":"shape","id":"sh/ed0bil8j","slide":22,"name":"line-701","bbox":[64,672,1152,0]}
+{"kind":"textbox","id":"sh/fe9sbqp4","slide":22,"name":"text-702","text":"Source: extract_preferences · user_preference · preference upsert","textPreview":"Source: extract_preferences · user_preference · preference upsert","textChars":65,"textLines":1,"bbox":[64,682,960,20]}
+{"kind":"textbox","id":"sh/o32tof6l","slide":22,"name":"text-703","text":"22","textPreview":"22","textChars":2,"textLines":1,"bbox":[1180,681,36,20]}
+{"kind":"notes","id":"nt/jcijf8","slide":22,"text":"长期记忆的关键不是“模型说它记住了”，而是数据库里真的有一行可检查的标签和权重。\n权重封顶 2.0，避免重复对话无限放大某个偏好。"}
+{"kind":"slide","id":"sl/jpb8ky","slide":23,"title":"AI 08 · CROSS-SESSION MEMORY","textShapes":12}
+{"kind":"textbox","id":"sh/y5k36xc7","slide":23,"name":"text-704","text":"AI 08 · CROSS-SESSION MEMORY","textPreview":"AI 08 · CROSS-SESSION MEMORY","textChars":28,"textLines":1,"bbox":[64,34,430,24]}
+{"kind":"textbox","id":"sh/lsvmhsby","slide":23,"name":"text-705","text":"新会话读取Top 3偏好，跨Session仍记得","textPreview":"新会话读取Top 3偏好，跨Session仍记得","textChars":24,"textLines":1,"bbox":[64,70,1040,64]}
+{"kind":"textbox","id":"sh/0rml8nad","slide":23,"name":"text-706","text":"Session A 写入事实，Session B 只读取高权重标签并温和注入 system prompt。","textPreview":"Session A 写入事实，Session B 只读取高权重标签并温和注入 system prompt。","textChars":53,"textLines":1,"bbox":[64,137,1020,40]}
+{"kind":"shape","id":"sh/nud4j2to","slide":23,"name":"shape-707","bbox":[74,238,300,286]}
+{"kind":"shape","id":"sh/mt43axs3","slide":23,"name":"shape-708","bbox":[102,264,100,26]}
+{"kind":"textbox","id":"sh/9wvmlcbu","slide":23,"name":"text-709","text":"SESSION A","textPreview":"SESSION A","textChars":9,"textLines":1,"bbox":[112,267,80,20]}
+{"kind":"textbox","id":"sh/8vmlc7a9","slide":23,"name":"text-710","text":"用户：我喜欢机械键盘\nAgent：记录偏好","textPreview":"用户：我喜欢机械键盘 | Agent：记录偏好","textChars":21,"textLines":2,"bbox":[102,326,236,66]}
+{"kind":"shape","id":"sh/vyx4nmt0","slide":23,"name":"shape-711","bbox":[402,344,52,22]}
+{"kind":"shape","id":"sh/ax4nehsf","slide":23,"name":"shape-712","bbox":[490,238,300,286]}
+{"kind":"shape","id":"sh/wrq9cfmt","slide":23,"name":"shape-713","bbox":[518,264,126,26]}
+{"kind":"textbox","id":"sh/xsja5kne","slide":23,"name":"text-714","text":"PREFERENCE ROW","textPreview":"PREFERENCE ROW","textChars":14,"textLines":1,"bbox":[528,267,106,20]}
+{"kind":"textbox","id":"sh/a58rap4n","slide":23,"name":"text-715","text":"user_id = 5\ntag = 机械键盘\nweight = 1.10","textPreview":"user_id = 5 | tag = 机械键盘 | weight = 1.10","textChars":36,"textLines":3,"bbox":[518,326,236,88]}
+{"kind":"shape","id":"sh/vqhs3u58","slide":23,"name":"shape-716","bbox":[818,344,52,22]}
+{"kind":"shape","id":"sh/kvatgzmp","slide":23,"name":"shape-717","bbox":[904,238,300,286]}
+{"kind":"shape","id":"sh/5wja94na","slide":23,"name":"shape-718","bbox":[932,264,100,26]}
+{"kind":"textbox","id":"sh/itsbep4z","slide":23,"name":"text-719","text":"SESSION B","textPreview":"SESSION B","textChars":9,"textLines":1,"bbox":[942,267,80,20]}
+{"kind":"textbox","id":"sh/ju1s7u5k","slide":23,"name":"text-720","text":"system prompt：优先考虑键盘偏好\n推荐：新品机械键盘","textPreview":"system prompt：优先考虑键盘偏好 | 推荐：新品机械键盘","textChars":32,"textLines":2,"bbox":[932,326,236,92]}
+{"kind":"shape","id":"sh/szatkzm1","slide":23,"name":"shape-721","bbox":[148,574,1000,52]}
+{"kind":"textbox","id":"sh/t03ad4nm","slide":23,"name":"text-722","text":"演示方法：结束 Session A → 新建 Session B → 问“有什么新品推荐” → 观察推荐方向与表记录。","textPreview":"演示方法：结束 Session A → 新建 Session B → 问“有什么新品推荐” → 观察推荐方向与表记录。","textChars":59,"textLines":1,"bbox":[174,588,948,24]}
+{"kind":"shape","id":"sh/1gzax4fq","slide":23,"name":"line-723","bbox":[64,672,1152,0]}
+{"kind":"textbox","id":"sh/gfq94ze5","slide":23,"name":"text-724","text":"Source: user_preference read path · new session smoke test","textPreview":"Source: user_preference read path · new session smoke test","textChars":58,"textLines":1,"bbox":[64,682,960,20]}
+{"kind":"textbox","id":"sh/fexsvuxk","slide":23,"name":"text-725","text":"23","textPreview":"23","textChars":2,"textLines":1,"bbox":[1180,681,36,20]}
+{"kind":"notes","id":"nt/jpb8ky","slide":23,"text":"这是答辩最值得现场演示的 AI 证据：跨会话，不只是同一 session 的上下文。\n强调读取的是 top 3 标签，推荐时优先考虑但不把标签词机械地重复到每句话里。"}
+{"kind":"slide","id":"sl/1wi331","slide":24,"title":"AI 09 · PURCHASE PLAN","textShapes":22}
+{"kind":"textbox","id":"sh/ylo3uhon","slide":24,"name":"text-726","text":"AI 09 · PURCHASE PLAN","textPreview":"AI 09 · PURCHASE PLAN","textChars":21,"textLines":1,"bbox":[64,34,430,24]}
+{"kind":"textbox","id":"sh/l8fm5wne","slide":24,"name":"text-727","text":"多步购买方案先补齐需求，再搜索与计算","textPreview":"多步购买方案先补齐需求，再搜索与计算","textChars":18,"textLines":1,"bbox":[64,70,1040,64]}
+{"kind":"textbox","id":"sh/k76lwr6t","slide":24,"name":"text-728","text":"不完整就先追问；完整后才调用工具；加购必须停在确认点。","textPreview":"不完整就先追问；完整后才调用工具；加购必须停在确认点。","textChars":27,"textLines":1,"bbox":[64,137,1020,40]}
+{"kind":"shape","id":"sh/bid4zm5c","slide":24,"name":"line-729","bbox":[120,330,1000,0]}
+{"kind":"shape","id":"sh/ah43qhor","slide":24,"name":"shape-730","bbox":[98,308,44,44]}
+{"kind":"textbox","id":"sh/xkfm1cn2","slide":24,"name":"text-731","text":"01","textPreview":"01","textChars":2,"textLines":1,"bbox":[104,318,32,24]}
+{"kind":"textbox","id":"sh/cjmls76x","slide":24,"name":"text-732","text":"补齐场景","textPreview":"补齐场景","textChars":4,"textLines":1,"bbox":[38,382,164,26]}
+{"kind":"textbox","id":"sh/veh4b65g","slide":24,"name":"text-733","text":"跑步 / 办公 / 宿舍","textPreview":"跑步 / 办公 / 宿舍","textChars":12,"textLines":1,"bbox":[20,418,200,42]}
+{"kind":"shape","id":"sh/ud8n214v","slide":24,"name":"shape-734","bbox":[348,308,44,44]}
+{"kind":"textbox","id":"sh/g7ihcn6l","slide":24,"name":"text-735","text":"02","textPreview":"02","textChars":2,"textLines":1,"bbox":[354,318,32,24]}
+{"kind":"textbox","id":"sh/hsryls76","slide":24,"name":"text-736","text":"确认预算","textPreview":"确认预算","textChars":4,"textLines":1,"bbox":[288,382,164,26]}
+{"kind":"textbox","id":"sh/u50zadof","slide":24,"name":"text-737","text":"预算是必需条件","textPreview":"预算是必需条件","textChars":7,"textLines":1,"bbox":[270,418,200,42]}
+{"kind":"shape","id":"sh/f69gjip0","slide":24,"name":"shape-738","bbox":[598,308,44,44]}
+{"kind":"textbox","id":"sh/s3ih8n69","slide":24,"name":"text-739","text":"03","textPreview":"03","textChars":2,"textLines":1,"bbox":[604,318,32,24]}
+{"kind":"textbox","id":"sh/t4ryhs7u","slide":24,"name":"text-740","text":"检索商品","textPreview":"检索商品","textChars":4,"textLines":1,"bbox":[538,382,164,26]}
+{"kind":"textbox","id":"sh/610f6doj","slide":24,"name":"text-741","text":"search_products","textPreview":"search_products","textChars":15,"textLines":1,"bbox":[520,418,200,42]}
+{"kind":"shape","id":"sh/729gfipo","slide":24,"name":"shape-742","bbox":[848,308,44,44]}
+{"kind":"textbox","id":"sh/kzyx436d","slide":24,"name":"text-743","text":"04","textPreview":"04","textChars":2,"textLines":1,"bbox":[854,318,32,24]}
+{"kind":"textbox","id":"sh/l07yd87y","slide":24,"name":"text-744","text":"计算方案","textPreview":"计算方案","textChars":4,"textLines":1,"bbox":[788,382,164,26]}
+{"kind":"textbox","id":"sh/1kz6l0va","slide":24,"name":"text-745","text":"build_purchase_plan ≤ 3","textPreview":"build_purchase_plan ≤ 3","textChars":23,"textLines":1,"bbox":[770,418,200,42]}
+{"kind":"shape","id":"sh/0j65svep","slide":24,"name":"shape-746","bbox":[1098,308,44,44]}
+{"kind":"textbox","id":"sh/zix4jqdk","slide":24,"name":"text-747","text":"05","textPreview":"05","textChars":2,"textLines":1,"bbox":[1104,318,32,24]}
+{"kind":"textbox","id":"sh/ehonq5wz","slide":24,"name":"text-748","text":"确认加购","textPreview":"确认加购","textChars":4,"textLines":1,"bbox":[1038,382,164,26]}
+{"kind":"textbox","id":"sh/dgfmh0ve","slide":24,"name":"text-749","text":"add_to_cart 受控写入","textPreview":"add_to_cart 受控写入","textChars":16,"textLines":1,"bbox":[1020,418,200,42]}
+{"kind":"shape","id":"sh/cf65ovet","slide":24,"name":"shape-750","bbox":[112,508,1010,92]}
+{"kind":"shape","id":"sh/rux4fqd8","slide":24,"name":"shape-751","bbox":[140,532,66,24]}
+{"kind":"textbox","id":"sh/qtonmlwn","slide":24,"name":"text-752","text":"STATE","textPreview":"STATE","textChars":5,"textLines":1,"bbox":[150,535,46,18]}
+{"kind":"textbox","id":"sh/xcj6tkvi","slide":24,"name":"text-753","text":"clarifying → ready → awaiting_confirmation → completed","textPreview":"clarifying → ready → awaiting_confirmation → completed","textChars":54,"textLines":1,"bbox":[234,528,820,30]}
+{"kind":"shape","id":"sh/wbq50fex","slide":24,"name":"line-754","bbox":[64,672,1152,0]}
+{"kind":"textbox","id":"sh/uxk3uhcf","slide":24,"name":"text-755","text":"Source: build_purchase_plan · ChatUi agentTask · agent_smoke.py","textPreview":"Source: build_purchase_plan · ChatUi agentTask · agent_smoke.py","textChars":63,"textLines":1,"bbox":[64,682,960,20]}
+{"kind":"textbox","id":"sh/fytknmt0","slide":24,"name":"text-756","text":"24","textPreview":"24","textChars":2,"textLines":1,"bbox":[1180,681,36,20]}
+{"kind":"notes","id":"nt/1wi331","slide":24,"text":"购买方案是一个真正的多步 Agent 工作流，不是一次搜索后堆三件商品。\n没有预算时先追问；拿到预算后再搜索和计算；用户确认后才调用写工具。"}
+{"kind":"slide","id":"sl/vrrd93","slide":25,"title":"AI 10 · SAFETY & FALLBACK","textShapes":17}
+{"kind":"textbox","id":"sh/o3qh8rut","slide":25,"name":"text-757","text":"AI 10 · SAFETY & FALLBACK","textPreview":"AI 10 · SAFETY & FALLBACK","textChars":25,"textLines":1,"bbox":[64,34,430,24]}
+{"kind":"textbox","id":"sh/n2h0fmdo","slide":25,"name":"text-758","text":"失败时降级，写操作必须停在确认点","textPreview":"失败时降级，写操作必须停在确认点","textChars":16,"textLines":1,"bbox":[64,70,1040,64]}
+{"kind":"textbox","id":"sh/m18z6hc3","slide":25,"name":"text-759","text":"可控性来自明确的失败语义，而不是期待模型永远正确。","textPreview":"可控性来自明确的失败语义，而不是期待模型永远正确。","textChars":25,"textLines":1,"bbox":[64,137,1020,40]}
+{"kind":"shape","id":"sh/10zidcvi","slide":25,"name":"shape-760","bbox":[90,244,500,126]}
+{"kind":"shape","id":"sh/0zqh4rux","slide":25,"name":"shape-761","bbox":[90,244,8,126]}
+{"kind":"textbox","id":"sh/zyhgbmdc","slide":25,"name":"text-762","text":"域外问题","textPreview":"域外问题","textChars":4,"textLines":1,"bbox":[118,264,160,26]}
+{"kind":"textbox","id":"sh/exoz2hcr","slide":25,"name":"text-763","text":"天气 / 闲聊","textPreview":"天气 / 闲聊","textChars":7,"textLines":1,"bbox":[300,264,230,24]}
+{"kind":"textbox","id":"sh/lwjipgvm","slide":25,"name":"text-764","text":"礼貌拒答，不调用工具","textPreview":"礼貌拒答，不调用工具","textChars":10,"textLines":1,"bbox":[118,310,430,28]}
+{"kind":"shape","id":"sh/kvahgbu1","slide":25,"name":"shape-765","bbox":[650,244,500,126]}
+{"kind":"shape","id":"sh/i1g7m10v","slide":25,"name":"shape-766","bbox":[650,244,8,126]}
+{"kind":"textbox","id":"sh/j2pov6hg","slide":25,"name":"text-767","text":"工具失败","textPreview":"工具失败","textChars":4,"textLines":1,"bbox":[678,264,160,26]}
+{"kind":"textbox","id":"sh/43ypobi1","slide":25,"name":"text-768","text":"超时 / 401 / 空结果","textPreview":"超时 / 401 / 空结果","textChars":14,"textLines":1,"bbox":[860,264,230,24]}
+{"kind":"textbox","id":"sh/5476xwzm","slide":25,"name":"text-769","text":"可读 fallback，不编造","textPreview":"可读 fallback，不编造","textChars":15,"textLines":1,"bbox":[678,310,430,28]}
+{"kind":"shape","id":"sh/udw7ih0z","slide":25,"name":"shape-770","bbox":[90,414,500,126]}
+{"kind":"shape","id":"sh/ve5ormhk","slide":25,"name":"shape-771","bbox":[90,414,8,126]}
+{"kind":"textbox","id":"sh/wfypkrip","slide":25,"name":"text-772","text":"模型不可用","textPreview":"模型不可用","textChars":5,"textLines":1,"bbox":[118,434,160,26]}
+{"kind":"textbox","id":"sh/h076twza","slide":25,"name":"text-773","text":"无 LLM key / 调用失败","textPreview":"无 LLM key / 调用失败","textChars":16,"textLines":1,"bbox":[300,434,230,24]}
+{"kind":"textbox","id":"sh/e907ulg3","slide":25,"name":"text-774","text":"offline_agent 继续走真实工具","textPreview":"offline_agent 继续走真实工具","textChars":21,"textLines":1,"bbox":[118,480,430,28]}
+{"kind":"shape","id":"sh/fa983qho","slide":25,"name":"shape-775","bbox":[650,414,500,126]}
+{"kind":"shape","id":"sh/be14vix0","slide":25,"name":"shape-776","bbox":[650,414,8,126]}
+{"kind":"textbox","id":"sh/ads3mdgf","slide":25,"name":"text-777","text":"写操作","textPreview":"写操作","textChars":3,"textLines":1,"bbox":[678,434,160,26]}
+{"kind":"textbox","id":"sh/xg3mxsf6","slide":25,"name":"text-778","text":"加购 / 方案提交","textPreview":"加购 / 方案提交","textChars":9,"textLines":1,"bbox":[860,434,230,24]}
+{"kind":"textbox","id":"sh/cfalonyl","slide":25,"name":"text-779","text":"pending confirmation，二次确认","textPreview":"pending confirmation，二次确认","textChars":25,"textLines":1,"bbox":[678,480,430,28]}
+{"kind":"shape","id":"sh/zil4zixc","slide":25,"name":"line-780","bbox":[64,672,1152,0]}
+{"kind":"textbox","id":"sh/yhc3qdgr","slide":25,"name":"text-781","text":"Source: system prompt · offline_agent · pendingCart confirmation","textPreview":"Source: system prompt · offline_agent · pendingCart confirmation","textChars":64,"textLines":1,"bbox":[64,682,960,20]}
+{"kind":"textbox","id":"sh/lk3m1sf2","slide":25,"name":"text-782","text":"25","textPreview":"25","textChars":2,"textLines":1,"bbox":[1180,681,36,20]}
+{"kind":"notes","id":"nt/vrrd93","slide":25,"text":"这页回答“如果 LLM 挂了怎么办”和“Agent 会不会自己下单”。\n关键策略是让失败变得可读，让写操作有确认点，让模型不能决定库存和订单状态。"}
+{"kind":"slide","id":"sl/k875ba","slide":26,"title":"AI 11 · FRONTEND EXPERIENCE","textShapes":12}
+{"kind":"textbox","id":"sh/kzqtsbu9","slide":26,"name":"text-783","text":"AI 11 · FRONTEND EXPERIENCE","textPreview":"AI 11 · FRONTEND EXPERIENCE","textChars":27,"textLines":1,"bbox":[64,34,430,24]}
+{"kind":"textbox","id":"sh/jyhcz6to","slide":26,"name":"text-784","text":"前端把工具轨迹转成可操作界面","textPreview":"前端把工具轨迹转成可操作界面","textChars":14,"textLines":1,"bbox":[64,70,1040,64]}
+{"kind":"textbox","id":"sh/yx8bq1c3","slide":26,"name":"text-785","text":"SSE 负责过程反馈，结构化 ChatUi 负责商品卡、建议动作、任务阶段和确认按钮。","textPreview":"SSE 负责过程反馈，结构化 ChatUi 负责商品卡、建议动作、任务阶段和确认按钮。","textChars":43,"textLines":1,"bbox":[64,137,1020,40]}
+{"kind":"shape","id":"sh/toju5gbq","slide":26,"name":"shape-786","bbox":[66,212,312,394]}
+{"kind":"shape","id":"sh/72hc36tk","slide":26,"name":"shape-787","bbox":[460,218,700,382]}
+{"kind":"shape","id":"sh/618bu1cf","slide":26,"name":"shape-788","bbox":[492,246,150,26]}
+{"kind":"textbox","id":"sh/9sfatcvm","slide":26,"name":"text-789","text":"AGENT WORKBENCH","textPreview":"AGENT WORKBENCH","textChars":15,"textLines":1,"bbox":[502,249,130,20]}
+{"kind":"textbox","id":"sh/or6tkru1","slide":26,"name":"text-790","text":"“适合敲代码的键盘，预算500”","textPreview":"“适合敲代码的键盘，预算500”","textChars":16,"textLines":1,"bbox":[492,300,560,30]}
+{"kind":"shape","id":"sh/mxovapwv","slide":26,"name":"shape-791","bbox":[492,350,420,64]}
+{"kind":"textbox","id":"sh/nyxcjudg","slide":26,"name":"text-792","text":"工具：search_products  ✓\n2 件真实商品 · 库存已核验","textPreview":"工具：search_products  ✓ | 2 件真实商品 · 库存已核验","textChars":37,"textLines":2,"bbox":[516,365,370,40]}
+{"kind":"shape","id":"sh/ozqdcze1","slide":26,"name":"shape-793","bbox":[724,442,374,64]}
+{"kind":"textbox","id":"sh/90zul4vm","slide":26,"name":"text-794","text":"建议动作：查看详情 · 加入方案","textPreview":"建议动作：查看详情 · 加入方案","textChars":16,"textLines":1,"bbox":[748,463,326,24]}
+{"kind":"shape","id":"sh/al8ve9w7","slide":26,"name":"shape-795","bbox":[492,538,118,26]}
+{"kind":"textbox","id":"sh/bmhwneds","slide":26,"name":"text-796","text":"NEW SESSION","textPreview":"NEW SESSION","textChars":11,"textLines":1,"bbox":[502,541,98,20]}
+{"kind":"shape","id":"sh/wnqdgjex","slide":26,"name":"shape-797","bbox":[632,538,140,26]}
+{"kind":"textbox","id":"sh/xozep4vi","slide":26,"name":"text-798","text":"PREFERENCE OFF","textPreview":"PREFERENCE OFF","textChars":14,"textLines":1,"bbox":[642,541,120,20]}
+{"kind":"textbox","id":"sh/yp8vi9c3","slide":26,"name":"text-799","text":"SSE tool_start / tool_end · Markdown sanitize · retry UI","textPreview":"SSE tool_start / tool_end · Markdown sanitize · retry UI","textChars":56,"textLines":1,"bbox":[796,541,300,22]}
+{"kind":"shape","id":"sh/jqhwredo","slide":26,"name":"line-800","bbox":[64,672,1152,0]}
+{"kind":"textbox","id":"sh/vu1czetw","slide":26,"name":"text-801","text":"Source: AgentConversation.vue · ChatWidget.vue · ui-mobile.png","textPreview":"Source: AgentConversation.vue · ChatWidget.vue · ui-mobile.png","textChars":62,"textLines":1,"bbox":[64,682,960,20]}
+{"kind":"textbox","id":"sh/utsb6tsb","slide":26,"name":"text-802","text":"26","textPreview":"26","textChars":2,"textLines":1,"bbox":[1180,681,36,20]}
+{"kind":"image","id":"im/hcfap07i","slide":26,"name":"","geometry":"roundRect","alt":"移动端真实页面","bbox":[72,218,300,382]}
+{"kind":"notes","id":"nt/k875ba","slide":26,"text":"这一页把 Agent 从后端原理拉回用户体验：工具调用状态、商品卡和建议动作都落在页面上。\n截图使用真实移动端构建，右侧是可编辑的结构化交互示意。"}
+{"kind":"slide","id":"sl/2jpp45","slide":27,"title":"DEVOPS & OBSERVABILITY","textShapes":15}
+{"kind":"textbox","id":"sh/zq9ob6dc","slide":27,"name":"text-803","text":"DEVOPS & OBSERVABILITY","textPreview":"DEVOPS & OBSERVABILITY","textChars":22,"textLines":1,"bbox":[64,34,430,24]}
+{"kind":"textbox","id":"sh/0ripkbux","slide":27,"name":"text-804","text":"Compose一键编排，日志定位跨服务链路","textPreview":"Compose一键编排，日志定位跨服务链路","textChars":21,"textLines":1,"bbox":[64,70,1040,64]}
+{"kind":"textbox","id":"sh/1sr6dgvi","slide":27,"name":"text-805","text":"四个容器通过服务名通信；密钥走环境变量；关键下单与工具调用写 INFO 日志。","textPreview":"四个容器通过服务名通信；密钥走环境变量；关键下单与工具调用写 INFO 日志。","textChars":39,"textLines":1,"bbox":[64,137,1020,40]}
+{"kind":"shape","id":"sh/mt07mlcn","slide":27,"name":"line-806","bbox":[100,300,980,0]}
+{"kind":"shape","id":"sh/nutofqd8","slide":27,"name":"shape-807","bbox":[82,244,184,112]}
+{"kind":"textbox","id":"sh/8v2pobut","slide":27,"name":"text-808","text":"mysql","textPreview":"mysql","textChars":5,"textLines":1,"bbox":[96,260,156,30]}
+{"kind":"textbox","id":"sh/9wb6hgve","slide":27,"name":"text-809","text":"3307\nschema + seed","textPreview":"3307 | schema + seed","textChars":18,"textLines":2,"bbox":[96,294,156,54]}
+{"kind":"shape","id":"sh/axk7qlcz","slide":27,"name":"shape-810","bbox":[82,244,5,112]}
+{"kind":"shape","id":"sh/vytojqdk","slide":27,"name":"shape-811","bbox":[354,244,184,112]}
+{"kind":"textbox","id":"sh/bydwbipg","slide":27,"name":"text-812","text":"backend","textPreview":"backend","textChars":7,"textLines":1,"bbox":[368,260,156,30]}
+{"kind":"textbox","id":"sh/ax4fidov","slide":27,"name":"text-813","text":"8081\nREST + logs","textPreview":"8081 | REST + logs","textChars":16,"textLines":2,"bbox":[368,294,156,54]}
+{"kind":"shape","id":"sh/x0ved87m","slide":27,"name":"shape-814","bbox":[354,244,5,112]}
+{"kind":"shape","id":"sh/czmxk361","slide":27,"name":"shape-815","bbox":[626,244,184,112]}
+{"kind":"textbox","id":"sh/nudw7ypk","slide":27,"name":"text-816","text":"agent-service","textPreview":"agent-service","textChars":13,"textLines":1,"bbox":[640,260,156,30]}
+{"kind":"textbox","id":"sh/2tkvetoz","slide":27,"name":"text-817","text":"8000\nFastAPI + SSE","textPreview":"8000 | FastAPI + SSE","textChars":18,"textLines":2,"bbox":[640,294,156,54]}
+{"kind":"shape","id":"sh/pwve987q","slide":27,"name":"shape-818","bbox":[626,244,5,112]}
+{"kind":"shape","id":"sh/ovmxg365","slide":27,"name":"shape-819","bbox":[898,244,184,112]}
+{"kind":"textbox","id":"sh/7qxwj2po","slide":27,"name":"text-820","text":"frontend","textPreview":"frontend","textChars":8,"textLines":1,"bbox":[912,260,156,30]}
+{"kind":"textbox","id":"sh/mpofqxo3","slide":27,"name":"text-821","text":"80\nNginx static","textPreview":"80 | Nginx static","textChars":15,"textLines":2,"bbox":[912,294,156,54]}
+{"kind":"shape","id":"sh/ilszi18b","slide":27,"name":"shape-822","bbox":[898,244,5,112]}
+{"kind":"shape","id":"sh/jm10b69w","slide":27,"name":"shape-823","bbox":[278,290,50,20]}
+{"kind":"shape","id":"sh/4nahkrqh","slide":27,"name":"shape-824","bbox":[550,290,50,20]}
+{"kind":"shape","id":"sh/5ojidwr2","slide":27,"name":"shape-825","bbox":[822,290,50,20]}
+{"kind":"shape","id":"sh/6pszm18n","slide":27,"name":"shape-826","bbox":[82,446,1000,126]}
+{"kind":"shape","id":"sh/rq10f698","slide":27,"name":"shape-827","bbox":[110,474,110,24]}
+{"kind":"textbox","id":"sh/srahobqd","slide":27,"name":"text-828","text":"docker logs","textPreview":"docker logs","textChars":11,"textLines":1,"bbox":[120,477,90,18]}
+{"kind":"textbox","id":"sh/ts3ihgry","slide":27,"name":"text-829","text":"2026-07-12 INFO  order.create  stock=80 → 0\n2026-07-12 INFO  agent.tool    name=query_order_status user=5\n2026-07-12 INFO  compose       healthy: mysql / backend / agent / frontend","textPreview":"2026-07-12 INFO  order.create  stock=80 → 0 | 2026-07-12 INFO  agent.tool    name=query_order_status user=5 | 2026-07-12 INFO  compose   ...","textChars":180,"textLines":3,"bbox":[254,468,790,76]}
+{"kind":"shape","id":"sh/mt8zah83","slide":27,"name":"line-830","bbox":[64,672,1152,0]}
+{"kind":"textbox","id":"sh/7uhg3m9o","slide":27,"name":"text-831","text":"Source: docker-compose.yml · architecture.md · service logs","textPreview":"Source: docker-compose.yml · architecture.md · service logs","textChars":59,"textLines":1,"bbox":[64,682,960,20]}
+{"kind":"textbox","id":"sh/p8n2pkb6","slide":27,"name":"text-832","text":"27","textPreview":"27","textChars":2,"textLines":1,"bbox":[1180,681,36,20]}
+{"kind":"notes","id":"nt/2jpp45","slide":27,"text":"部署页只讲实训需要的可操作性：docker compose up -d、服务名通信、环境变量和日志。\n不把日志管理夸大成 Prometheus/Grafana；但关键节点有足够 INFO 线索追踪。"}
+{"kind":"slide","id":"sl/ovb3v3","slide":28,"title":"EVIDENCE STATUS","textShapes":15}
+{"kind":"textbox","id":"sh/1sz2xwje","slide":28,"name":"text-833","text":"EVIDENCE STATUS","textPreview":"EVIDENCE STATUS","textChars":15,"textLines":1,"bbox":[64,34,430,24]}
+{"kind":"textbox","id":"sh/ep8j2hkn","slide":28,"name":"text-834","text":"核心结果已验证，但验收状态仍是INCOMPLETE","textPreview":"核心结果已验证，但验收状态仍是INCOMPLETE","textChars":25,"textLines":1,"bbox":[64,70,1040,64]}
+{"kind":"textbox","id":"sh/zqhkvm18","slide":28,"name":"text-835","text":"把“已经跑过”和“还需要补证”并列展示，比宣称全部通过更可靠。","textPreview":"把“已经跑过”和“还需要补证”并列展示，比宣称全部通过更可靠。","textChars":31,"textLines":1,"bbox":[64,137,1020,40]}
+{"kind":"shape","id":"sh/cnq1072h","slide":28,"name":"shape-836","bbox":[70,228,540,340]}
+{"kind":"shape","id":"sh/doz2tcj2","slide":28,"name":"shape-837","bbox":[670,228,540,340]}
+{"kind":"shape","id":"sh/qlojyhkr","slide":28,"name":"shape-838","bbox":[98,254,82,26]}
+{"kind":"textbox","id":"sh/rmhkr21c","slide":28,"name":"text-839","text":"已验证","textPreview":"已验证","textChars":3,"textLines":1,"bbox":[108,257,62,20]}
+{"kind":"shape","id":"sh/4j61w72l","slide":28,"name":"shape-840","bbox":[698,254,82,26]}
+{"kind":"textbox","id":"sh/pkf2pcj6","slide":28,"name":"text-841","text":"待补证","textPreview":"待补证","textChars":3,"textLines":1,"bbox":[708,257,62,20]}
+{"kind":"shape","id":"sh/lgbmd8j2","slide":28,"name":"shape-842","bbox":[102,322,10,10]}
+{"kind":"textbox","id":"sh/kf2543ix","slide":28,"name":"text-843","text":"30 后端测试 · 0 failure / 0 error","textPreview":"30 后端测试 · 0 failure / 0 error","textChars":29,"textLines":1,"bbox":[124,316,436,26]}
+{"kind":"shape","id":"sh/zet4by1c","slide":28,"name":"shape-844","bbox":[102,374,10,10]}
+{"kind":"textbox","id":"sh/ydkn2t0r","slide":28,"name":"text-845","text":"并发 3 轮 · 80 成功 / 20 库存不足","textPreview":"并发 3 轮 · 80 成功 / 20 库存不足","textChars":24,"textLines":1,"bbox":[124,368,436,26]}
+{"kind":"shape","id":"sh/xcbm9oj6","slide":28,"name":"shape-846","bbox":[102,426,10,10]}
+{"kind":"textbox","id":"sh/cbi50jil","slide":28,"name":"text-847","text":"Agent smoke · 8 工具 / SSE / 跨会话","textPreview":"Agent smoke · 8 工具 / SSE / 跨会话","textChars":30,"textLines":1,"bbox":[124,420,436,26]}
+{"kind":"shape","id":"sh/ba947e10","slide":28,"name":"shape-848","bbox":[102,478,10,10]}
+{"kind":"textbox","id":"sh/a903y90f","slide":28,"name":"text-849","text":"前端 production build · Compose 容器健康","textPreview":"前端 production build · Compose 容器健康","textChars":34,"textLines":1,"bbox":[124,472,436,26]}
+{"kind":"shape","id":"sh/p8rm5oja","slide":28,"name":"shape-850","bbox":[702,322,10,10]}
+{"kind":"textbox","id":"sh/o7ilwjip","slide":28,"name":"text-851","text":"独立新数据库 schema / seed 验收","textPreview":"独立新数据库 schema / seed 验收","textChars":23,"textLines":1,"bbox":[724,316,436,26]}
+{"kind":"shape","id":"sh/grm5sjal","slide":28,"name":"shape-852","bbox":[702,374,10,10]}
+{"kind":"textbox","id":"sh/1svmlorq","slide":28,"name":"text-853","text":"Agent FastAPI / MockTransport 确定性测试","textPreview":"Agent FastAPI / MockTransport 确定性测试","textChars":35,"textLines":1,"bbox":[724,368,436,26]}
+{"kind":"shape","id":"sh/epknq9sf","slide":28,"name":"shape-854","bbox":[702,426,10,10]}
+{"kind":"textbox","id":"sh/fqd4je90","slide":28,"name":"text-855","text":"移动端视觉回归与大 chunk 收口","textPreview":"移动端视觉回归与大 chunk 收口","textChars":18,"textLines":1,"bbox":[724,420,436,26]}
+{"kind":"shape","id":"sh/sn25oza9","slide":28,"name":"shape-856","bbox":[702,478,10,10]}
+{"kind":"textbox","id":"sh/tobmh4ru","slide":28,"name":"text-857","text":"真实 Claude Code 截图、模块分支与 PR","textPreview":"真实 Claude Code 截图、模块分支与 PR","textChars":26,"textLines":1,"bbox":[724,472,436,26]}
+{"kind":"shape","id":"sh/61knm9s3","slide":28,"name":"line-858","bbox":[64,672,1152,0]}
+{"kind":"textbox","id":"sh/rmt4fe9o","slide":28,"name":"text-859","text":"Source: docs/acceptance-report.md · tier1 logs · PROJECT_HANDOFF","textPreview":"Source: docs/acceptance-report.md · tier1 logs · PROJECT_HANDOFF","textChars":64,"textLines":1,"bbox":[64,682,960,20]}
+{"kind":"textbox","id":"sh/cj6503qd","slide":28,"name":"text-860","text":"28","textPreview":"28","textChars":2,"textLines":1,"bbox":[1180,681,36,20]}
+{"kind":"notes","id":"nt/ovb3v3","slide":28,"text":"这页是答辩可信度的关键：主链路有运行证据，但课程交付物仍有明确缺口。\n不要把历史知识库 88 条、旧稿 20/20 测试或本轮 Codex 记录替代待补证项。"}
+{"kind":"slide","id":"sl/p0qevm","slide":29,"title":"LIMITS → NEXT","textShapes":21}
+{"kind":"textbox","id":"sh/32t83elo","slide":29,"name":"text-861","text":"LIMITS → NEXT","textPreview":"LIMITS → NEXT","textChars":13,"textLines":1,"bbox":[64,34,430,24]}
+{"kind":"textbox","id":"sh/4329wjm9","slide":29,"name":"text-862","text":"下一步优先补“可复现证据”，再谈扩展","textPreview":"下一步优先补“可复现证据”，再谈扩展","textChars":18,"textLines":1,"bbox":[64,70,1040,64]}
+{"kind":"textbox","id":"sh/p4ba5o3u","slide":29,"name":"text-863","text":"先把当前能力变成干净、可重复、可审计的交付，再增加生产级复杂度。","textPreview":"先把当前能力变成干净、可重复、可审计的交付，再增加生产级复杂度。","textChars":32,"textLines":1,"bbox":[64,137,1020,40]}
+{"kind":"shape","id":"sh/ux0rq947","slide":29,"name":"line-864","bbox":[110,542,1010,0]}
+{"kind":"shape","id":"sh/fy98zels","slide":29,"name":"shape-865","bbox":[96,268,46,26]}
+{"kind":"textbox","id":"sh/gz29sjmd","slide":29,"name":"text-866","text":"P0","textPreview":"P0","textChars":2,"textLines":1,"bbox":[106,271,26,20]}
+{"kind":"textbox","id":"sh/h0bq143y","slide":29,"name":"text-867","text":"独立 DB 初始化","textPreview":"独立 DB 初始化","textChars":9,"textLines":1,"bbox":[96,324,190,28]}
+{"kind":"textbox","id":"sh/et4r2t4r","slide":29,"name":"text-868","text":"schema + seed + reset","textPreview":"schema + seed + reset","textChars":21,"textLines":1,"bbox":[96,364,198,44]}
+{"kind":"shape","id":"sh/zudsbylw","slide":29,"name":"line-869","bbox":[119,482,0,60]}
+{"kind":"shape","id":"sh/3axwvqpc","slide":29,"name":"shape-870","bbox":[334,268,46,26]}
+{"kind":"textbox","id":"sh/29of2l8r","slide":29,"name":"text-871","text":"P0","textPreview":"P0","textChars":2,"textLines":1,"bbox":[344,271,26,20]}
+{"kind":"textbox","id":"sh/pwzex07i","slide":29,"name":"text-872","text":"确定性 Agent 测试","textPreview":"确定性 Agent 测试","textChars":12,"textLines":1,"bbox":[334,324,190,28]}
+{"kind":"textbox","id":"sh/ob6x4v6x","slide":29,"name":"text-873","text":"MockTransport / contract","textPreview":"MockTransport / contract","textChars":24,"textLines":1,"bbox":[334,364,198,44]}
+{"kind":"shape","id":"sh/byhwzapo","slide":29,"name":"line-874","bbox":[357,482,0,60]}
+{"kind":"shape","id":"sh/qx8f65o3","slide":29,"name":"shape-875","bbox":[572,268,46,26]}
+{"kind":"textbox","id":"sh/d0ze107u","slide":29,"name":"text-876","text":"P1","textPreview":"P1","textChars":2,"textLines":1,"bbox":[582,271,26,20]}
+{"kind":"textbox","id":"sh/czqx8v69","slide":29,"name":"text-877","text":"视觉与包体","textPreview":"视觉与包体","textChars":5,"textLines":1,"bbox":[572,324,190,28]}
+{"kind":"textbox","id":"sh/z2hw3apk","slide":29,"name":"text-878","text":"mobile regression / split","textPreview":"mobile regression / split","textChars":25,"textLines":1,"bbox":[572,364,198,44]}
+{"kind":"shape","id":"sh/y18fa5oz","slide":29,"name":"line-879","bbox":[595,482,0,60]}
+{"kind":"shape","id":"sh/axcz2987","slide":29,"name":"shape-880","bbox":[810,268,46,26]}
+{"kind":"textbox","id":"sh/vyl0ve9s","slide":29,"name":"text-881","text":"P1","textPreview":"P1","textChars":2,"textLines":1,"bbox":[820,271,26,20]}
+{"kind":"textbox","id":"sh/wzuh4jqd","slide":29,"name":"text-882","text":"协作证据","textPreview":"协作证据","textChars":4,"textLines":1,"bbox":[810,324,190,28]}
+{"kind":"textbox","id":"sh/x03ixory","slide":29,"name":"text-883","text":"Claude 截图 / PR","textPreview":"Claude 截图 / PR","textChars":14,"textLines":1,"bbox":[810,364,198,44]}
+{"kind":"shape","id":"sh/mtszy9sb","slide":29,"name":"line-884","bbox":[833,482,0,60]}
+{"kind":"shape","id":"sh/nu10ru9w","slide":29,"name":"shape-885","bbox":[1048,268,46,26]}
+{"kind":"textbox","id":"sh/8vuh0zqh","slide":29,"name":"text-886","text":"P2","textPreview":"P2","textChars":2,"textLines":1,"bbox":[1058,271,26,20]}
+{"kind":"textbox","id":"sh/9w3it4r2","slide":29,"name":"text-887","text":"能力扩展","textPreview":"能力扩展","textChars":4,"textLines":1,"bbox":[1048,324,190,28]}
+{"kind":"textbox","id":"sh/6pwzat8f","slide":29,"name":"text-888","text":"全文检索 / 支付 / RAG init","textPreview":"全文检索 / 支付 / RAG init","textChars":20,"textLines":1,"bbox":[1048,364,198,44]}
+{"kind":"shape","id":"sh/7q503y90","slide":29,"name":"line-889","bbox":[1071,482,0,60]}
+{"kind":"textbox","id":"sh/1wrupwfe","slide":29,"name":"text-890","text":"工程判断：先保证“老师按步骤能复现”，再把系统推向生产级。","textPreview":"工程判断：先保证“老师按步骤能复现”，再把系统推向生产级。","textChars":29,"textLines":1,"bbox":[110,586,920,30]}
+{"kind":"shape","id":"sh/0vitgret","slide":29,"name":"line-891","bbox":[64,672,1152,0]}
+{"kind":"textbox","id":"sh/fu9cnmx8","slide":29,"name":"text-892","text":"Source: acceptance-report.md · handoff recommendations","textPreview":"Source: acceptance-report.md · handoff recommendations","textChars":54,"textLines":1,"bbox":[64,682,960,20]}
+{"kind":"textbox","id":"sh/et0behw3","slide":29,"name":"text-893","text":"29","textPreview":"29","textChars":2,"textLines":1,"bbox":[1180,681,36,20]}
+{"kind":"notes","id":"nt/p0qevm","slide":29,"text":"这页不是道歉页，而是优先级判断。P0 是证据和可复现性，P2 才是支付、全文检索等扩展。\n主动讲限制，能把追问从“你们有没有做”引导到“下一步如何验收”。"}
+{"kind":"slide","id":"sl/ovftpl","slide":30,"title":"LIVE DEMO · Q&A","textShapes":22}
+{"kind":"textbox","id":"sh/rq5szahw","slide":30,"name":"text-894","text":"LIVE DEMO · Q&A","textPreview":"LIVE DEMO · Q&A","textChars":15,"textLines":1,"bbox":[64,34,430,24]}
+{"kind":"textbox","id":"sh/crytsfih","slide":30,"name":"text-895","text":"现场演示沿一条主链路完成收束","textPreview":"现场演示沿一条主链路完成收束","textChars":14,"textLines":1,"bbox":[64,136,1040,70]}
+{"kind":"textbox","id":"sh/ds7a10z2","slide":30,"name":"text-896","text":"登录 → 搜索 → 下单 → Agent 查单 → 新会话推荐 → 方案确认 → 日志","textPreview":"登录 → 搜索 → 下单 → Agent 查单 → 新会话推荐 → 方案确认 → 日志","textChars":43,"textLines":1,"bbox":[68,220,1080,34]}
+{"kind":"shape","id":"sh/etgbu50n","slide":30,"name":"line-897","bbox":[100,378,1040,0]}
+{"kind":"shape","id":"sh/zups3ah8","slide":30,"name":"shape-898","bbox":[79,357,42,42]}
+{"kind":"textbox","id":"sh/0fytwfit","slide":30,"name":"text-899","text":"01","textPreview":"01","textChars":2,"textLines":1,"bbox":[84,366,32,22]}
+{"kind":"textbox","id":"sh/1g7a5kze","slide":30,"name":"text-900","text":"登录","textPreview":"登录","textChars":2,"textLines":1,"bbox":[36,424,128,26]}
+{"kind":"shape","id":"sh/uxcril0j","slide":30,"name":"shape-901","bbox":[252,357,42,42]}
+{"kind":"textbox","id":"sh/fylsrq14","slide":30,"name":"text-902","text":"02","textPreview":"02","textChars":2,"textLines":1,"bbox":[257,366,32,22]}
+{"kind":"textbox","id":"sh/fqtcnql8","slide":30,"name":"text-903","text":"搜索键盘","textPreview":"搜索键盘","textChars":4,"textLines":1,"bbox":[209,424,128,26]}
+{"kind":"shape","id":"sh/upkvelkn","slide":30,"name":"shape-904","bbox":[425,357,42,42]}
+{"kind":"textbox","id":"sh/hsbep03e","slide":30,"name":"text-905","text":"03","textPreview":"03","textChars":2,"textLines":1,"bbox":[430,366,32,22]}
+{"kind":"textbox","id":"sh/gr2dgv2t","slide":30,"name":"text-906","text":"加购下单","textPreview":"加购下单","textChars":4,"textLines":1,"bbox":[382,424,128,26]}
+{"kind":"shape","id":"sh/729cj6lc","slide":30,"name":"shape-907","bbox":[598,357,42,42]}
+{"kind":"textbox","id":"sh/610va1kr","slide":30,"name":"text-908","text":"04","textPreview":"04","textChars":2,"textLines":1,"bbox":[603,366,32,22]}
+{"kind":"textbox","id":"sh/t4bulg32","slide":30,"name":"text-909","text":"AI 查订单","textPreview":"AI 查订单","textChars":6,"textLines":1,"bbox":[555,424,128,26]}
+{"kind":"shape","id":"sh/s3idcb2h","slide":30,"name":"shape-910","bbox":[771,357,42,42]}
+{"kind":"textbox","id":"sh/jy9cf6l0","slide":30,"name":"text-911","text":"05","textPreview":"05","textChars":2,"textLines":1,"bbox":[776,366,32,22]}
+{"kind":"textbox","id":"sh/ix0v61kf","slide":30,"name":"text-912","text":"跨会话偏好","textPreview":"跨会话偏好","textChars":5,"textLines":1,"bbox":[728,424,128,26]}
+{"kind":"shape","id":"sh/mtgvi1o7","slide":30,"name":"shape-913","bbox":[944,357,42,42]}
+{"kind":"textbox","id":"sh/nupwr65s","slide":30,"name":"text-914","text":"06","textPreview":"06","textChars":2,"textLines":1,"bbox":[949,366,32,22]}
+{"kind":"textbox","id":"sh/8vydkb6d","slide":30,"name":"text-915","text":"确认加购","textPreview":"确认加购","textChars":4,"textLines":1,"bbox":[901,424,128,26]}
+{"kind":"shape","id":"sh/9w7etwny","slide":30,"name":"shape-916","bbox":[1117,357,42,42]}
+{"kind":"textbox","id":"sh/ax0vm1oj","slide":30,"name":"text-917","text":"07","textPreview":"07","textChars":2,"textLines":1,"bbox":[1122,366,32,22]}
+{"kind":"textbox","id":"sh/vy9wv654","slide":30,"name":"text-918","text":"看日志","textPreview":"看日志","textChars":3,"textLines":1,"bbox":[1074,424,128,26]}
+{"kind":"shape","id":"sh/wzixob6p","slide":30,"name":"shape-919","bbox":[68,520,1080,94]}
+{"kind":"textbox","id":"sh/x0rexgna","slide":30,"name":"text-920","text":"闭环","textPreview":"闭环","textChars":2,"textLines":1,"bbox":[96,548,80,28]}
+{"kind":"textbox","id":"sh/i10fqlof","slide":30,"name":"text-921","text":"可运行  ·  可解释  ·  可验证","textPreview":"可运行  ·  可解释  ·  可验证","textChars":19,"textLines":1,"bbox":[214,544,560,34]}
+{"kind":"textbox","id":"sh/j29wzq50","slide":30,"name":"text-922","text":"谢谢，欢迎提问","textPreview":"谢谢，欢迎提问","textChars":7,"textLines":1,"bbox":[936,552,178,28]}
+{"kind":"shape","id":"sh/twvypk7i","slide":30,"name":"line-923","bbox":[64,672,1152,0]}
+{"kind":"textbox","id":"sh/sv2hwfqx","slide":30,"name":"text-924","text":"Agent Store · defense close","textPreview":"Agent Store · defense close","textChars":27,"textLines":1,"bbox":[64,682,960,20]}
+{"kind":"textbox","id":"sh/7utgnapc","slide":30,"name":"text-925","text":"30","textPreview":"30","textChars":2,"textLines":1,"bbox":[1180,681,36,20]}
+{"kind":"notes","id":"nt/ovftpl","slide":30,"text":"收束回到开场的三个词：闭环、可解释、可验证。\n现场演示顺序固定为 7 步；如果环境异常，优先切换到真实截图和日志证据，不临时改变主线。\n最后把问题抛给评委：可以从 Agent 工具、服务间鉴权、事务并发或验收缺口开始提问。"}

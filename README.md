@@ -73,5 +73,8 @@ python scripts/concurrent_order_test.py --base-url http://127.0.0.1:8081
 - [Acceptance report](docs/acceptance-report.md)
 - [AI development record](docs/ai-development-record.md)
 - [Defense materials](docs/defense/)
+- [Final project development report](docs/defense/项目开发报告-终稿.md)
+- [Final project development report (Word)](docs/defense/项目开发报告-终稿.docx)
+- [Report skill and review record](docs/defense/报告制作技能记录.md)
 
 Generated logs, caches, PPT inspection files, and slide previews are excluded from version control. The final PPTX and PDF remain in `docs/defense/final/`.
