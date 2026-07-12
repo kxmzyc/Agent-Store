@@ -158,6 +158,18 @@ CREATE TABLE IF NOT EXISTS user_preference (
   KEY idx_user_preference_user_weight (user_id, weight, updated_at)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+-- Agent 知识库内容。source_id 是按 source_type 解释的多态逻辑引用，
+-- 不设置跨服务外键；Agent 的 ensure_tables() 会在初始化时兜底创建同构表。
+CREATE TABLE IF NOT EXISTS knowledge_chunk (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  source_type VARCHAR(20) NOT NULL,
+  source_id BIGINT NULL,
+  content TEXT NOT NULL,
+  embedding_json MEDIUMTEXT NULL,
+  updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  KEY idx_knowledge_source (source_type, source_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 CREATE TABLE IF NOT EXISTS coupon (
   id BIGINT PRIMARY KEY AUTO_INCREMENT,
   name VARCHAR(64) NOT NULL,

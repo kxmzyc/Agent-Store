@@ -192,6 +192,15 @@ erDiagram
     decimal weight
     datetime updated_at
   }
+
+  KNOWLEDGE_CHUNK {
+    bigint id PK
+    varchar source_type
+    bigint source_id
+    text content
+    mediumtext embedding_json
+    datetime updated_at
+  }
 ```
 
 ## 关系说明
@@ -222,6 +231,8 @@ erDiagram
 | `user` -> `agent_conversation` | 1:N | 一个用户可以产生多条 Agent 对话消息 |
 | `user` -> `user_preference` | 1:N | 一个用户可以有多个长期偏好标签 |
 
+`knowledge_chunk` 不声明物理外键。`source_type=product` 或 `review` 时，`source_id` 按约定指向对应商品的 ID；`source_type=faq` 时为 `NULL`。这是 Agent 知识库对主业务数据的多态逻辑引用，避免跨微服务边界建立数据库外键；知识库重建脚本和 Agent 的 `ensure_tables()` 使用同一结构。
+
 ## 3NF 说明
 
 - 主业务表围绕单一实体建模，非主键字段只依赖本表主键。
@@ -234,3 +245,4 @@ erDiagram
 - `product_favorite` 只保存用户、商品和收藏时间，商品展示字段仍从 `product` 查询，避免冗余。
 - `product_view_history` 的 `view_count` 与 `last_viewed_at` 是用户浏览行为事实，不是可由其他业务表稳定推导的字段。
 - Agent 记忆表是独立边界，`user_preference` 通过 `(user_id, preference_tag)` 唯一约束表达“一个用户一个偏好标签只有一条权重记录”。
+- `knowledge_chunk` 保存 FAQ、商品和评价知识块及可选 embedding 快照；`source_id` 是多态知识源标识，不是可由单一实体表约束的普通外键。

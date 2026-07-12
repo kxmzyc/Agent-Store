@@ -4,14 +4,14 @@
 
 本数据库支撑“淘宝 + AI 助手”迷你商城项目，核心目标是完整覆盖用户、商品、订单、搜索、AI 助手五大模块，并满足课程验收中对 MySQL、三范式、事务、并发扣库存、Agent 记忆机制的要求。
 
-当前项目数据库名为 `smart_mall`，使用 MySQL 8.0，所有业务表使用 `InnoDB` 引擎和 `utf8mb4` 字符集。后端 Spring Boot 使用 Spring Data JPA 访问主业务表，Agent 服务使用 SQLAlchemy 访问两张专属记忆表。
+当前项目数据库名为 `smart_mall`，使用 MySQL 8.0，所有业务表使用 `InnoDB` 引擎和 `utf8mb4` 字符集。后端 Spring Boot 使用 Spring Data JPA 访问主业务表，Agent 服务使用 SQLAlchemy 访问三张专属数据表。
 
 ## 2. 数据库边界
 
 | 边界 | 表 | 写入方 | 说明 |
 |---|---|---|---|
 | 主业务数据 | `user`、`category`、`product`、`cart`、`order`、`order_item`、`after_sale_request`、`product_favorite`、`product_view_history`、`product_view_log`、`shipping_address`、`banner_slot`、`search_keyword_log`、`product_tag`、`product_tag_relation`、`admin_operation_log` | Spring Boot 后端 | 用户、商品、购物车、订单、售后、收藏、浏览行为、地址簿和运营配置等电商核心数据，Agent 不直接写这些表 |
-| Agent 记忆数据 | `agent_conversation`、`user_preference` | FastAPI Agent 服务 | 存储对话历史和用户长期偏好，是 Agent 专属数据 |
+| Agent 数据 | `agent_conversation`、`user_preference`、`knowledge_chunk` | FastAPI Agent 服务 | 存储对话历史、用户长期偏好和知识库内容，是 Agent 专属数据 |
 
 Agent 查询商品和订单时通过后端 REST API 调用，不能直接读写订单、商品、用户业务表。这样可以保证权限边界清晰，避免 Agent 绕过主系统鉴权和业务校验。
 
@@ -41,6 +41,7 @@ Agent 查询商品和订单时通过后端 REST API 调用，不能直接读写�
 | `admin_operation_log` | 管理员操作日志表 | DevOps/管理端增强 | AOP 自动记录管理员写操作 |
 | `agent_conversation` | Agent 对话表 | AI 助手模块 | 持久化保存会话消息，作为短期记忆恢复兜底 |
 | `user_preference` | 用户偏好表 | AI 助手模块 | 存储长期偏好标签和权重 |
+| `knowledge_chunk` | Agent 知识块表 | AI 助手模块 | 存储 FAQ、商品和评价摘要，以及可选 embedding 快照 |
 
 ## 5. 表结构详情
 
@@ -323,6 +324,28 @@ PENDING_PAYMENT --取消--> CANCELLED
 - 已存在标签时 `weight = LEAST(2.0, weight + 0.1)`，用于体现偏好强度。
 - 不设置外键到 `user(id)`，原因同 `agent_conversation`：保持 Agent 专属表边界，由应用层校验用户身份。
 
+### 5.11 `knowledge_chunk` Agent 知识块表
+
+用途：保存知识库构建脚本生成的 FAQ、商品摘要和评价摘要，供 `search_knowledge_base` 工具检索；`embedding_json` 用于可选的 embedding 快照，未配置 embedding 时可以为空。
+
+| 字段 | 类型 | 约束 | 说明 |
+|---|---|---|---|
+| `id` | `BIGINT` | PK，自增 | 知识块主键 |
+| `source_type` | `VARCHAR(20)` | NOT NULL | 知识源类型：`faq`、`product` 或 `review` |
+| `source_id` | `BIGINT` | NULL | 商品/评价知识源 ID；FAQ 为 `NULL` |
+| `content` | `TEXT` | NOT NULL | 可检索的知识块正文 |
+| `embedding_json` | `MEDIUMTEXT` | NULL | 可选的向量快照，以 JSON 保存 |
+| `updated_at` | `DATETIME` | NOT NULL，自动更新时间 | 最近更新时间 |
+
+关键索引：
+
+- `idx_knowledge_source`：按知识源类型和源 ID 定位或重建知识块。
+
+设计说明：
+
+- 该表由 Agent 服务维护，主后端不直接写入。
+- `source_id` 是按 `source_type` 解释的多态逻辑引用，不设置跨服务外键；这样 Agent 可以独立重建 FAQ、商品和评价知识块，主业务表仍由 Spring Boot 负责。
+
 ## 6. 索引设计汇总
 
 | 表 | 索引/约束 | 字段 | 类型 | 目的 |
@@ -355,6 +378,7 @@ PENDING_PAYMENT --取消--> CANCELLED
 | `agent_conversation` | `idx_agent_conversation_user_session` | `user_id,session_id,id` | 普通索引 | 用户会话隔离查询 |
 | `user_preference` | `uk_user_preference_tag` | `user_id,preference_tag` | 唯一索引 | 偏好 upsert |
 | `user_preference` | `idx_user_preference_user_weight` | `user_id,weight,updated_at` | 普通索引 | 读取 Top 偏好 |
+| `knowledge_chunk` | `idx_knowledge_source` | `source_type,source_id` | 普通索引 | 知识源定位和重建 |
 
 ## 7. 搜索设计
 

@@ -60,7 +60,7 @@ Agent-Store 是一个“淘宝 + AI 导购助手”风格的智能商城实训�
 | Bean Validation | 是 | `spring-boot-starter-validation`，Controller DTO `@Valid` | 请求参数校验 | 注册、下单、商品、评价等请求使用 |
 | Swagger/OpenAPI | 是 | `springdoc-openapi-starter-webmvc-ui` | API 调试文档 | `/swagger-ui/**`、`/v3/api-docs/**` 放行 |
 | Maven | 是 | `backend/pom.xml` | 构建与测试 | 已能执行 `mvn.cmd test` |
-| Docker | 是 | `backend/Dockerfile`、`docker-compose.yml` | 容器化 | 注意 Dockerfile 依赖预先存在 `target/*.jar` |
+| Docker | 是 | `backend/Dockerfile`、`docker-compose.yml` | 容器化 | backend 使用 Maven 多阶段构建，Compose 配置四服务健康检查 |
 | Apache POI | 是 | `pom.xml`、`AdminController.java` | 订单 Excel 导出 | 后台订单导出使用 |
 | LLM SDK | 否，后端无 | `backend/pom.xml` 未发现 LLM SDK | 不适用 | LLM 逻辑在 `agent-service/` |
 | LangChain | 否，后端无 | 后端 Java 源码未发现 LangChain | 不适用 | LangChain 只在 Python Agent |
@@ -539,6 +539,8 @@ sequenceDiagram
 21. `product_tag_relation`
 22. `admin_operation_log`
 
+此外，Agent 启动时的 `ensure_tables()` 会创建 Agent 专属的 `knowledge_chunk` 知识块表；该表不由演示 seed 数据填充，知识库构建脚本负责写入。
+
 一致性风险：
 
 - `docs/schema.sql` 与 `docs/seed.sql` 不完全一致。`schema.sql` 只覆盖较早版本表结构，未完整包含优惠券、积分、评价、反馈等后续扩展表和 `user.points`、`order.discount_amount`、`order.points_used` 等字段。
@@ -558,6 +560,7 @@ sequenceDiagram
 | `product_view_history` | 登录用户浏览聚合 | `id`、`user_id`、`product_id`、`view_count`、`created_at`、`last_viewed_at` | 用于个人浏览历史 |
 | `agent_conversation` | Agent 对话历史 | `id`、`session_id`、`user_id`、`role`、`content`、`created_at` | Agent 短期记忆持久化兜底 |
 | `user_preference` | 长期偏好 | `id`、`user_id`、`preference_tag`、`weight`、`updated_at` | Agent 和推荐系统共享的偏好标签 |
+| `knowledge_chunk` | Agent 知识块 | `id`、`source_type`、`source_id`、`content`、`embedding_json`、`updated_at` | FAQ、商品和评价摘要；由 Agent 独立维护 |
 | `coupon` | 优惠券模板 | `id`、`name`、`type`、`threshold`、`discount`、`total_count`、`remain_count`、`valid_days`、`created_at` | `type=1` 满减，`type=2` 折扣 |
 | `user_coupon` | 用户已领优惠券 | `id`、`user_id`、`coupon_id`、`status`、`expire_at`、`used_order_id`、`created_at` | 源码 Repository 关联 `coupon`；DDL 未声明外键 |
 | `point_record` | 积分流水 | `id`、`user_id`、`delta`、`reason`、`created_at` | 记录积分增加/扣减 |
@@ -920,7 +923,7 @@ Agent 并不直接信任前端传入的 `userId`：
 | 订单与库存事务 | 已完成 | `OrderService`、`ProductRepository.deductStock` |
 | AI 导购 Agent | 已完成，依赖 LLM 配置 | `agent-service/app/main.py`、`ChatWidget.vue` |
 | 短期记忆与长期偏好 | 已完成 | `agent_conversation`、`user_preference` |
-| Docker Compose 编排 | 部分完成 | `docker-compose.yml` 存在，但 backend Dockerfile 依赖预构建 jar |
+| Docker Compose 编排 | 已完成 | `docker-compose.yml` 编排四服务并配置 backend、Agent、frontend、MySQL 健康检查 |
 
 ### ★★★★☆ 重要业务增强
 
@@ -976,13 +979,13 @@ Agent 并不直接信任前端传入的 `userId`：
 
 | 维度 | 完成度 | 依据 |
 |---|---:|---|
-| 企业商城完成度 | 86% | 用户、商品、购物车、订单、地址、优惠券、积分、评价、收藏、后台等主链路完整；缺少真实支付、售后、物流、多 SKU、复杂权限 |
+| 企业商城完成度 | 86% | 用户、商品、购物车、订单、地址、优惠券、积分、评价、售后、收藏、后台等主链路完整；缺少真实支付、物流、多 SKU、复杂权限 |
 | AI 能力完成度 | 76% | LangChain Agent、工具调用、Memory、Preference、SSE 已实现；缺少 RAG、Embedding、多 Agent、MCP，且完整 Agent 效果依赖 LLM Key |
 | 后台完成度 | 80% | Dashboard、商品、订单、Banner、标签、搜索词、反馈、日志均存在；缺少复杂权限、批量操作、失败审计、更多运营配置 |
-| 数据库完成度 | 84% | 22 张表覆盖完整演示业务；但 `schema.sql` 与 `seed.sql` 不一致，部分扩展表 DDL 未声明外键 |
+| 数据库完成度 | 84% | 22 张表覆盖演示业务，Agent 运行时另有 `knowledge_chunk`；`schema.sql` 与 `seed.sql` 仍有字段/扩展表差异，部分扩展表 DDL 未声明外键 |
 | 前端完成度 | 88% | 页面路由完整、主流程可用、聊天窗和后台丰富；没有 TypeScript、Pinia、组件库，部分后台字段展示仍可打磨 |
-| DevOps 完成度 | 72% | Docker Compose 存在并编排四服务；后端 Dockerfile 依赖本地预构建 jar，不是完全 clean checkout 一键构建；无 CI/CD |
-| 测试完成度 | 45% | 存在 BCrypt 和库存 SQL 测试，另有脚本；但覆盖面较窄，缺少完整接口集成自动化覆盖 |
+| DevOps 完成度 | 78% | Docker Compose 编排四服务并通过健康检查；backend 可在 Dockerfile 内完成 Maven 多阶段构建；无 CI/CD |
+| 测试完成度 | 65% | `mvn.cmd test` 当前 30 个测试全部通过，另有并发脚本和 Agent 烟测；仍可继续扩大接口与前端覆盖 |
 | 整体完成度 | 83% | 五大核心模块均有源码实现，AI 与运营增强完整度较高；生产级和高级 AI 能力仍有明显缺口 |
 
 ## 11. 当前仍缺失的重要功能
@@ -991,10 +994,9 @@ Agent 并不直接信任前端传入的 `userId`：
 
 | 缺失/风险 | 当前证据 | 建议 |
 |---|---|---|
-| Clean checkout 下后端 Docker 构建不稳 | `backend/Dockerfile` 复制 `target/*.jar`，未在 Dockerfile 内执行 Maven 构建 | 改为 Maven 多阶段构建，或 README 明确先执行 `mvn package` |
 | `schema.sql` 与 `seed.sql` 不一致 | `seed.sql` 有 22 表和 ALTER 字段，`schema.sql` 只覆盖部分 | 合并为单一权威 DDL，避免答辩/部署时口径不一致 |
 | AI 完整效果依赖 LLM 配置 | `llm_enabled()` 检查 `LLM_API_KEY`，否则走 `offline_agent()` | `.env.example`、README 和答辩文档明确配置方式，并准备可用 Key |
-| 测试覆盖不足 | 当前仅 2 个 JUnit 测试和脚本 | 增加注册登录、购物车、下单、优惠券、Agent smoke 的自动化集成测试 |
+| 测试覆盖仍可扩大 | 当前 30 个 Maven 测试、并发脚本和 Agent smoke 已通过 | 继续补充 Agent MockTransport、前端关键交互和独立数据库回归 |
 | 后台订单用户展示存在信息不足风险 | `OrderResponse` 主要返回订单自身字段，后台页面无法完整展示用户资料 | 后台订单响应增加 `userId/username` 或专用 Admin DTO |
 
 ### 11.2 中优先级
@@ -1004,7 +1006,7 @@ Agent 并不直接信任前端传入的 `userId`：
 | 搜索未使用 FULLTEXT | Repository 使用 JPQL `LIKE`，虽然 DDL 建了全文索引 | 如需强调 MySQL ngram，改为 native query `MATCH AGAINST`；否则文档说明降级为 LIKE |
 | 部分扩展表缺少数据库外键 | `coupon` 后续扩展表 DDL 多为索引，无 FK 约束 | 补充外键或在文档中解释为演示简化 |
 | 无真实支付 | 只有模拟支付状态流转 | 保持实训范围即可，答辩时说明不接第三方支付 |
-| 无退款/售后 | 未发现退款/售后 Controller/表 | 如需企业级完整度，增加售后模块 |
+| 售后仍是教学简化 | 已有售后申请、管理员审批、库存/优惠券回滚和积分回滚；不接入真实支付退款渠道 | 若要生产化，再接入支付退款、风控和对账流程 |
 | 无物流跟踪 | 发货只是状态变更 | 增加物流单号字段和物流状态展示 |
 | 无复杂 RBAC | 只有 USER/ADMIN | 若后台多人协作，增加权限表和菜单权限 |
 | 无 Redis/缓存 | 未发现 Redis | 当前规模可接受；高并发场景可补缓存和限流 |
@@ -1032,7 +1034,7 @@ Agent 并不直接信任前端传入的 `userId`：
 
 ### 12.3 企业价值
 
-作为企业内部原型或教学实训项目，项目已经具备电商交易闭环、后台运营和 AI 导购闭环；作为生产系统仍需补齐支付、售后、物流、权限、监控、测试和部署可靠性。
+作为企业内部原型或教学实训项目，项目已经具备电商交易闭环、后台运营、售后和 AI 导购闭环；作为生产系统仍需补齐真实支付退款、物流、权限、监控、测试和部署可靠性。
 
 ### 12.4 毕业设计价值
 

@@ -10,7 +10,7 @@
 
 | 项目 | 状态 | 实际命令与结果 |
 |---|---|---|
-| 后端单元/集成/HTTP回归 | PASS | `mvn.cmd test`：27 tests，0 failures，0 errors。包含 Mockito 重试分支、H2 事务边界和 RestAssured 随机端口“注册到确认收货”链路。 |
+| 后端单元/集成/HTTP回归 | PASS | `mvn.cmd test`：30 tests，0 failures，0 errors。包含 Mockito 重试分支、H2 事务边界、售后积分回滚并发验证和 RestAssured 随机端口“注册到确认收货”链路。 |
 | 前端生产构建 | PASS | `npm.cmd run build`：成功。产物含一个 1,135.53 kB（gzip 382.15 kB）chunk 警告。 |
 | Compose 配置 | PASS（临时验证变量） | `docker compose config --quiet` 使用只在当前进程注入的变量通过；未修改 `.env`。 |
 | 容器 | PASS | 重新执行 `docker compose up -d --build` 后，frontend、backend、agent-service、mysql 均为 Up；Agent/MySQL 健康。 |
